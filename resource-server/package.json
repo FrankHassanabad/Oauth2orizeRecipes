@@ -1,0 +1,14 @@
+{
+    "name": "oauth2orize-all-grants-resource-server-example",
+    "version": "0.0.0",
+    "dependencies": {
+        "express": "3.x.x",
+        "ejs": "0.7.x",
+        "passport": "~0.1.12",
+        "passport-local": "0.1.x",
+        "passport-oauth2-client-password": "0.1.x",
+        "passport-http-bearer": "0.2.x",
+        "connect-ensure-login": "0.1.x",
+        "oauth": "0.9.x"
+    }
+}

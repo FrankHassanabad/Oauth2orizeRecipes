@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth2orize Static HTML Example</title>
+</head>
+<body>
+<script type="text/javascript">
+    document.write("\<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js' type='text/javascript'>\<\/script>");
+</script>
+<p>
+Your access token (Authorization Bearer) is: <pre><span id="access_token">None yet, press the button</span></pre>
+</p>
+<p>
+Your refresh token is:<pre><span id="refresh_token">None yet, press the button</span></pre>
+</p>
+<p>
+<div id="div1"><h2>User Information from access token</h2></div>
+<button id="button_2">Press to get access and refresh tokens</button>
+<button id="button_1">No Protected resource yet, press the button</button>
+</p>
+<p>
+<div id="protectedEndPointData">Get Protected EndPoint Data</div>
+</p>
+<script>
+    $(document).ready(function(){
+
+        var access_token = {};
+
+        $("#button_2").click(function () {
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    "Authorization": "Basic YWJjMTIzOnNzaC1zZWNyZXQ="
+                },
+                dataType: 'json',
+                url: "/oauth/token",
+                data: 'grant_type=password&username=bob&password=secret&scope=offline_access',
+                success: function (result) {
+                    access_token = result.access_token;
+                    $("#access_token").html(result.access_token);
+                    $("#refresh_token").html(result.refresh_token);
+                },
+                failure: function(result) {
+                    $("#access_token").html(result);
+                }
+            });
+        });
+
+        $("#button_1").click(function () {
+            $("#protectedEndPointData").html("Calling EndPoint");
+            $.ajax({
+                headers: {
+                    "Authorization": "Bearer " + access_token
+                },
+                url: "/api/protectedEndPoint",
+                success: function (result) {
+                    $("#protectedEndPointData").html(result);
+                },
+                failure: function(result) {
+                    $("#protectedEndPointData").html("failure");
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

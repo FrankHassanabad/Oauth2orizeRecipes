@@ -1,0 +1,8 @@
+{
+    "name": "oauth2orize-all-grants-client-example",
+    "version": "0.0.0",
+    "dependencies": {
+        "http-proxy": "0.10.3",
+        "connect": "2.8.4"
+    }
+}
