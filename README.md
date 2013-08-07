@@ -24,4 +24,5 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authoriza
 * Access Tokens (includes configurable expiration time)
 * Refresh Tokens
 * REST tokeninfo endPoint for verifying a token is valid.
-
+* Authorization tokens are only useable once
+* SSL/HTTPS usage
