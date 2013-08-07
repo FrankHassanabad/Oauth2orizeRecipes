@@ -19,7 +19,7 @@ node app.js
 Then go here for more on how to use the REST endpoints
 https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authorization-Server-Tests
 
-# Features Of The Authorization Server
+# Features of the Authorization Server
 * All 4 grant types exposed out of the box
 * Access Tokens (includes configurable expiration time)
 * Refresh Tokens
