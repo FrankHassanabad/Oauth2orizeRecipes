@@ -5,8 +5,8 @@ OAuth2 security recipes and examples based on [OAuth2orize](https://github.com/j
 
 The express2 example from [OAuth2orize](https://github.com/jaredhanson/oauth2orize) is a great and simple
 minimal OAuth2 Server in Node.js.  It is an example you can use to get an idea of how to write your
-own OAuth2 Server in Node.js.  The recipes here, in contrast, are more complete but are more complex OAuth2 solutions
-in Node.js.  If you were wanting more after looking at the express2 example from [OAuth2orize](https://github.com/jaredhanson/oauth2orize)
+own OAuth2 Server in Node.js.  The recipes here in contrast are more complete but also a bit more complex.
+If you were wanting more after looking at the express2 example from [OAuth2orize](https://github.com/jaredhanson/oauth2orize)
 then this is the project you want to look at next.
 
 # Installation
