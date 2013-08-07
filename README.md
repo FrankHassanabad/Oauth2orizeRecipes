@@ -1,13 +1,12 @@
 OAuth2orizeRecipes
 ==================
 
-OAuth2 security recipes and examples based on OAuth2orize.
+OAuth2 security recipes and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 
-What is different here from the plain grants example from OAuth2orize?  The plain grants example from
-[OAuth2orize](https://github.com/jaredhanson/oauth2orize) is meant to be a very simple example which show cases the
-bare minimum of an OAuth2 Server in Node.js so that you get an idea of how to write your own.  The recipes here are
-more complete but come with more complexity.  However, if you're looking for a more complete OAuth2 code solution to
-run on Node.js, then this is the place you want to be.
+The plain grants example from [OAuth2orize](https://github.com/jaredhanson/oauth2orize) are meant to be a very simple
+example which show cases the bare minimum of an OAuth2 Server in Node.js so that you get an idea of how to write your own.
+The recipes here are more complete but come with more complexity.  However, if you're looking for a more complete
+OAuth2 code solution to run on Node.js, then this is the place you want to be.
 
 # Installation
 ```
@@ -16,7 +15,7 @@ cd Oauth2orizeRecipes
 npm install
 node app.js
 ```
-Now go here for more on how to use the REST endpoints
+Then go here for more on how to use the REST endpoints
 https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authorization-Server-Tests
 
 # Features Of The Authorization Server
