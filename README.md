@@ -20,9 +20,8 @@ Then go here for more on how to use the REST endpoints
 https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authorization-Server-Tests
 
 # Features Of The Authorization Server
-* Access Tokens (includes configurable expiration)
-* Refresh Tokens
 * All 4 grant types exposed out of the box
-* REST tokeninfo endPoint for verifying a token is valid.  This is similar to Google's tokeninfo endpoint and is useful
-for token validations between the Resource Server and the Authorization Server
+* Access Tokens (includes configurable expiration time)
+* Refresh Tokens
+* REST tokeninfo endPoint for verifying a token is valid.
 
