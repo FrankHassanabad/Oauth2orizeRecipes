@@ -188,7 +188,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken,
             if (err) {
                 return done(err);
             }
-            return done(null, token, {expires_in: config.token.expiresIn});
+            return done(null, token, null, {expires_in: config.token.expiresIn});
         });
     });
 }));
@@ -211,21 +211,23 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken,
  * first, and rendering the `dialog` view.
  */
 exports.authorization = [
-  login.ensureLoggedIn(),
-  server.authorization(function(clientID, redirectURI, scope, done) {
-    db.clients.findByClientId(clientID, function(err, client) {
-      if (err) { return done(err); }
-      client.scope = scope;
-      // WARNING: For security purposes, it is highly advisable to check that
-      //          redirectURI provided by the client matches one registered with
-      //          the server.  For simplicity, this example does not.  You have
-      //          been warned.
-      return done(null, client, redirectURI);
-    });
-  }),
-  function(req, res){
-    res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
-  }
+    login.ensureLoggedIn(),
+    server.authorization(function (clientID, redirectURI, scope, done) {
+        db.clients.findByClientId(clientID, function (err, client) {
+            if (err) {
+                return done(err);
+            }
+            client.scope = scope;
+            // WARNING: For security purposes, it is highly advisable to check that
+            //          redirectURI provided by the client matches one registered with
+            //          the server.  For simplicity, this example does not.  You have
+            //          been warned.
+            return done(null, client, redirectURI);
+        });
+    }),
+    function (req, res) {
+        res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+    }
 ];
 
 /**
@@ -237,8 +239,8 @@ exports.authorization = [
  * a response.
  */
 exports.decision = [
-  login.ensureLoggedIn(),
-  server.decision()
+    login.ensureLoggedIn(),
+    server.decision()
 ];
 
 /**
