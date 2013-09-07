@@ -47,10 +47,9 @@ app.get('/api/tokeninfo', token.info);
 //From time to time we need to clean up any expired tokens
 //in the database
 setInterval(function () {
-    console.log("Checking for expired tokens");
     db.accessTokens.removeExpired(function(err) {
         if(err) {
-            console.log("Error removing expired tokens");
+            console.error("Error removing expired tokens");
         }
     });
 }, config.db.timeToCheckExpiredTokens * 1000);
