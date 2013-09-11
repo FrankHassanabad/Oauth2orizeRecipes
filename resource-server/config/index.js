@@ -1,23 +1,26 @@
+
 /**
- * The client id and the client secret
- * @type {{clientID: string, clientSecret: string}}
+ * The client id and the client secret.  I'm using a
+ * "trusted" client so that I don't get the "decision"
+ * screen.
  */
 exports.client = {
-    clientID: "abc123",
-    clientSecret: "ssh-secret"
+    clientID: "trustedClient",
+    clientSecret: "ssh-otherpassword"
 };
 
 //TODO Compact this more, and document it better
 /**
  * The Authorization server's location, port number, and the token info end point
- * @type {{host: string, port: string, url: string, tokenURL: string, tokeninfoURL: string}}
  */
 exports.authorization = {
     host: "localhost",
     port: "3000",
     url: "https://localhost:3000/",
     tokenURL: "oauth/token",
-    tokeninfoURL: "/api/tokeninfo?access_token="
+    authorizeURL: "https://localhost:3000/dialog/authorize",
+    tokeninfoURL: "https://localhost:3000/api/tokeninfo?access_token=",
+    redirectURL: "https://localhost:4000/receivetoken"
 };
 
 /**
@@ -30,4 +33,14 @@ exports.authorization = {
  */
 exports.db = {
     timeToCheckExpiredTokens: 3600
+};
+
+/**
+ * Session configuration
+ *
+ * secret - The session secret that you should change to what you want
+ */
+exports.session = {
+    //TODO You need to change this secret to something that you choose for your secret
+    secret: "A Secret That Should Be Changed"
 };

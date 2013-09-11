@@ -1,16 +1,30 @@
-var express = require('express')
+var config = require('./config')
+    , express = require('express')
     , passport = require('passport')
     , site = require('./site')
     , oauth2 = require('./oauth2')
     , user = require('./user')
     , client = require('./client')
-    , utils = require('./utils')
     , token = require('./token')
-    , http = require('http')
     , https = require('https')
     , fs = require('fs')
-    , config = require('./config')
     , db = require('./db');
+
+//Pull in the mongo store if we're configured to use it
+//else pull in MemoryStore
+var sessionStorage;
+if (config.session.type === 'MongoStore') {
+    var MongoStore = require('connect-mongo')(express);
+    sessionStorage = new MongoStore({
+        db: config.session.dbName
+    });
+} else if(config.session.type === 'MemoryStore') {
+    var MemoryStore = express.session.MemoryStore;
+    sessionStorage = new MemoryStore();
+} else {
+    //We have no idea here
+    throw new Error("Within config/index.js the session.type is unknown: " + config.session.type )
+}
 
 // Express configuration
 var app = express();
@@ -18,7 +32,15 @@ app.set('view engine', 'ejs');
 app.use(express.logger());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
-app.use(express.session({ secret: utils.uid(256) }));
+
+//Session Configuration
+app.use(express.session({
+    secret: config.session.secret,
+    store: sessionStorage,
+    key: "authorization.sid",
+    cookie: {maxAge: config.session.maxAge }
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);

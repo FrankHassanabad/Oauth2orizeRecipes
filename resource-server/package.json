@@ -1,6 +1,6 @@
 {
     "name": "oauth2orize-resource-server",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "dependencies": {
         "express": "3.x.x",
         "ejs": "0.7.x",
@@ -9,6 +9,7 @@
         "passport-oauth2-client-password": "0.1.x",
         "passport-http-bearer": "0.2.x",
         "connect-ensure-login": "0.1.x",
-        "oauth": "0.9.x"
+        "oauth": "0.9.x",
+        "request": "2.27.x"
     }
 }
