@@ -5,7 +5,8 @@ var express = require('express')
     , http = require('http')
     , https = require('https')
     , config = require('./config')
-    , db = require('./db');
+    , db = require('./db')
+    , sso = require('./sso');
 
 // Express configuration
 var app = express();
@@ -13,7 +14,7 @@ app.set('view engine', 'ejs');
 app.use(express.logger());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
-app.use(express.session({ secret: 'client keyboard cat' }));
+app.use(express.session({ secret: config.session.secret }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -27,7 +28,9 @@ app.get('/', site.index);
 app.get('/login', site.loginForm);
 app.post('/login', site.login);
 app.get('/info', site.info);
+app.get('/infosso', site.infosso);
 app.get('/api/protectedEndPoint', site.protectedEndPoint);
+app.get('/receivetoken', sso.receivetoken);
 
 //From time to time we need to clean up any expired tokens
 //in the database

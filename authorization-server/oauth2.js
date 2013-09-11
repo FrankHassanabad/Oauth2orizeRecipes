@@ -217,7 +217,9 @@ exports.authorization = [
             if (err) {
                 return done(err);
             }
-            client.scope = scope;
+            if(client) {
+                client.scope = scope;
+            }
             // WARNING: For security purposes, it is highly advisable to check that
             //          redirectURI provided by the client matches one registered with
             //          the server.  For simplicity, this example does not.  You have
@@ -225,8 +227,21 @@ exports.authorization = [
             return done(null, client, redirectURI);
         });
     }),
-    function (req, res) {
-        res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+    function (req, res, next) {
+        //Render the decision dialog if the client isn't a trusted client
+        //TODO Make a mechanism so that if this isn't a trusted client, the user can recorded that they have consented
+        //but also make a mechanism so that if the user revokes access to any of the clients then they will have to
+        //re-consent.
+        db.clients.findByClientId(req.query.client_id, function(err, client) {
+            if(!err && client && client.trustedClient && client.trustedClient === true) {
+                //This is how we short call the decision like the dialog below does
+                server.decision({loadTransaction: false}, function(req, callback) {
+                    callback(null, { allow: true });
+                })(req, res, next);
+            } else {
+                res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+            }
+        });
     }
 ];
 

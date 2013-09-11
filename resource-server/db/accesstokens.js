@@ -39,6 +39,7 @@ exports.delete = function(accessToken, done) {
     return done(null);
 }
 
+//TODO Document this
 exports.removeExpired = function(done) {
     var tokensToDelete = [];
     for (var key in tokens) {

@@ -1,4 +1,4 @@
-var passport = require('passport')
+var passport = require('passport');
 
 /**
  * Simple informational end point, if you want to get information
