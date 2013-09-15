@@ -19,6 +19,15 @@ describe('Grant Type Authorization Code', function () {
     //set the time out to be 20 seconds
     this.timeout(20000);
     describe('', function () {
+        it('should redirect when trying to get authorization without logging in', function (done) {
+            request.get('https://localhost:3000/logout');
+            helper.getAuthorization({},
+                function(error, response, body) {
+                    assert.equal(-1, response.req.path.indexOf("/?code="));
+                    done();
+                }
+            )
+        });
         it('should work with the authorization_code asking for a refresh token', function (done) {
             //Log into the OAuth2 server as bob
             helper.login(

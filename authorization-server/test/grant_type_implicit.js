@@ -19,6 +19,15 @@ describe('Grant Type Implicit', function () {
     //set the time out to be 20 seconds
     this.timeout(20000);
     describe('', function () {
+        it('should redirect when trying to get authorization without logging in', function (done) {
+            request.get('https://localhost:3000/logout');
+            helper.getAuthorization({responseType: 'token'},
+                function(error, response, body) {
+                    assert.equal(-1, response.request.href.indexOf("/#access_token="));
+                    done();
+                }
+            )
+        });
         it('should work with the implicit asking for a access token', function (done) {
             //Log into the OAuth2 server as bob
             helper.login(
