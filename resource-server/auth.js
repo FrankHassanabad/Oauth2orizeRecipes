@@ -1,6 +1,5 @@
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy
-    , OAuth2 = require('oauth').OAuth2
     , db = require('./db')
     , config = require('./config')
     , BearerStrategy = require('passport-http-bearer').Strategy
@@ -26,37 +25,44 @@ var passport = require('passport')
  */
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        //TODO Replace this with request calls from request = require('request');
-        var oauth2 = new OAuth2(config.client.clientID, config.client.clientSecret, config.authorization.url, null, config.authorization.tokenURL, null);
-        oauth2.getOAuthAccessToken('', {'grant_type': 'password', 'username': username, 'password': password, 'scope': 'offline_access'},
-            function (e, access_token, refresh_token, results) {
-                if (access_token) {
-                    //TODO scopes
-                    var expirationDate = null;
-                    if (results.expires_in) {
-                        expirationDate = new Date(new Date().getTime() + (results.expires_in * 1000));
+        request.post('https://localhost:3000/oauth/token', {
+            form: {
+                grant_type: 'password',
+                username: username,
+                password: password,
+                scope: 'offline_access'
+            },
+            headers: {
+                Authorization: 'Basic ' + new Buffer(config.client.clientID + ':' + config.client.clientSecret).toString('base64')
+            }
+        }, function (error, response, body) {
+            var jsonResponse = JSON.parse(body);
+            if (response.statusCode === 200 && jsonResponse.access_token) {
+                //TODO scopes
+                var expirationDate = null;
+                if (jsonResponse.expires_in) {
+                    expirationDate = new Date(new Date().getTime() + (jsonResponse.expires_in * 1000));
+                }
+                var saveAccessToken = function (err) {
+                    if (err) {
+                        return done(null, false);
                     }
-                    var saveAccessToken = function (err) {
+                    return done(null, {accessToken: jsonResponse.access_token, refreshToken: jsonResponse.refresh_token});
+                };
+                if (jsonResponse.refresh_token) {
+                    db.refreshTokens.save(jsonResponse.refresh_token, config.client.clientID, null, function (err) {
                         if (err) {
                             return done(null, false);
                         }
-                        return done(null, {accessToken: access_token, refreshToken: refresh_token});
-                    };
-                    if (refresh_token) {
-                        db.refreshTokens.save(refresh_token, config.client.clientID, null, function (err) {
-                            if (err) {
-                                return done(null, false);
-                            }
-                            db.accessTokens.save(access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-                        });
-                    } else {
-                        db.accessTokens.save(access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-                    }
+                        db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+                    });
                 } else {
-                    return done(null, false);
+                    db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
                 }
+            } else {
+                return done(null, false);
             }
-        );
+        });
     }
 ));
 

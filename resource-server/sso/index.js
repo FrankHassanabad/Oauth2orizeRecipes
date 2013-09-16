@@ -1,5 +1,6 @@
 var config = require('../config')
-    , request = require('request');
+    , request = require('request')
+    , db = require('../db');
 
 /**
  * https://localhost:4000/(any end point that is part of your API)
@@ -41,7 +42,12 @@ exports.ensureSingleSignOn = function() {
  * https://localhost:4000/receivetoken?code=(authorization code)
  *
  * This is part of the single sign on using the OAuth2 Authorization Code grant type.  This is the
- * redirect from the authorization server.
+ * redirect from the authorization server.  If you send in a bad authorization code you will get the
+ * response code of 400 and the message of
+ * {
+ *     "error": "invalid_grant",
+ *     "error_description": "invalid code"
+ * }
  * @param req The request which should have the parameter query of ?code=(authorization code)
  * @param res We use this to redirect to the original URL that needed to authenticate with the
  * authorization server.
@@ -60,12 +66,36 @@ exports.receivetoken = function(req, res) {
         },
         function (error, response, body) {
             var jsonResponse = JSON.parse(body);
-            //TODO Check for errors (even though there shouldn't be any, still good to check for them)
-            //TODO Store in the local database (otherwise we end up making an additional unnecessary end point call later)
-            req.session.accessToken = jsonResponse.access_token;
-            req.session.refreshToken = jsonResponse.refresh_token;
-            req.session.isAuthorized = true;
-            res.redirect(req.session.redirectURL);
+            if(response.statusCode === 200 && jsonResponse.access_token) {
+                req.session.accessToken = jsonResponse.access_token;
+                req.session.refreshToken = jsonResponse.refresh_token;
+                req.session.isAuthorized = true;
+
+                var expirationDate = null;
+                if (jsonResponse.expires_in) {
+                    expirationDate = new Date(new Date().getTime() + (jsonResponse.expires_in * 1000));
+                }
+                var saveAccessToken = function (err) {
+                    if (err) {
+                        res.send(500);
+                    }
+                    res.redirect(req.session.redirectURL);
+                };
+                if (jsonResponse.refresh_token) {
+                    db.refreshTokens.save(jsonResponse.refresh_token, config.client.clientID, null, function (err) {
+                        if (err) {
+                            res.send(500);
+                        }
+                        db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+                    });
+                } else {
+                    db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+                }
+            } else {
+                //Error, someone is trying to put a bad authorization code in
+                res.status(response.statusCode);
+                res.send(response.body);
+            }
         }
     );
 };
