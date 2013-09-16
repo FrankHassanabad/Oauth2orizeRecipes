@@ -1,4 +1,4 @@
-properties = require('./properties.js').properties
+properties = require('./properties.js').properties;
 requestLib = require('request');
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
@@ -41,7 +41,7 @@ exports.request = {
     },
     /**
      * Posts to the OAuth2 Authorization server the code to get the access token
-     * @param code The Authorization code
+     * @param scope The optinal scope to use
      * @param next Standard forward to the next function call
      */
     postOAuthPassword: function (scope, next) {
@@ -60,7 +60,7 @@ exports.request = {
     },
     /**
      * Posts to the OAuth2 Authorization server the code to get the access token
-     * @param code The Authorization code
+     * @param scope The optionally scope to use
      * @param next Standard forward to the next function call
      */
     postOAuthClient: function (scope, next) {
