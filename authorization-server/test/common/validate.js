@@ -44,15 +44,15 @@ validate.validateAccessRefreshToken = function (headers, body) {
 };
 
 /**
- * Validates an access token.  An access token should be in the form of:
+ * Validates a user json message. It validates against this exact
+ * user json message in the form of:
  * {
- *     access_token: (some 256 characters)
- *     refresh_token: (some 256 characters)
- *     expires_in: 3600
- *     token_type: "bearer"
+ *     "user_d": "1"
+ *     "name": "Bob Smith"
+ *     "token_type": "bearer"
  * }
  * @param headers The http headers
- * @param body The body of the message which contains the access token and refresh token
+ * @param body The body of the message which contains the user json message
  */
 validate.validateUserJson = function (headers, body) {
     var jsonResponse = JSON.parse(body);
@@ -60,6 +60,26 @@ validate.validateUserJson = function (headers, body) {
     assert.equal(Object.keys(jsonResponse).length, 3);
     assert.equal(jsonResponse.user_id, "1");
     assert.equal(jsonResponse.name, "Bob Smith");
+    assert.equal(jsonResponse.scope, "*");
+};
+
+/**
+ * Validates a client json message. It validates against this exact
+ * client json message in the form of:
+ * {
+ *     "client_id": "3"
+ *     "name": "Samplr3"
+ *     "scope": "*"
+ * }
+ * @param headers The http headers
+ * @param body The body of the message which contains the client json message
+ */
+validate.validateClientJson = function (headers, body) {
+    var jsonResponse = JSON.parse(body);
+    assert.equal(headers["content-type"], "application/json; charset=utf-8");
+    assert.equal(Object.keys(jsonResponse).length, 3);
+    assert.equal(jsonResponse.client_id, "3");
+    assert.equal(jsonResponse.name, "Samplr3");
     assert.equal(jsonResponse.scope, "*");
 };
 
