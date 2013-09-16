@@ -28,7 +28,7 @@ exports.find = function (key, done) {
  * @param redirectURI The redirect URI of where to send access tokens once exchanged (required)
  * @param scope The scope (optional)
  * @param done Calls this with null always
- * @param returns this with null
+ * @returns returns this with null
  */
 exports.save = function (code, clientID, redirectURI, userID, scope, done) {
     codes[code] = { clientID: clientID, redirectURI: redirectURI, userID: userID, scope: scope };
@@ -43,5 +43,5 @@ exports.save = function (code, clientID, redirectURI, userID, scope, done) {
 exports.delete = function(key, done) {
     delete codes[key];
     return done(null);
-}
+};
 
