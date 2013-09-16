@@ -2,7 +2,7 @@ var passport = require('passport')
     , login = require('connect-ensure-login')
     , config = require('./config')
     , request = require('request')
-    , sso = require('./sso')
+    , sso = require('./sso');
 
 /**
  * https://localhost:4000/
