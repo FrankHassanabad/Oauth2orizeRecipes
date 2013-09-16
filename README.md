@@ -19,8 +19,10 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authoriza
 
 # Features of the Authorization Server
 * All 4 grant types exposed out of the box
-* Access Tokens (includes configurable expiration time)
-* Refresh Tokens
+* Access/Refresh Tokens
+* Configurable expriation times on tokens
+* Single Sign on Example
+* Example of trusted clients
 * REST tokeninfo endPoint for verifying a token is valid.
 * Authorization tokens are only useable once
 * SSL/HTTPS usage
