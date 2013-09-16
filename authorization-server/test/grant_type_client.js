@@ -22,12 +22,12 @@ describe('Grant Type Client', function () {
         it('should work with asking for an access token', function (done) {
             helper.postOAuthClient({},
                 function (error, response, body) {
-                    validate.validateAccessToken(response.headers, body);
+                    validate.validateAccessToken(response, body);
                     var tokens = JSON.parse(body);
                     //Get the user info
                     helper.getClientInfo(tokens.access_token,
                         function (error, response, body) {
-                            validate.validateClientJson(response.headers, body);
+                            validate.validateClientJson(response, body);
                             done();
                         }
                     );
@@ -38,12 +38,12 @@ describe('Grant Type Client', function () {
             //test it with no off line access
             helper.postOAuthClient(undefined,
                 function(error, response, body) {
-                    validate.validateAccessToken(response.headers, body);
+                    validate.validateAccessToken(response, body);
                     var tokens = JSON.parse(body);
                     //Get the user info
                     helper.getClientInfo(tokens.access_token,
                         function(error, response, body) {
-                            validate.validateClientJson(response.headers, body);
+                            validate.validateClientJson(response, body);
                             done();
                         }
                     );

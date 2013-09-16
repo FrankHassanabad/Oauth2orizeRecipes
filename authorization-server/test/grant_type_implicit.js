@@ -46,7 +46,7 @@ describe('Grant Type Implicit', function () {
                             //Get the user info
                             helper.getUserInfo(accessToken,
                                 function(error, response, body) {
-                                    validate.validateUserJson(response.headers, body);
+                                    validate.validateUserJson(response, body);
                                     done();
                                 }
                             );

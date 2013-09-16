@@ -22,21 +22,21 @@ describe('Grant Type Password', function () {
         it('should work with asking for an access token and refrsh token', function (done) {
             helper.postOAuthPassword('offline_access',
                 function (error, response, body) {
-                    validate.validateAccessRefreshToken(response.headers, body);
+                    validate.validateAccessRefreshToken(response, body);
                     var tokens = JSON.parse(body);
                     //Get the user info
                     helper.getUserInfo(tokens.access_token,
                         function (error, response, body) {
-                            validate.validateUserJson(response.headers, body);
+                            validate.validateUserJson(response, body);
                         }
                     );
                     //Get another valid access token from the refresh token
                     helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
-                        validate.validateAccessToken(response.headers, body);
+                        validate.validateAccessToken(response, body);
                     });
                     //Get another valid access token from the refresh token
                     helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
-                        validate.validateAccessToken(response.headers, body);
+                        validate.validateAccessToken(response, body);
                         done();
                     });
                 }
@@ -46,12 +46,12 @@ describe('Grant Type Password', function () {
             //test it with no off line access
             helper.postOAuthPassword(undefined,
                 function(error, response, body) {
-                    validate.validateAccessToken(response.headers, body);
+                    validate.validateAccessToken(response, body);
                     var tokens = JSON.parse(body);
                     //Get the user info
                     helper.getUserInfo(tokens.access_token,
                         function(error, response, body) {
-                            validate.validateUserJson(response.headers, body);
+                            validate.validateUserJson(response, body);
                             done();
                         }
                     );
