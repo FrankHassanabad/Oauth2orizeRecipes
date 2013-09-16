@@ -14,7 +14,7 @@ cd Oauth2orizeRecipes/resource-server
 npm install
 node app.js
 ```
-Go here for how to use the REST API
+Go here for how to use the REST API  
 https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authorization-Server-Tests
 
 # Features of the Authorization Server
