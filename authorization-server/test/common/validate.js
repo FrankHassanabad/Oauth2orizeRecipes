@@ -100,4 +100,13 @@ validate.validateInvalidCodeError = function (headers, body) {
     assert.equal(jsonResponse.error_description, "invalid code");
 };
 
+/**
+ * Given an access code, this will validate its length
+ * @param code The code to validate the access code against the
+ * correct length.
+ */
+validate.validateAuthorizationCode = function (code) {
+    assert.equal(code.length, 16);
+};
+
 exports.validate = validate;

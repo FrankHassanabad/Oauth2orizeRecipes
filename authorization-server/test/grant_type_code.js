@@ -38,6 +38,7 @@ describe('Grant Type Authorization Code', function () {
                             //Assert that we have the ?code in our URL
                             assert.equal(response.req.path.indexOf("/?code="), 0);
                             var code = response.req.path.slice(7, response.req.path.length);
+                            validate.validateAuthorizationCode(code);
                             //Get the token
                             helper.postOAuthCode(code,
                                 function (error, response, body) {
@@ -82,6 +83,7 @@ describe('Grant Type Authorization Code', function () {
                             //Assert that we have the ?code in our URL
                             assert.equal(response.req.path.indexOf("/?code="), 0);
                             var code = response.req.path.slice(7, response.req.path.length);
+                            validate.validateAuthorizationCode(code);
                             //Get the token
                             helper.postOAuthCode(code,
                                 function (error, response, body) {
