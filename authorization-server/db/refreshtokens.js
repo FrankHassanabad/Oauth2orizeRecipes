@@ -1,5 +1,5 @@
-//The access token and optionally refresh token.
-//You will use these to access your end point data through the means outlined
+//The refresh tokens.
+//You will use these to get access tokens to access your end point data through the means outlined
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
 //(http://tools.ietf.org/html/rfc6750)
 
@@ -27,7 +27,7 @@ exports.find = function(key, done) {
  * @param clientID The client ID (required)
  * @param scope The scope (optional)
  * @param done Calls this with null always
- * @param returns this with null
+ * @returns returns this with null
  */
 exports.save = function(token, userID, clientID, scope, done) {
     tokens[token] = { userID: userID, clientID: clientID, scope: scope};
@@ -42,4 +42,4 @@ exports.save = function(token, userID, clientID, scope, done) {
 exports.delete = function(key, done) {
     delete tokens[key];
     return done(null);
-}
+};

@@ -4,7 +4,7 @@
  *
  * id: (A unique numeric id of your client application )
  * name: (The name of your client application)
- * clientId: (A unique id of your client application
+ * clientId: (A unique id of your client application)
  * clientSecret: (A unique password(ish) secret that is _best not_ shared with anyone but your client
  *     application and the authorization server.
  *
@@ -43,14 +43,14 @@ var clients = [
  * @param done The function to call next
  * @returns The client if found, otherwise returns null
  */
-exports.find = function(id, done) {
-  for (var i = 0, len = clients.length; i < len; i++) {
-    var client = clients[i];
-    if (client.id === id) {
-      return done(null, client);
+exports.find = function (id, done) {
+    for (var i = 0, len = clients.length; i < len; i++) {
+        var client = clients[i];
+        if (client.id === id) {
+            return done(null, client);
+        }
     }
-  }
-  return done(null, null);
+    return done(null, null);
 };
 
 /**
@@ -60,12 +60,12 @@ exports.find = function(id, done) {
  * @param done The function to call next
  * @returns The client if found, otherwise returns null
  */
-exports.findByClientId = function(clientId, done) {
-  for (var i = 0, len = clients.length; i < len; i++) {
-    var client = clients[i];
-    if (client.clientId === clientId) {
-      return done(null, client);
+exports.findByClientId = function (clientId, done) {
+    for (var i = 0, len = clients.length; i < len; i++) {
+        var client = clients[i];
+        if (client.clientId === clientId) {
+            return done(null, client);
+        }
     }
-  }
-  return done(null, null);
+    return done(null, null);
 };
