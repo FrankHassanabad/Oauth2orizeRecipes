@@ -19,7 +19,7 @@ describe('Grant Type Password', function () {
     //set the time out to be 20 seconds
     this.timeout(20000);
     describe('', function () {
-        it('should work with the implicit asking for a access token', function (done) {
+        it('should work with asking for an access token and refrsh token', function (done) {
             helper.postOAuthPassword('offline_access',
                 function (error, response, body) {
                     validate.validateAccessRefreshToken(response.headers, body);
