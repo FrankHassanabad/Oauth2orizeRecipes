@@ -19,7 +19,18 @@ app.use(express.session({ secret: config.session.secret }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
-app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+
+// Catch all for error messages.  Instead of a stack
+// trace, this will log the json of the error message
+// to the browser and pass along the status with it
+app.use(function(err, req, res, next) {
+    if(err) {
+        res.status(err.status);
+        res.json(err);
+    } else {
+        next();
+    }
+});
 
 // Passport configuration
 require('./auth');
