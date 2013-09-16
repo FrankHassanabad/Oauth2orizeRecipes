@@ -3,13 +3,17 @@
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
 //(http://tools.ietf.org/html/rfc6750)
 
+/**
+ * Tokens in-memory data structure which stores all of the access tokens
+ */
 var tokens = { };
 
 /**
- * Finds an access token and passes it if it exists, otherwise
- * it passes null
- * @param accessToken The accessToken to find
- * @param done Passes the token or null
+ * Returns an access token if it finds one, otherwise returns
+ * null if one is not found.
+ * @param key The key to the access token
+ * @param done The function to call next
+ * @returns The access token if found, otherwise returns null
  */
 exports.find = function(accessToken, done) {
     var token = tokens[accessToken];
@@ -17,9 +21,9 @@ exports.find = function(accessToken, done) {
 };
 
 /**
- * Saves a access token, refresh token, client id, and scope.
+ * Saves a access token, expiration date, client id, and scope.
  * @param accessToken The access token (required)
- * @param refreshToken The refresh token (optional)
+ * @param expirationDate The expiration of the access token that is a javascript Date() object
  * @param clientID The client ID (required)
  * @param scope The scope (optional)
  * @param done Calls this with null
@@ -39,7 +43,12 @@ exports.delete = function(accessToken, done) {
     return done(null);
 }
 
-//TODO Document this
+/**
+ * Removes expired access tokens.  It does this by looping through them all
+ * and then removing the expired ones it finds.
+ * @param done returns this when done.
+ * @returns done
+ */
 exports.removeExpired = function(done) {
     var tokensToDelete = [];
     for (var key in tokens) {
