@@ -59,6 +59,25 @@ exports.request = {
             }, next)
     },
     /**
+     * Posts to the OAuth2 Authorization server the code to get the access token
+     * @param code The Authorization code
+     * @param next Standard forward to the next function call
+     */
+    postOAuthClient: function (scope, next) {
+        requestLib.post(
+            properties.token, {
+                form: {
+                    grant_type: 'client_credentials',
+                    username: properties.username,
+                    password: properties.password,
+                    scope: scope
+                },
+                headers: {
+                    Authorization: 'Basic ' + new Buffer(properties.clientId + ':' + properties.clientSecret).toString('base64')
+                }
+            }, next)
+    },
+    /**
      * Gets a new access token from the OAuth2 authorization server
      * @param refreshToken The refresh token to get the new access token from
      * @param next Standard forward to the next function call
@@ -102,11 +121,23 @@ exports.request = {
      */
     getUserInfo: function (accessToken, next) {
         requestLib.get({
-                url: 'https://localhost:3000/api/userinfo',
-                headers: {
-                    Authorization: 'Bearer ' + accessToken
-                }
+            url: properties.userinfo,
+            headers: {
+                Authorization: 'Bearer ' + accessToken
             }
-            , next);
+        }, next);
+    },
+    /**
+     * Gets the client info from the OAuth2 authorization server
+     * @param accessToken The access token to get the client info from
+     * @param next Standard forward to the next function call
+     */
+    getClientInfo: function (accessToken, next) {
+        requestLib.get({
+            url: properties.clientinfo,
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        }, next);
     }
 };

@@ -10,5 +10,7 @@ exports.properties = {
     clientId: 'trustedClient',
     clientSecret: 'ssh-otherpassword',
     token: 'https://localhost:3000/oauth/token',
-    authorization: 'https://localhost:3000/dialog/authorize'
+    authorization: 'https://localhost:3000/dialog/authorize',
+    userinfo: 'https://localhost:3000/api/userinfo',
+    clientinfo: 'https://localhost:3000/api/clientinfo'
 };
