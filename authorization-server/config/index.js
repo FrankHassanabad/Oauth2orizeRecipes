@@ -50,7 +50,4 @@ exports.session = {
     //TODO You need to change this secret to something that you choose for your secret
     secret: "A Secret That Should Be Changed",
     dbName: "Session"
-}
-
-//todo Add configuration for the size of the Authorization tokens
-//todo Add configuration for the size of the access tokens
+};
