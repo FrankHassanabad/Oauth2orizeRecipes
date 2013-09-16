@@ -28,7 +28,7 @@ var server = oauth2orize.createServer();
  * which is bound to these values, and will be exchanged for an access token.
  */
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
-    var code = utils.uid(16);
+    var code = utils.uid(config.token.authorizationCodeLength);
     db.authorizationCodes.save(code, client.id, redirectURI, user.id, client.scope, function (err) {
         if (err) {
             return done(err);
@@ -46,7 +46,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
  * which is bound to these values.
  */
 server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
-    var token = utils.uid(256);
+    var token = utils.uid(config.token.accessTokenLength);
     db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, client.scope, function (err) {
         if (err) {
             return done(err);
@@ -81,7 +81,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
             if (err) {
                 return done(err);
             }
-            var token = utils.uid(256);
+            var token = utils.uid(config.token.accessTokenLength);
             db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
                 if (err) {
                     return done(err);
@@ -90,7 +90,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
                 //I mimic openid connect's offline scope to determine if we send
                 //a refresh token or not
                 if (authCode.scope && authCode.scope.indexOf("offline_access") === 0) {
-                    refreshToken = utils.uid(256);
+                    refreshToken = utils.uid(config.token.refreshTokenLength);
                     db.refreshTokens.save(refreshToken, authCode.userID, authCode.clientID, authCode.scope, function (err) {
                         if (err) {
                             return done(err);
@@ -124,7 +124,7 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
         if (password !== user.password) {
             return done(null, false);
         }
-        var token = utils.uid(256);
+        var token = utils.uid(config.token.accessTokenLength);
         db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, scope, function (err) {
             if (err) {
                 return done(err);
@@ -133,7 +133,7 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
             //I mimic openid connect's offline scope to determine if we send
             //a refresh token or not
             if (scope && scope.indexOf("offline_access") === 0) {
-                refreshToken = utils.uid(256);
+                refreshToken = utils.uid(config.token.refreshTokenLength);
                 db.refreshTokens.save(refreshToken, user.id, client.id, scope, function (err) {
                     if (err) {
                         return done(err);
@@ -155,7 +155,7 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
  * application issues an access token on behalf of the client who authorized the code.
  */
 server.exchange(oauth2orize.exchange.clientCredentials(function(client, scope, done) {
-    var token = utils.uid(256);
+    var token = utils.uid(config.token.accessTokenLength);
     //Pass in a null for user id since there is no user when using this grant type
     db.accessTokens.save(token, config.token.calculateExpirationDate(), null, client.id, scope, function (err) {
         if (err) {
@@ -183,7 +183,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken,
         if (client.id !== authCode.clientID) {
             return done(null, false);
         }
-        var token = utils.uid(256);
+        var token = utils.uid(config.token.accessTokenLength);
         db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
             if (err) {
                 return done(err);
