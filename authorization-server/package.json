@@ -1,20 +1,23 @@
 {
-  "name": "oauth2orize-authorization-server",
-  "version": "2.1.0",
-  "dependencies": {
-    "express": "3.x.x",
-    "ejs": "0.7.x",
-    "oauth2orize": "0.x.x",
-    "passport": "~0.1.12",
-    "passport-local": "0.1.x",
-    "passport-http": "0.2.x",
-    "passport-http-bearer": "0.2.x",
-    "passport-oauth2-client-password": "0.1.x",
-    "connect-ensure-login": "0.1.x",
-    "connect-mongo": "0.3.x"
-  },
-  "devDependencies": {
-      "mocha": "1.12.x",
-      "request": "2.27.x"
-  }
+    "name": "oauth2orize-authorization-server",
+    "version": "2.1.0",
+    "dependencies": {
+        "express": "3.x.x",
+        "ejs": "0.7.x",
+        "oauth2orize": "0.x.x",
+        "passport": "~0.1.12",
+        "passport-local": "0.1.x",
+        "passport-http": "0.2.x",
+        "passport-http-bearer": "0.2.x",
+        "passport-oauth2-client-password": "0.1.x",
+        "connect-ensure-login": "0.1.x",
+        "connect-mongo": "0.3.x"
+    },
+    "scripts": {
+        "test": "mocha"
+    },
+    "devDependencies": {
+        "mocha": "1.12.x",
+        "request": "2.27.x"
+    }
 }
