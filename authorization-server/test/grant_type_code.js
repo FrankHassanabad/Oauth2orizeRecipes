@@ -23,7 +23,7 @@ describe('Grant Type Authorization Code', function () {
             request.get('https://localhost:3000/logout');
             helper.getAuthorization({},
                 function(error, response, body) {
-                    assert.equal(-1, response.req.path.indexOf("/?code="));
+                    assert.equal(response.req.path.indexOf("/?code="), -1);
                     done();
                 }
             )
@@ -36,7 +36,7 @@ describe('Grant Type Authorization Code', function () {
                     helper.getAuthorization({scope: 'offline_access'},
                         function (error, response, body) {
                             //Assert that we have the ?code in our URL
-                            assert.equal(0, response.req.path.indexOf("/?code="));
+                            assert.equal(response.req.path.indexOf("/?code="), 0);
                             var code = response.req.path.slice(7, response.req.path.length);
                             //Get the token
                             helper.postOAuthCode(code,
@@ -80,7 +80,7 @@ describe('Grant Type Authorization Code', function () {
                     helper.getAuthorization({},
                         function (error, response, body) {
                             //Assert that we have the ?code in our URL
-                            assert.equal(0, response.req.path.indexOf("/?code="));
+                            assert.equal(response.req.path.indexOf("/?code="), 0);
                             var code = response.req.path.slice(7, response.req.path.length);
                             //Get the token
                             helper.postOAuthCode(code,
