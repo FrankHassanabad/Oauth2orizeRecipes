@@ -20,7 +20,7 @@ describe('Grant Type Authorization Code', function () {
     this.timeout(20000);
     describe('', function () {
         it('should redirect when trying to get authorization without logging in', function (done) {
-            request.get('https://localhost:3000/logout');
+            request.get(properties.logout);
             helper.getAuthorization({},
                 function(error, response, body) {
                     assert.equal(response.req.path.indexOf("/?code="), -1);

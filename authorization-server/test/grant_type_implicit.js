@@ -20,7 +20,7 @@ describe('Grant Type Implicit', function () {
     this.timeout(20000);
     describe('', function () {
         it('should redirect when trying to get authorization without logging in', function (done) {
-            request.get('https://localhost:3000/logout');
+            request.get(properties.logout);
             helper.getAuthorization({responseType: 'token'},
                 function(error, response, body) {
                     assert.equal(-1, response.request.href.indexOf("/#access_token="));

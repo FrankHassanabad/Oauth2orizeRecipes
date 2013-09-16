@@ -12,5 +12,6 @@ exports.properties = {
     token: 'https://localhost:3000/oauth/token',
     authorization: 'https://localhost:3000/dialog/authorize',
     userinfo: 'https://localhost:3000/api/userinfo',
-    clientinfo: 'https://localhost:3000/api/clientinfo'
+    clientinfo: 'https://localhost:3000/api/clientinfo',
+    logout: 'https://localhost:3000/logout'
 };
