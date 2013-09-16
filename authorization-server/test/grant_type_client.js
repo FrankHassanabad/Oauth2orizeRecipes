@@ -28,10 +28,13 @@ describe('Grant Type Client', function () {
                     helper.getClientInfo(tokens.access_token,
                         function (error, response, body) {
                             validate.validateClientJson(response.headers, body);
+                            done();
                         }
                     );
                 }
             );
+        });
+        it('should work with a scope of undefined', function (done) {
             //test it with no off line access
             helper.postOAuthClient(undefined,
                 function(error, response, body) {

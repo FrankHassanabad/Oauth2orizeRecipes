@@ -37,9 +37,12 @@ describe('Grant Type Password', function () {
                     //Get another valid access token from the refresh token
                     helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
                         validate.validateAccessToken(response.headers, body);
+                        done();
                     });
                 }
             );
+        });
+        it('should work just an access token and a scope of undefined', function (done) {
             //test it with no off line access
             helper.postOAuthPassword(undefined,
                 function(error, response, body) {
@@ -55,5 +58,6 @@ describe('Grant Type Password', function () {
                 }
             );
         });
+
     });
 });
