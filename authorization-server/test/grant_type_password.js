@@ -58,6 +58,5 @@ describe('Grant Type Password', function () {
                 }
             );
         });
-
     });
 });
