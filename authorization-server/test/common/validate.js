@@ -1,7 +1,8 @@
 var assert = require("assert");
 
-//Assert that we got back an application/json response
-
+/**
+ * Our validate module object we export at the bottom
+ */
 var validate = {};
 
 /**
@@ -11,12 +12,13 @@ var validate = {};
  *     expires_in: 3600
  *     token_type: "bearer"
  * }
- * @param headers The http headers
+ * @param response The http response
  * @param body The body of the message which contains the access token and refresh token
  */
-validate.validateAccessToken = function (headers, body) {
+validate.validateAccessToken = function (response, body) {
+    assert.equal(response.statusCode, 200);
     var jsonResponse = JSON.parse(body);
-    assert.equal(headers["content-type"], "application/json");
+    assert.equal(response.headers["content-type"], "application/json");
     assert.equal(Object.keys(jsonResponse).length, 3);
     assert.equal(jsonResponse.access_token.length, 256);
     assert.equal(jsonResponse.expires_in, 3600);
@@ -31,12 +33,13 @@ validate.validateAccessToken = function (headers, body) {
  *     expires_in: 3600
  *     token_type: "bearer"
  * }
- * @param headers The http headers
+ * @param response The http response
  * @param body The body of the message which contains the access token and refresh token
  */
-validate.validateAccessRefreshToken = function (headers, body) {
+validate.validateAccessRefreshToken = function (response, body) {
+    assert.equal(response.statusCode, 200);
     var jsonResponse = JSON.parse(body);
-    assert.equal(headers["content-type"], "application/json");
+    assert.equal(response.headers["content-type"], "application/json");
     assert.equal(Object.keys(jsonResponse).length, 4);
     assert.equal(jsonResponse.access_token.length, 256);
     assert.equal(jsonResponse.expires_in, 3600);
@@ -51,12 +54,13 @@ validate.validateAccessRefreshToken = function (headers, body) {
  *     "name": "Bob Smith"
  *     "token_type": "bearer"
  * }
- * @param headers The http headers
+ * @param response The http response
  * @param body The body of the message which contains the user json message
  */
-validate.validateUserJson = function (headers, body) {
+validate.validateUserJson = function (response, body) {
+    assert.equal(response.statusCode, 200);
     var jsonResponse = JSON.parse(body);
-    assert.equal(headers["content-type"], "application/json; charset=utf-8");
+    assert.equal(response.headers["content-type"], "application/json; charset=utf-8");
     assert.equal(Object.keys(jsonResponse).length, 3);
     assert.equal(jsonResponse.user_id, "1");
     assert.equal(jsonResponse.name, "Bob Smith");
@@ -71,12 +75,13 @@ validate.validateUserJson = function (headers, body) {
  *     "name": "Samplr3"
  *     "scope": "*"
  * }
- * @param headers The http headers
+ * @param response The http response
  * @param body The body of the message which contains the client json message
  */
-validate.validateClientJson = function (headers, body) {
+validate.validateClientJson = function (response, body) {
+    assert.equal(response.statusCode, 200);
     var jsonResponse = JSON.parse(body);
-    assert.equal(headers["content-type"], "application/json; charset=utf-8");
+    assert.equal(response.headers["content-type"], "application/json; charset=utf-8");
     assert.equal(Object.keys(jsonResponse).length, 3);
     assert.equal(jsonResponse.client_id, "3");
     assert.equal(jsonResponse.name, "Samplr3");
@@ -89,12 +94,13 @@ validate.validateClientJson = function (headers, body) {
  *     error: invalid_grant
  *     error_description: invalid_code
  * }
- * @param headers The http headers
+ * @param headers The http response
  * @param body The body of the message which contains the error message
  */
-validate.validateInvalidCodeError = function (headers, body) {
+validate.validateInvalidCodeError = function (response, body) {
+    assert.equal(response.statusCode, 400);
     var jsonResponse = JSON.parse(body);
-    assert.equal(headers["content-type"], "application/json");
+    assert.equal(response.headers["content-type"], "application/json");
     assert.equal(Object.keys(jsonResponse).length, 2);
     assert.equal(jsonResponse.error, "invalid_grant");
     assert.equal(jsonResponse.error_description, "invalid code");

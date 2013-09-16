@@ -42,21 +42,21 @@ describe('Grant Type Authorization Code', function () {
                             //Get the token
                             helper.postOAuthCode(code,
                                 function (error, response, body) {
-                                    validate.validateAccessRefreshToken(response.headers, body);
+                                    validate.validateAccessRefreshToken(response, body);
                                     var tokens = JSON.parse(body);
                                     //Get the user info
                                     helper.getUserInfo(tokens.access_token,
                                         function(error, response, body) {
-                                            validate.validateUserJson(response.headers, body);
+                                            validate.validateUserJson(response, body);
                                         }
                                     );
                                     //Get another valid access token from the refresh token
                                     helper.postRefeshToken(tokens.refresh_token, function(error, response, body) {
-                                        validate.validateAccessToken(response.headers, body);
+                                        validate.validateAccessToken(response, body);
                                     });
                                     //Get another valid access token from the refresh token
                                     helper.postRefeshToken(tokens.refresh_token, function(error, response, body) {
-                                        validate.validateAccessToken(response.headers, body);
+                                        validate.validateAccessToken(response, body);
                                     });
                                 }
                             );
@@ -64,7 +64,7 @@ describe('Grant Type Authorization Code', function () {
                             helper.postOAuthCode(code,
                                 function (error, response, body) {
                                     assert.equal(response.statusCode, 400);
-                                    validate.validateInvalidCodeError(response.headers, body);
+                                    validate.validateInvalidCodeError(response, body);
                                     done();
                                 }
                             );
@@ -87,11 +87,11 @@ describe('Grant Type Authorization Code', function () {
                             //Get the token
                             helper.postOAuthCode(code,
                                 function (error, response, body) {
-                                    validate.validateAccessToken(response.headers, body);
+                                    validate.validateAccessToken(response, body);
                                     //Get the user info
                                     helper.getUserInfo(JSON.parse(body).access_token,
                                         function(error, response, body) {
-                                            validate.validateUserJson(response.headers, body);
+                                            validate.validateUserJson(response, body);
                                         }
                                     );
                                     done();
