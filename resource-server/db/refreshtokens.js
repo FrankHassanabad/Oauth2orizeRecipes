@@ -3,6 +3,9 @@
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
 //(http://tools.ietf.org/html/rfc6750)
 
+/**
+ * Tokens in-memory data structure which stores all of the refresh tokens
+ */
 var tokens = { };
 
 /**

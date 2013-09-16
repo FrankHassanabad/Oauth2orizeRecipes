@@ -96,7 +96,9 @@ exports.infosso = [
 ];
 
 /**
- * Example Protected EndPoint
+ * https://localhost:4000/api/protectedEndPoint
+ *
+ * An example protected esndPoint
  *
  * This endpoint is protected to where you have to send the Authorization Bearer
  * token to it and that token has to be valid on the authorization server.  If the
