@@ -22,13 +22,13 @@ exports.find = function (key, done) {
 
 /**
  * Saves a access token, expiration date, user id, client id, and scope.
- * @param accessToken The access token (required)
+ * @param token The access token (required)
  * @param expirationDate The expiration of the access token that is a javascript Date() object (required)
  * @param userID The user ID (required)
  * @param clientID The client ID (required)
  * @param scope The scope (optional)
  * @param done Calls this with null always
- * @param returns this with null
+ * @returns returns this with null
  */
 exports.save = function (token, expirationDate, userID, clientID, scope, done) {
     tokens[token] = { userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope};
@@ -37,7 +37,7 @@ exports.save = function (token, expirationDate, userID, clientID, scope, done) {
 
 /**
  * Deletes an access token
- * @param accessToken The access token to delete
+ * @param key The access token to delete
  * @param done returns this when done
  */
 exports.delete = function(key, done) {
