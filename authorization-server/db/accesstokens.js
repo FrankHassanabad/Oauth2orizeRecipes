@@ -15,23 +15,24 @@ var tokens = {};
  * @param done The function to call next
  * @returns The access token if found, otherwise returns null
  */
-exports.find = function(key, done) {
-  var token = tokens[key];
-  return done(null, token);
+exports.find = function (key, done) {
+    var token = tokens[key];
+    return done(null, token);
 };
 
 /**
  * Saves a access token, expiration date, user id, client id, and scope.
  * @param accessToken The access token (required)
- * @param expirationDate The expiration of the access token that is a javascript Date() object
+ * @param expirationDate The expiration of the access token that is a javascript Date() object (required)
  * @param userID The user ID (required)
  * @param clientID The client ID (required)
  * @param scope The scope (optional)
+ * @param done Calls this with null always
  * @param returns this with null
  */
-exports.save = function(token, expirationDate, userID, clientID, scope, done) {
-  tokens[token] = { userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope};
-  return done(null);
+exports.save = function (token, expirationDate, userID, clientID, scope, done) {
+    tokens[token] = { userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope};
+    return done(null);
 };
 
 /**

@@ -26,7 +26,7 @@ exports.find = function(accessToken, done) {
  * @param expirationDate The expiration of the access token that is a javascript Date() object
  * @param clientID The client ID (required)
  * @param scope The scope (optional)
- * @param done Calls this with null
+ * @param done Calls this with null always
  */
 exports.save = function(accessToken, expirationDate, clientID, scope, done) {
     tokens[accessToken] = { accessToken: accessToken, expirationDate: expirationDate, clientID: clientID, scope: scope };
@@ -36,7 +36,7 @@ exports.save = function(accessToken, expirationDate, clientID, scope, done) {
 /**
  * Deletes an access token
  * @param accessToken The access token to delete
- * @param done returns this when done
+ * @param done Calls this with null always
  */
 exports.delete = function(accessToken, done) {
     delete tokens[accessToken];
