@@ -94,7 +94,7 @@ validate.validateClientJson = function (response, body) {
  *     error: invalid_grant
  *     error_description: invalid_code
  * }
- * @param headers The http response
+ * @param response The http response
  * @param body The body of the message which contains the error message
  */
 validate.validateInvalidCodeError = function (response, body) {
