@@ -4,9 +4,9 @@
 var oauth2orize = require('oauth2orize')
     , passport = require('passport')
     , login = require('connect-ensure-login')
-    , db = require('./db')
-    , utils = require('./utils')
-    , config = require('./config');
+    , config = require('./config')
+    , db = require('./' + config.db.type)
+    , utils = require('./utils');
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -77,9 +77,16 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
         if (redirectURI !== authCode.redirectURI) {
             return done(null, false);
         }
-        db.authorizationCodes.delete(code, function (err) {
+        db.authorizationCodes.delete(code, function (err, result) {
             if (err) {
                 return done(err);
+            }
+            if(result != undefined && result === 0) {
+                //This condition can result because of a "race condition" that can occur naturally when you're making
+                //two very fast calls to the authorization server to exchange authorization codes.  So, we check for
+                // the result and if it's not undefined and the result is zero, then we have already deleted the
+                // authorization code
+                return done(null, false);
             }
             var token = utils.uid(config.token.accessTokenLength);
             db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
