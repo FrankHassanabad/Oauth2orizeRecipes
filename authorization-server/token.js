@@ -1,5 +1,6 @@
 var passport = require('passport')
-    , db = require('./db');
+    , config = require('./config')
+    , db = require('./' + config.db.type);
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to

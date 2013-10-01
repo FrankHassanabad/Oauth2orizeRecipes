@@ -28,9 +28,14 @@ exports.token = {
  * timeToCheckExpiredTokens - The time in seconds to check the database
  * for expired access tokens.  For example, if it's set to 3600, then that's
  * one hour to check for expired access tokens.
+ * type - The type of database to use.  "db" for "in-memory", or
+ * "mongodb" for the mongo database store.
+ * dbName - The database name to use.
  */
 exports.db = {
-    timeToCheckExpiredTokens: 3600
+    timeToCheckExpiredTokens: 3600,
+    type: "db",
+    dbName: "OAuth2orizeRecipeTokens"
 };
 
 /**

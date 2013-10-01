@@ -67,3 +67,12 @@ exports.removeExpired = function(done) {
     }
     return done(null);
 };
+
+/**
+ * Removes all access tokens.
+ * @param done returns this when done.
+ */
+exports.removeAll = function(done) {
+    tokens = {};
+    return done(null);
+};
