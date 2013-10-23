@@ -57,8 +57,8 @@ var localServer = new httpProxy.HttpProxy({
 
 /**
  * Proxy that listens on 5000, which proxies all the
- * Authorization requests to port 4000 and all
- * Resource Servers to 6000
+ * Authorization requests to port 3000 and all
+ * Resource Servers to 4000
  */
 httpProxy.createServer(options, function (req, res) {
     if(startsWith(req.url, '/api/tokeninfo') || startsWith(req.url, '/oauth/token')) {
