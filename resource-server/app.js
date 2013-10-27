@@ -14,7 +14,8 @@ var app = express();
 app.set('view engine', 'ejs');
 app.use(express.logger());
 app.use(express.cookieParser());
-app.use(express.bodyParser());
+app.use(express.urlencoded());
+app.use(express.json());
 app.use(express.session({ secret: config.session.secret }));
 
 app.use(passport.initialize());

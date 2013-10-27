@@ -46,7 +46,8 @@ var app = express();
 app.set('view engine', 'ejs');
 app.use(express.logger());
 app.use(express.cookieParser());
-app.use(express.bodyParser());
+app.use(express.urlencoded());
+app.use(express.json());
 
 //Session Configuration
 app.use(express.session({
