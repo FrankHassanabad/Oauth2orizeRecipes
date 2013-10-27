@@ -1,0 +1,37 @@
+/*
+ * Base styles that I'm changing for the web site.  This should only contain styles of default elements of the web
+ * such as h1, body, etc...
+ */
+
+/**
+ * Coloring h1 a bit off black, removing bold, and shadowing
+ * a touch.
+ */
+h1 {
+    color: #505050;
+    text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
+    font-weight: normal;
+}
+
+/**
+ * Using some off white for the background color and
+ * padding the top.
+ */
+body
+{
+    background: whitesmoke;
+    padding-top: 60px;
+}
+
+/**
+ * Make links smaller,
+ */
+a
+{
+    text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
+    padding-bottom: 5px;
+    padding-top: 10px;
+    font-size: 80%;
+    color: #6464ff;
+    text-decoration: none;
+}

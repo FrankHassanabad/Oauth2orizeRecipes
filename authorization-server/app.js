@@ -8,6 +8,7 @@ var config = require('./config')
     , token = require('./token')
     , https = require('https')
     , fs = require('fs')
+    , path = require('path')
     , db = require('./db');
 
 //Pull in the mongo store if we're configured to use it
@@ -90,6 +91,9 @@ app.get('/api/clientinfo', client.info);
 // Mimicking google's token info endpoint from
 // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
 app.get('/api/tokeninfo', token.info);
+
+//static resources for stylesheets, images, javascript files
+app.use(express.static(path.join(__dirname, 'public')));
 
 //From time to time we need to clean up any expired tokens
 //in the database

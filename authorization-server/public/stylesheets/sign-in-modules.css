@@ -1,0 +1,135 @@
+/**
+ * Upper box that contains the title Authorization Server, the UserName, and Password fields
+ */
+.upper-box {
+
+    width: 350px;
+
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-right: 1px solid;
+
+    border-color: lightgrey;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+
+    padding-top: 5px;
+    padding-left: 20px;
+    padding-bottom: 35px;
+
+    box-shadow: 1px 1px 5px #e7e7e7;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    /**
+     * Gradient calculated from gradient calculator of
+     * http://gradients.glrzad.com/
+     */
+    background-image: linear-gradient(bottom, rgb(249,250,252) 21%, rgb(245,247,250) 67%, rgb(247,249,255) 94%);
+    background-image: -o-linear-gradient(bottom, rgb(249,250,252) 21%, rgb(245,247,250) 67%, rgb(247,249,255) 94%);
+    background-image: -moz-linear-gradient(bottom, rgb(249,250,252) 21%, rgb(245,247,250) 67%, rgb(247,249,255) 94%);
+    background-image: -webkit-linear-gradient(bottom, rgb(249,250,252) 21%, rgb(245,247,250) 67%, rgb(247,249,255) 94%);
+    background-image: -ms-linear-gradient(bottom, rgb(249,250,252) 21%, rgb(245,247,250) 67%, rgb(247,249,255) 94%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.21, rgb(249,250,252)),
+        color-stop(0.67, rgb(245,247,250)),
+        color-stop(0.94, rgb(247,249,255))
+    );
+
+}
+
+/**
+ * Bottom box that contains the "Sign in" button
+ */
+.bottom-box {
+    border:1px solid;
+    border-color: lightgrey;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    width: 350px;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+    box-shadow: 1px 3px 1px #e7e7e7;
+    margin-left: auto;
+    margin-right: auto;
+
+    /**
+     * Gradient calculated from gradient calculator of
+     * http://gradients.glrzad.com/
+     */
+    background-image: linear-gradient(bottom, rgb(242,245,250) 21%, rgb(242,245,250) 67%, rgb(242,245,255) 94%);
+    background-image: -o-linear-gradient(bottom, rgb(242,245,250) 21%, rgb(242,245,250) 67%, rgb(242,245,255) 94%);
+    background-image: -moz-linear-gradient(bottom, rgb(242,245,250) 21%, rgb(242,245,250) 67%, rgb(242,245,255) 94%);
+    background-image: -webkit-linear-gradient(bottom, rgb(242,245,250) 21%, rgb(242,245,250) 67%, rgb(242,245,255) 94%);
+    background-image: -ms-linear-gradient(bottom, rgb(242,245,250) 21%, rgb(242,245,250) 67%, rgb(242,245,255) 94%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.21, rgb(242,245,250)),
+        color-stop(0.67, rgb(242,245,250)),
+        color-stop(0.94, rgb(242,245,255))
+    );
+}
+
+/**
+ * Okay, you caught me.  It's a hack to make this look centered.
+ *
+ * TODO Fix this, can't figure out how to get this to center correctly.
+ * It's currently anchored to the fieldset and that's causing issues.
+ */
+.title-padding {
+    padding-left: 15px;
+}
+
+/**
+ * The username and password labels
+ */
+.labels {
+    color: #505050;
+    text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
+    padding-bottom: 5px;
+    padding-top: 10px;
+}
+
+/**
+ * Input fields so I can make it slightly larger than the default,
+ * and I can also pad anything trying to touch it on the right.
+ */
+.input-fields {
+    padding-right: 20px;
+    font-size: 130%;
+ }
+
+/**
+ * This makes all the placeholder text italic.  Nice trick I
+ * picked up from stack overflow:
+ * http://stackoverflow.com/questions/16291925/how-to-make-value-text-in-form-be-italic
+ */
+::-webkit-input-placeholder { font-style: italic; }
+::-moz-placeholder { font-style: italic; }
+:-ms-input-placeholder { font-style: italic; }
+
+/**
+ * Very specific to the sign on button.
+ */
+.sign-in-button {
+    padding-right: 20px;
+    text-align: right;
+}
+
+/**
+ * Very specific to the "from website" link
+ */
+.from-text {
+    padding-top: 10px;
+    text-align: center;
+}
