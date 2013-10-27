@@ -35,3 +35,4 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 * REST tokeninfo endPoint for verifying a token is valid.
 * Authorization tokens are only useable once
 * SSL/HTTPS usage
+* More complex UI Examples for the Sign In/Login and the Decision Screens 
