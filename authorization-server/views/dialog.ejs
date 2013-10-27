@@ -1,16 +1,52 @@
 <!DOCTYPE html>
-<div>
-    Authorization Server Decision
-</div>
-<p>Hi <%= user.name %>!</p>
-<p><b><%= client.name %></b> is requesting access to your account.</p>
-<p>Do you approve?</p>
+<html>
 
-<form action="/dialog/authorize/decision" method="post">
+<head>
+    <!-- Style sheets -->
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pure-min.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/base.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/dialog-modules.css">
+</head>
+<body>
+
+<form action="/dialog/authorize/decision" method="post" class="pure-form pure-form-stacked">
     <input name="transaction_id" type="hidden" value="<%= transactionID %>">
-
-    <div>
-        <input type="submit" value="Allow" id="allow">
-        <input type="submit" value="Deny" name="cancel" id="deny">
+    <fieldset>
+        <!-- Upper box with Title, username, and password -->
+        <div class="upper-box">
+            <!-- Title -->
+            <div>
+                <div class="main-text">Decision</div>
+                <div class="subtext">Authorization Server</div>
+            </div>
+            <div class="pure-control-group labels">
+                <p>
+                <p><%= user.name %>,</p>
+                The application <b><%= client.name %></b> is requesting access to your account.
+                <p>Do you approve?</p>
+                </p>
+            </div>
+        </div>
+        <!-- Bottom box with Sign in -->
+        <div class="bottom-box">
+            <div class="pure-controls accept-cancel-buttons">
+                <div>
+                    <input class="pure-button pure-button-primary" type="submit" value="Accept" id="allow">
+                    <!-- Cheat to make a bit of spacing -->
+                    <span>&nbsp&nbsp</span>
+                    <input class="pure-button"type="submit" value="Deny" name="cancel" id="deny">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="from-text">
+        <a href="https://github.com/FrankHassanabad/Oauth2orizeRecipes">
+            From OAuth2OrizeRecipes
+        </a>
     </div>
 </form>
+
+</body>
+</html>
+
+

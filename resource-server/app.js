@@ -5,6 +5,7 @@ var express = require('express')
     , http = require('http')
     , https = require('https')
     , config = require('./config')
+    , path = require('path')
     , db = require('./db')
     , sso = require('./sso');
 
@@ -42,6 +43,9 @@ app.get('/info', site.info);
 app.get('/infosso', site.infosso);
 app.get('/api/protectedEndPoint', site.protectedEndPoint);
 app.get('/receivetoken', sso.receivetoken);
+
+//static resources for stylesheets, images, javascript files
+app.use(express.static(path.join(__dirname, 'public')));
 
 //From time to time we need to clean up any expired tokens
 //in the database

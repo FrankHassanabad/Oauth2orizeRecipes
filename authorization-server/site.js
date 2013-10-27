@@ -5,6 +5,10 @@ var passport = require('passport')
 
 exports.index = function (req, res) {
     res.send('OAuth 2.0 Authorization Server');
+
+    //TODO Make this render a page instead of sending it to plain
+    //string land
+    //res.render('auth-code');
 };
 
 exports.loginForm = function (req, res) {
