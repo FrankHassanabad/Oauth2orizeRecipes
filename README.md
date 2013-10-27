@@ -7,9 +7,9 @@ The express2 example from [OAuth2orize](https://github.com/jaredhanson/oauth2ori
 minimal OAuth2 Server in Node.js.  It is an example you can use to get an idea of how to write your
 own OAuth2 Server in Node.js.  The recipes here are built from it and are more complete but also a bit more complex.
 
-![Sign In](/readme-media/images/login-in-screen.png "Sign In") ![Decision](/readme-media/images/decision.png "Decision")
-
-
+<p align="center">
+  <img src="readme-media/images/login-in-screen.png?raw=true" alt="Sign In"/>
+</p>
 
 # Installation
 ```
