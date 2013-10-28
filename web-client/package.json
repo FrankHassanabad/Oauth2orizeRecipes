@@ -1,8 +1,12 @@
 {
     "name": "oauth2orize-web-client",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
         "http-proxy": "0.10.3",
         "connect": "2.8.4"
+    },
+    "engines": {
+        "node": "0.10.x",
+        "npm":  "1.2.x"
     }
 }
