@@ -183,7 +183,7 @@
                 browser's debug tools, and click the Submit Post button below to begin the grant type.
                 <pre>
   POST oauth/token HTTP/1.1
-  Host: <span class=".host">https://localhost:3000</span>
+  Host: <span class="hostname">https://localhost:3000</span>
   Content-Type: application/x-www-form-urlencoded
   Authorization: Basic YWJjMTIzOnNzaC1zZWNyZXQ=
 
@@ -208,11 +208,11 @@
             the Submit Post button below to begin the grant type.
             <pre>
   POST oauth/token HTTP/1.1
-  Host: <span class=".host">https://localhost:3000</span>
+  Host: <span class="hostname">https://localhost:3000</span>
   Content-Type: application/x-www-form-urlencoded
   Authorization: Basic YWJjMTIzOnNzaC1zZWNyZXQ=
 
-  grant_type=client_credentials&
+  grant_type=client_credentials
             </pre>
             <p>
                 <button id="clientSubmitPostButton" class="pure-button pure-button-primary" type="button">Submit Post</button>
@@ -240,7 +240,7 @@
             press the Call API EndPoint button and look at your network tab.
         </p>
         <pre>GET /api/userinfo HTTP/1.1
-Host: <span class=".host">https://localhost:3000</span>
+Host: <span class="hostname">https://localhost:3000</span>
 Authorization: Bearer <span class="access_token"></span>
         </pre>
         <button id="apiEndPointButton" class="pure-button pure-button-primary" type="button">Call API EndPoint</button>
@@ -273,7 +273,7 @@ Authorization: Bearer <span class="access_token"></span>
             Call API EndPoint button and look at your network tab.
         </p>
         <pre>GET /api/userinfo HTTP/1.1
-Host: <span class=".host">https://localhost:3000</span>
+Host: <span class="hostname">https://localhost:3000</span>
 Authorization: Bearer <span class="access_token"></span>
         </pre>
         <button id="accessTokenCallApiButton" class="pure-button pure-button-primary" type="button">Call API EndPoint</button>
