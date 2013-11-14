@@ -11,13 +11,7 @@ own OAuth2 Server in Node.js.  The recipes here are built from it and are more c
   <img src="readme-media/images/login-in-screen.png?raw=true" alt="Sign In"/>
 </p>
 
-# Demo
-
-Go [here](https://oauth2orizerecipes.herokuapp.com/) for a demo
-<p align="center">
-  <img src="readme-media/images/web-site.png?raw=true" alt="Sign In"/>
-</p>
-
+You can see a demo of it in action [here](https://oauth2orizerecipes.herokuapp.com/)
 
 # Installation
 ```
