@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth2Orize Recipes</title>
+    <!-- Needed for mobile sites to work -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Style sheets -->
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pure-min.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/base.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/index-modules.css">
+    <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            /**
+             * Gets a parameter by name.  Lifted from stackoverflow here:
+             * http://stackoverflow.com/questions/1403888/get-url-parameter-with-javascript-or-jquery
+             * @param name The name of the parameter to get from the URL
+             * @returns {*|string} the parameter name if matched
+             */
+            function getParameterByName(name) {
+                var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+                return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+            }
+
+            //Get the host name and code
+            var http = location.protocol;
+            var slashes = http.concat("//");
+            var port = location.port ? ':' + location.port : '';
+            var host = slashes.concat(window.location.hostname) + port ;
+            var code = getParameterByName('code');
+
+
+            $(".code").text(code);
+            //replace the host name from the URL
+            $(".hostname").text(host);
+            $("#submit").click(function(event) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: "/oauth/token",
+                    data: 'code=' + code + '&redirect_uri=' + host + '&client_id=abc123&client_secret=ssh-secret&grant_type=authorization_code',
+                    success: function (result) {
+                        $("#authCode").hide();
+                        $("#accessTokenDiv").show();
+                        var access_token = result.access_token;
+                        $("#access_token").text(access_token);
+                        $("#fullResult").append(JSON.stringify(result, undefined, 4));
+
+                        $("#apiCall").click(function(event) {
+                            $.ajax({
+                                type: 'GET',
+                                dataType: 'json',
+                                url: '/api/userinfo',
+                                headers: {
+                                    "Authorization": "Bearer " + access_token
+                                },
+                                success: function (result) {
+                                    $("#accessTokenDiv").hide();
+                                    $("#apiCallDiv").show();
+                                    $("#userInfo").text(JSON.stringify(result, undefined, 4));
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <!-- Authorization code section -->
+    <div id="authCode">
+        <h1>
+            Authorization Code
+        </h1>
+        <p>
+            Look at your URL and you will see that you have a authorization code of
+        </p>
+        <pre><span class="code">code</span></pre>
+        <p>
+            This isn't your access token, but you can exchange it for an access token by clicking the Submit Post button.
+            Bring up your browser's debugger tools and examine the network tab as you click the Submit Post button.
+        </p>
+        <pre>POST oauth/token HTTP/1.1
+Host: <span class=".host">https://localhost:3000</span>
+Content-Type: application/x-www-form-urlencoded
+
+code=<span class=".code">7HMEo1VA1xVS6EkJ</span>&
+redirect_uri=<span class=".hostname">https://localhost:3000</span>&
+client_id=abc123&
+client_secret=ssh-secret&
+grant_type=authorization_code
+        </pre>
+        <p>
+            <button id="submit" class="pure-button pure-button-primary" type="button">Submit Post</button>
+        </p>
+    </div>
+
+    <!-- Shown after the user clicks and gets an access token -->
+    <div id="accessTokenDiv" style="display: none;">
+        <h1>
+            Access Token
+        </h1>
+        <p>
+            Underneath your browser's network tab you will see the following response
+            with your access token, refresh token, expiration time, and token type
+        </p>
+        <pre><span id="fullResult"></span></pre>
+        <p>
+            You can use your access token to call an endpoint such as a user info endpoint.
+            To do this, set the Authorization Bearer to have your access token.  Press the
+            Call API EndPoint button and look at your network tab.
+        </p>
+        <pre>GET /api/userinfo HTTP/1.1
+Host: <span class=".host">https://localhost:3000</span>
+Authorization: Bearer <span id="access_token"></span>
+        </pre>
+        <button id="apiCall" class="pure-button pure-button-primary" type="button">Call API EndPoint</button>
+    </div>
+
+    <!-- Shown after the user clicks "Call API EndPoint" button -->
+    <div id="apiCallDiv" style="display: none;">
+        <h1>
+            User Information
+        </h1>
+        <p>
+            Underneath your brower's network tab you will see the following JSON response from a successful API endpoint call.
+        </p>
+        <pre><span id="userInfo"></span></pre>
+    </div>
+
+</body>
+</html>
+
+

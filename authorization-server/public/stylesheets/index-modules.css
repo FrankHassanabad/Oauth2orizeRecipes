@@ -1,0 +1,20 @@
+/**
+ * Using some off white for the background color and
+ * padding the top.
+ */
+body
+{
+    background: whitesmoke;
+    width: 500px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+/**
+ * Make links the same again,
+ */
+a
+{
+    font-size: 100%;
+}
+

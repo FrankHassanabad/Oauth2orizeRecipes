@@ -4,11 +4,11 @@ var passport = require('passport')
     , login = require('connect-ensure-login');
 
 exports.index = function (req, res) {
-    res.send('OAuth 2.0 Authorization Server');
-
-    //TODO Make this render a page instead of sending it to plain
-    //string land
-    //res.render('auth-code');
+    if(!req.query.code) {
+        res.render('index');
+    } else {
+        res.render('index-with-code');
+    }
 };
 
 exports.loginForm = function (req, res) {
