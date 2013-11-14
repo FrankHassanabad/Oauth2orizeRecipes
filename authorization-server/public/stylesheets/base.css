@@ -35,3 +35,9 @@ a
     color: #6464ff;
     text-decoration: none;
 }
+
+pre
+{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
