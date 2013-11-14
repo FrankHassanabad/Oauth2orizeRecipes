@@ -85,11 +85,11 @@
             Bring up your browser's debugger tools and examine the network tab as you click the Submit Post button.
         </p>
         <pre>POST oauth/token HTTP/1.1
-Host: <span class=".host">https://localhost:3000</span>
+Host: <span class="hostname">https://localhost:3000</span>
 Content-Type: application/x-www-form-urlencoded
 
 code=<span class=".code">7HMEo1VA1xVS6EkJ</span>&
-redirect_uri=<span class=".hostname">https://localhost:3000</span>&
+redirect_uri=<span class="hostname">https://localhost:3000</span>&
 client_id=abc123&
 client_secret=ssh-secret&
 grant_type=authorization_code
@@ -115,7 +115,7 @@ grant_type=authorization_code
             Call API EndPoint button and look at your network tab.
         </p>
         <pre>GET /api/userinfo HTTP/1.1
-Host: <span class=".host">https://localhost:3000</span>
+Host: <span class="hostname">https://localhost:3000</span>
 Authorization: Bearer <span id="access_token"></span>
         </pre>
         <button id="apiCall" class="pure-button pure-button-primary" type="button">Call API EndPoint</button>
