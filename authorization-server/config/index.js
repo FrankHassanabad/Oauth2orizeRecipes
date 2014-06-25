@@ -42,7 +42,7 @@ exports.db = {
  * Session configuration
  *
  * type - The type of session to use.  MemoryStore for "in-memory",
- * or MonoStore for the mongo database store
+ * or MongoStore for the mongo database store
  * maxAge - The maximum age in milliseconds of the session.  Use null for
  * web browser session only.  Use something else large like 3600000 * 24 * 7 * 52
  * for a year.
