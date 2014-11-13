@@ -10,7 +10,7 @@ var assert = require("assert")
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
-var request = request.defaults({jar: true, strictSSL: false});
+request = request.defaults({jar: true, strictSSL: false});
 
 /**
  * Tests for the Grant Type of Client.

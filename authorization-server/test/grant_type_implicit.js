@@ -10,7 +10,7 @@ var assert = require("assert")
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
-var request = request.defaults({jar: true, strictSSL: false});
+request = request.defaults({jar: true, strictSSL: false});
 
 /**
  * Tests for the Grant Type of Implicit.
@@ -26,13 +26,14 @@ describe('Grant Type Implicit', function () {
         });
     });
     it('should redirect when trying to get authorization without logging in', function (done) {
-        request.get(properties.logout);
-        helper.getAuthorization({responseType: 'token'},
-            function (error, response, body) {
-                assert.equal(-1, response.request.href.indexOf("/#access_token="));
-                done();
-            }
-        )
+        request.get(properties.logout, function(err) {
+            helper.getAuthorization({responseType: 'token'},
+                function (error, response, body) {
+                    assert.equal(-1, response.request.href.indexOf("/#access_token="));
+                    done();
+                }
+            )
+        });
     });
     it('should work with the implicit asking for a access token', function (done) {
         //Log into the OAuth2 server as bob
