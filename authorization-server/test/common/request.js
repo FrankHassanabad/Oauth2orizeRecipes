@@ -1,9 +1,9 @@
-properties = require('./properties.js').properties;
-requestLib = require('request');
+var properties = require('./properties.js').properties;
+var requestLib = require('request');
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
-var requestLib = requestLib.defaults({jar: true, strictSSL: false});
+requestLib = requestLib.defaults({jar: true, strictSSL: false});
 
 /**
  * These are all request helpers to help with testing

@@ -10,7 +10,7 @@ var assert = require("assert")
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
 //and turn off the strict SSL requirement
-var request = request.defaults({jar: true, strictSSL: false});
+request = request.defaults({jar: true, strictSSL: false});
 
 /**
  * Tests for the Grant Type of Authorization Code.
@@ -26,13 +26,14 @@ describe('Grant Type Authorization Code', function () {
         });
     });
     it('should redirect when trying to get authorization without logging in', function (done) {
-        request.get(properties.logout);
-        helper.getAuthorization({},
-            function (error, response, body) {
-                assert.equal(response.req.path.indexOf("/?code="), -1);
-                done();
-            }
-        )
+        request.get(properties.logout, function(err) {
+            helper.getAuthorization({},
+                function (error, response, body) {
+                    assert.equal(response.req.path.indexOf("/?code="), -1);
+                    done();
+                }
+            )
+        });
     });
     it('should work with the authorization_code asking for a refresh token', function (done) {
         //Log into the OAuth2 server as bob
