@@ -1,16 +1,16 @@
-
+/*jslint node: true */
 'use strict';
 
 //Create a proxy that combines the authorization server and
 //resource server with this server so that we can make calls
 //to both without cross domain issues
 
-var httpProxy = require('http-proxy')
-  , connect = require('connect')
-  , https = require('https')
-  , fs = require('fs')
-  , finalhandler = require('finalhandler')
-  , serveStatic = require('serve-static');
+var httpProxy = require('http-proxy');
+var connect = require('connect');
+var https = require('https');
+var fs = require('fs');
+var finalhandler = require('finalhandler');
+var serveStatic = require('serve-static');
 
 //TODO: Change these for your own certificates.  This was generated
 //through the commands:
@@ -86,5 +86,5 @@ console.log("Web Client Server started on port 5000");
  * Function which returns true if str1 starts with str2
  */
 function startsWith(str1, str2) {
-  return str1.indexOf(str2) == 0;
+  return str1.indexOf(str2) === 0;
 }

@@ -1,9 +1,11 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
 //TODO Document all of this
 
-var passport = require('passport')
-  , login = require('connect-ensure-login');
+var passport = require('passport');
+var login = require('connect-ensure-login');
 
 exports.index = function (req, res) {
   if (!req.query.code) {

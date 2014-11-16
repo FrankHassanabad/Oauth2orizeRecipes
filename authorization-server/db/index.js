@@ -1,3 +1,4 @@
+/*jslint node: true */
 'use strict';
 
 exports.users = require('./users');

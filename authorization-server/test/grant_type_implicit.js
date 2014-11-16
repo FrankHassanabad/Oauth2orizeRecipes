@@ -1,13 +1,16 @@
+/*jslint node: true */
+/*global it */
+/*global describe */
 'use strict';
 
-var assert = require("assert")
-  , app = require("../app.js")
-  , request = require('request')
-  , helper = require('./common').request
-  , validate = require('./common').validate
-  , properties = require('./common').properties
-  , config = require('../config')
-  , dbTokens = require('../' + config.db.type);
+var assert = require("assert");
+var app = require("../app.js");
+var request = require('request');
+var helper = require('./common').request;
+var validate = require('./common').validate;
+var properties = require('./common').properties;
+var config = require('../config');
+var dbTokens = require('../' + config.db.type);
 
 
 //Enable cookies so that we can perform logging in correctly to the OAuth server
@@ -34,7 +37,7 @@ describe('Grant Type Implicit', function () {
           assert.equal(-1, response.request.href.indexOf("/#access_token="));
           done();
         }
-      )
+      );
     });
   });
   it('should work with the implicit asking for a access token', function (done) {

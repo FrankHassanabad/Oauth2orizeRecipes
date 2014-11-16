@@ -1,8 +1,10 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
-var config = require('../config')
-  , request = require('request')
-  , db = require('../db');
+var config = require('../config');
+var request = require('request');
+var db = require('../db');
 
 /**
  * https://localhost:4000/(any end point that is part of your API)
@@ -37,7 +39,7 @@ exports.ensureSingleSignOn = function () {
     } else {
       next();
     }
-  }
+  };
 };
 
 /**

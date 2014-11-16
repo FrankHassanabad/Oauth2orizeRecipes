@@ -1,10 +1,12 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
-var passport = require('passport')
-  , login = require('connect-ensure-login')
-  , config = require('./config')
-  , request = require('request')
-  , sso = require('./sso');
+var passport = require('passport');
+var login = require('connect-ensure-login');
+var config = require('./config');
+var request = require('request');
+var sso = require('./sso');
 
 /**
  * https://localhost:4000/

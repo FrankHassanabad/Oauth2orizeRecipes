@@ -1,3 +1,6 @@
+/*jslint node: true */
+/*global it */
+/*global describe */
 'use strict';
 
 var assert = require("assert");
@@ -24,8 +27,8 @@ describe('access token saving/deleting', function () {
       new Date(),
       "madeUpUser",
       "madeUpClient",
-      "madeUpScope"
-      , function (err) {
+      "madeUpScope",
+      function (err) {
         dbTokens.accessTokens.find('someMadeUpAccessTokenLookAtMe', function (err, token) {
           assert.equal(token.userID, 'madeUpUser');
           assert.equal(token.clientID, 'madeUpClient');

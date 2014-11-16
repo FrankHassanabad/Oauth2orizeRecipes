@@ -1,18 +1,19 @@
+/*jslint node: true */
 'use strict';
 
-var express = require('express')
-  , site = require('./site')
-  , passport = require('passport')
-  , fs = require('fs')
-  , http = require('http')
-  , https = require('https')
-  , config = require('./config')
-  , path = require('path')
-  , db = require('./db')
-  , cookieParser = require('cookie-parser')
-  , bodyParser = require('body-parser')
-  , expressSession = require("express-session")
-  , sso = require('./sso');
+var express = require('express');
+var site = require('./site');
+var passport = require('passport');
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var config = require('./config');
+var path = require('path');
+var db = require('./db');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var expressSession = require("express-session");
+var sso = require('./sso');
 
 // Express configuration
 var app = express();

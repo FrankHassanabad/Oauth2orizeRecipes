@@ -1,0 +1,4 @@
+authorization-server/node_modules
+resource-server/node_modules
+web-client/node_modules
+authorization-server/public/javascripts/jquery.min.js

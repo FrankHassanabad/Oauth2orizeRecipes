@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
 //The access tokens.
@@ -82,7 +84,7 @@ exports.delete = function (key, done) {
 exports.removeExpired = function (done) {
   mongodb.getCollection(function (collection) {
     collection.find().each(function (err, token) {
-      if (token != null) {
+      if (token !== null) {
         if (new Date() > token.expirationDate) {
           collection.remove({
             token: token
