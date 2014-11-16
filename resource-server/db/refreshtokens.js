@@ -8,7 +8,7 @@
 /**
  * Tokens in-memory data structure which stores all of the refresh tokens
  */
-var tokens = { };
+var tokens = {};
 
 /**
  * Finds an access token and passes it if it exists, otherwise
@@ -16,22 +16,21 @@ var tokens = { };
  * @param accessToken The accessToken to find
  * @param done Passes the token or null
  */
-exports.find = function(accessToken, done) {
-    var token = tokens[accessToken];
-    return done(null, token);
+exports.find = function (accessToken, done) {
+  var token = tokens[accessToken];
+  return done(null, token);
 };
 
 /**
  * Saves a access token, refresh token, client id, and scope.
- * @param accessToken The access token (required)
  * @param refreshToken The refresh token (optional)
  * @param clientID The client ID (required)
  * @param scope The scope (optional)
  * @param done Calls this with null
  */
-exports.save = function(refreshToken, clientID, scope, done) {
-    tokens[refreshToken] = { refreshToken: refreshToken, clientID: clientID, scope: scope };
-    return done(null);
+exports.save = function (refreshToken, clientID, scope, done) {
+  tokens[refreshToken] = {refreshToken: refreshToken, clientID: clientID, scope: scope};
+  return done(null);
 };
 
 /**
@@ -39,7 +38,7 @@ exports.save = function(refreshToken, clientID, scope, done) {
  * @param accessToken The access token to delete
  * @param done returns this when done
  */
-exports.delete = function(accessToken, done) {
-    delete tokens[accessToken];
-    return done(null);
-}
+exports.delete = function (accessToken, done) {
+  delete tokens[accessToken];
+  return done(null);
+};

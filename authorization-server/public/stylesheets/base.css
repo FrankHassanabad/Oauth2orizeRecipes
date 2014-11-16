@@ -8,36 +8,33 @@
  * a touch.
  */
 h1 {
-    color: #505050;
-    text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
-    font-weight: normal;
+  color: #505050;
+  text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
+  font-weight: normal;
 }
 
 /**
  * Using some off white for the background color and
  * padding the top.
  */
-body
-{
-    background: whitesmoke;
-    padding-top: 60px;
+body {
+  background: whitesmoke;
+  padding-top: 60px;
 }
 
 /**
  * Make links smaller,
  */
-a
-{
-    text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
-    padding-bottom: 5px;
-    padding-top: 10px;
-    font-size: 80%;
-    color: #6464ff;
-    text-decoration: none;
+a {
+  text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
+  padding-bottom: 5px;
+  padding-top: 10px;
+  font-size: 80%;
+  color: #6464ff;
+  text-decoration: none;
 }
 
-pre
-{
-    margin-top: 0px;
-    margin-bottom: 0px;
+pre {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }

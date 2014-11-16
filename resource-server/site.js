@@ -1,10 +1,10 @@
 'use strict';
 
 var passport = require('passport')
-    , login = require('connect-ensure-login')
-    , config = require('./config')
-    , request = require('request')
-    , sso = require('./sso');
+  , login = require('connect-ensure-login')
+  , config = require('./config')
+  , request = require('request')
+  , sso = require('./sso');
 
 /**
  * https://localhost:4000/
@@ -13,8 +13,8 @@ var passport = require('passport')
  * @param res The response that we send the string of
  * "OAuth 2.0 Resource Server"
  */
-exports.index = function(req, res) {
-    res.send('OAuth 2.0 Resource Server');
+exports.index = function (req, res) {
+  res.send('OAuth 2.0 Resource Server');
 };
 
 /**
@@ -27,8 +27,8 @@ exports.index = function(req, res) {
  * @param req The request, which nothing is done with
  * @param res The response, which the login page of views/login.ejs is rendered
  */
-exports.loginForm = function(req, res) {
-    res.render('login');
+exports.loginForm = function (req, res) {
+  res.render('login');
 };
 
 /**
@@ -36,7 +36,7 @@ exports.loginForm = function(req, res) {
  *
  * The login endpoint when a post occurs through the login form
  */
-exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/login' });
+exports.login = passport.authenticate('local', {successReturnToOrRedirect: '/', failureRedirect: '/login'});
 
 /**
  * https://localhost:4000/info
@@ -53,15 +53,15 @@ exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/',
  * See auth.js's LocalStrategy
  */
 exports.info = [
-    login.ensureLoggedIn(),
-    function (req, res) {
-        var accessToken = req.user.accessToken;
-        var refreshToken = req.user.refreshToken;
-        res.render('info', {
-            access_token: accessToken,
-            refresh_token: refreshToken
-        });
-    }
+  login.ensureLoggedIn(),
+  function (req, res) {
+    var accessToken = req.user.accessToken;
+    var refreshToken = req.user.refreshToken;
+    res.render('info', {
+      access_token: accessToken,
+      refresh_token: refreshToken
+    });
+  }
 ];
 
 /**
@@ -86,15 +86,15 @@ exports.info = [
  * to access API calls to protected endpoints.
  */
 exports.infosso = [
-    sso.ensureSingleSignOn(),
-    function(req, res) {
-        var accessToken = req.session.accessToken;
-        var refreshToken = req.session.refreshToken;
-        res.render('info', {
-            access_token: accessToken,
-            refresh_token: refreshToken
-        });
-    }
+  sso.ensureSingleSignOn(),
+  function (req, res) {
+    var accessToken = req.session.accessToken;
+    var refreshToken = req.session.refreshToken;
+    res.render('info', {
+      access_token: accessToken,
+      refresh_token: refreshToken
+    });
+  }
 ];
 
 /**
@@ -107,10 +107,10 @@ exports.infosso = [
  * user is authenticated the it will send a plain text message back.
  */
 exports.protectedEndPoint = [
-    passport.authenticate('bearer', { session: false }),
-    function(req, res) {
-        //You can send whatever you want, such as JSON, etc...
-        //For a illustrative example, I'm just sending a string back
-        res.send('Successful Protected EndPoint Data Call');
-    }
+  passport.authenticate('bearer', {session: false}),
+  function (req, res) {
+    //You can send whatever you want, such as JSON, etc...
+    //For a illustrative example, I'm just sending a string back
+    res.send('Successful Protected EndPoint Data Call');
+  }
 ];

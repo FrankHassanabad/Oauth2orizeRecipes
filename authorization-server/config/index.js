@@ -15,13 +15,13 @@
  * refreshTokenLength - The length of the refresh token
  */
 exports.token = {
-    expiresIn: 3600,
-    calculateExpirationDate: function() {
-        return new Date(new Date().getTime() + (this.expiresIn * 1000));
-    },
-    authorizationCodeLength: 16,
-    accessTokenLength: 256,
-    refreshTokenLength: 256
+  expiresIn: 3600,
+  calculateExpirationDate: function () {
+    return new Date(new Date().getTime() + (this.expiresIn * 1000));
+  },
+  authorizationCodeLength: 16,
+  accessTokenLength: 256,
+  refreshTokenLength: 256
 };
 
 /**
@@ -35,9 +35,9 @@ exports.token = {
  * dbName - The database name to use.
  */
 exports.db = {
-    timeToCheckExpiredTokens: 3600,
-    type: "db",
-    dbName: "OAuth2orizeRecipeTokens"
+  timeToCheckExpiredTokens: 3600,
+  type: "db",
+  dbName: "OAuth2orizeRecipeTokens"
 };
 
 /**
@@ -52,9 +52,9 @@ exports.db = {
  * dbName - The database name if you're using Mongo
  */
 exports.session = {
-    type: "MemoryStore",
-    maxAge: 3600000 * 24 * 7 * 52,
-    //TODO You need to change this secret to something that you choose for your secret
-    secret: "A Secret That Should Be Changed",
-    dbName: "Session"
+  type: "MemoryStore",
+  maxAge: 3600000 * 24 * 7 * 52,
+  //TODO You need to change this secret to something that you choose for your secret
+  secret: "A Secret That Should Be Changed",
+  dbName: "Session"
 };
