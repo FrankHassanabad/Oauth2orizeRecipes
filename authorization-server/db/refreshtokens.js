@@ -1,3 +1,5 @@
+'use strict';
+
 //The refresh tokens.
 //You will use these to get access tokens to access your end point data through the means outlined
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage

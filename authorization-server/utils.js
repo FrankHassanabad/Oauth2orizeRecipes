@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Return a unique identifier with the given `len`.
  *

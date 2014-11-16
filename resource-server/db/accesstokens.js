@@ -1,3 +1,5 @@
+'use strict';
+
 //The access token and optionally refresh token.
 //You will use these to access your end point data through the means outlined
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
@@ -11,7 +13,7 @@ var tokens = { };
 /**
  * Returns an access token if it finds one, otherwise returns
  * null if one is not found.
- * @param key The key to the access token
+ * @param accessToken The key to the access token
  * @param done The function to call next
  * @returns The access token if found, otherwise returns null
  */
@@ -41,7 +43,7 @@ exports.save = function(accessToken, expirationDate, clientID, scope, done) {
 exports.delete = function(accessToken, done) {
     delete tokens[accessToken];
     return done(null);
-}
+};
 
 /**
  * Removes expired access tokens.  It does this by looping through them all

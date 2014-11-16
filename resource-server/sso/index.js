@@ -1,3 +1,5 @@
+'use strict';
+
 var config = require('../config')
     , request = require('request')
     , db = require('../db');

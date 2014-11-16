@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * This is the configuration of the users that are allowed to connected to your authorization server.
  * These represent users of different client applications that can connect to the authorization server.

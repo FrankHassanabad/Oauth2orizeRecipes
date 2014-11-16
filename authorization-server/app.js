@@ -1,3 +1,5 @@
+'use strict';
+
 var config = require('./config')
     , express = require('express')
     , passport = require('passport')

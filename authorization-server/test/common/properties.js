@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Properties and settings of the OAuth2 authorization server
  */

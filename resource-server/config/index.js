@@ -1,3 +1,4 @@
+'use strict';
 
 /**
  * The client id and the client secret.  I'm using a
