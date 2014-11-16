@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
 var assert = require("assert");

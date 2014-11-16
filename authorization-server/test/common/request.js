@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
 var properties = require('./properties.js').properties;
@@ -22,7 +24,7 @@ exports.request = {
           username: properties.username,
           password: properties.password
         }
-      }, next)
+      }, next);
   },
   /**
    * Posts to the OAuth2 Authorization server the code to get the access token
@@ -39,7 +41,7 @@ exports.request = {
           client_secret: properties.clientSecret,
           grant_type: 'authorization_code'
         }
-      }, next)
+      }, next);
   },
   /**
    * Posts to the OAuth2 Authorization server the code to get the access token
@@ -58,7 +60,7 @@ exports.request = {
         headers: {
           Authorization: 'Basic ' + new Buffer(properties.clientId + ':' + properties.clientSecret).toString('base64')
         }
-      }, next)
+      }, next);
   },
   /**
    * Posts to the OAuth2 Authorization server the code to get the access token
@@ -77,7 +79,7 @@ exports.request = {
         headers: {
           Authorization: 'Basic ' + new Buffer(properties.clientId + ':' + properties.clientSecret).toString('base64')
         }
-      }, next)
+      }, next);
   },
   /**
    * Gets a new access token from the OAuth2 authorization server
@@ -94,7 +96,7 @@ exports.request = {
         headers: {
           Authorization: 'Basic ' + new Buffer(properties.clientId + ':' + properties.clientSecret).toString('base64')
         }
-      }, next)
+      }, next);
   },
   /**
    * Gets the authorization code from the OAuth2 authorization server

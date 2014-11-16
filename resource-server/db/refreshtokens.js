@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
 //The access token and optionally refresh token.

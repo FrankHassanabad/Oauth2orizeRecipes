@@ -1,11 +1,12 @@
+/*jslint node: true */
 'use strict';
 
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy
-  , db = require('./db')
-  , config = require('./config')
-  , BearerStrategy = require('passport-http-bearer').Strategy
-  , request = require('request');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var db = require('./db');
+var config = require('./config');
+var BearerStrategy = require('passport-http-bearer').Strategy;
+var request = require('request');
 
 /**
  * LocalStrategy

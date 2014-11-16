@@ -1,8 +1,10 @@
+/*jslint node: true */
+/*global exports */
 'use strict';
 
-var passport = require('passport')
-  , config = require('./config')
-  , db = require('./' + config.db.type);
+var passport = require('passport');
+var config = require('./config');
+var db = require('./' + config.db.type);
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to
@@ -47,7 +49,7 @@ exports.info = [
                   res.json({audience: client.clientId, expires_in: expirationLeft});
                 }
               } else {
-                res.json({audience: client.clientId})
+                res.json({audience: client.clientId});
               }
             }
           });

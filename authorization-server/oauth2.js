@@ -1,14 +1,15 @@
+/*jslint node: true */
 'use strict';
 
 /**
  * Module dependencies.
  */
-var oauth2orize = require('oauth2orize')
-  , passport = require('passport')
-  , login = require('connect-ensure-login')
-  , config = require('./config')
-  , db = require('./' + config.db.type)
-  , utils = require('./utils');
+var oauth2orize = require('oauth2orize');
+var passport = require('passport');
+var login = require('connect-ensure-login');
+var config = require('./config');
+var db = require('./' + config.db.type);
+var utils = require('./utils');
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -83,7 +84,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       if (err) {
         return done(err);
       }
-      if (result != undefined && result === 0) {
+      if (result !== undefined && result === 0) {
         //This condition can result because of a "race condition" that can occur naturally when you're making
         //two very fast calls to the authorization server to exchange authorization codes.  So, we check for
         // the result and if it's not undefined and the result is zero, then we have already deleted the

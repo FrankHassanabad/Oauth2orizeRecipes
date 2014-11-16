@@ -1,12 +1,13 @@
+/*jslint node: true */
 'use strict';
 
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy
-  , BasicStrategy = require('passport-http').BasicStrategy
-  , ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy
-  , BearerStrategy = require('passport-http-bearer').Strategy
-  , config = require('./config')
-  , db = require('./' + config.db.type);
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var BasicStrategy = require('passport-http').BasicStrategy;
+var ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
+var BearerStrategy = require('passport-http-bearer').Strategy;
+var config = require('./config');
+var db = require('./' + config.db.type);
 
 /**
  * LocalStrategy
@@ -106,7 +107,7 @@ passport.use(new BearerStrategy(
           return done(err);
         });
       } else {
-        if (token.userID != null) {
+        if (token.userID !== null) {
           db.users.find(token.userID, function (err, user) {
             if (err) {
               return done(err);

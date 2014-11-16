@@ -1,3 +1,6 @@
+/*jslint node: true */
+/*global exports */
+/*global mongodb */
 'use strict';
 
 //The refresh tokens.

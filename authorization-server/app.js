@@ -1,19 +1,20 @@
+/*jslint node: true */
 'use strict';
 
-var config = require('./config')
-  , express = require('express')
-  , passport = require('passport')
-  , site = require('./site')
-  , oauth2 = require('./oauth2')
-  , user = require('./user')
-  , client = require('./client')
-  , token = require('./token')
-  , https = require('https')
-  , cookieParser = require('cookie-parser')
-  , bodyParser = require('body-parser')
-  , fs = require('fs')
-  , expressSession = require("express-session")
-  , path = require('path');
+var config = require('./config');
+var express = require('express');
+var passport = require('passport');
+var site = require('./site');
+var oauth2 = require('./oauth2');
+var user = require('./user');
+var client = require('./client');
+var token = require('./token');
+var https = require('https');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var fs = require('fs');
+var expressSession = require("express-session");
+var path = require('path');
 
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the session configuration
@@ -30,7 +31,7 @@ if (config.session.type === 'MongoStore') {
   sessionStorage = new MemoryStore();
 } else {
   //We have no idea here
-  throw new Error("Within config/index.js the session.type is unknown: " + config.session.type)
+  throw new Error("Within config/index.js the session.type is unknown: " + config.session.type);
 }
 
 //Pull in the mongo store if we're configured to use it
