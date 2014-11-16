@@ -16,7 +16,7 @@ You can see a demo of it in action [here](https://oauth2orizerecipes.herokuapp.c
 # Installation
 ```
 git clone https://github.com/FrankHassanabad/Oauth2orizeRecipes.git
-cd Oauth2orizeRecipes/resource-server
+cd Oauth2orizeRecipes/authorization-server
 npm install
 node app.js
 ```

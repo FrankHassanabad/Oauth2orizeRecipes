@@ -7,20 +7,23 @@ var config = require('./config')
     , client = require('./client')
     , token = require('./token')
     , https = require('https')
+    , cookieParser = require('cookie-parser')
+    , bodyParser = require('body-parser')
     , fs = require('fs')
+    , expressSession = require("express-session")
     , path = require('path');
 
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the session configuration
 var sessionStorage;
 if (config.session.type === 'MongoStore') {
-    var MongoStore = require('connect-mongo')(express);
+    var MongoStore = require('connect-mongo')({session: expressSession});
     console.log('Using MongoDB for the Session');
     sessionStorage = new MongoStore({
         db: config.session.dbName
     });
 } else if(config.session.type === 'MemoryStore') {
-    var MemoryStore = express.session.MemoryStore;
+    var MemoryStore = expressSession.MemoryStore;
     console.log('Using MemoryStore for the Session');
     sessionStorage = new MemoryStore();
 } else {
@@ -43,34 +46,22 @@ if(config.db.type === 'mongodb') {
 // Express configuration
 var app = express();
 app.set('view engine', 'ejs');
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.urlencoded());
-app.use(express.json());
+app.use(cookieParser());
 
 //Session Configuration
-app.use(express.session({
+app.use(expressSession({
+    saveUninitialized: true,
+    resave: true,
     secret: config.session.secret,
     store: sessionStorage,
     key: "authorization.sid",
     cookie: {maxAge: config.session.maxAge }
 }));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(app.router);
-
-// Catch all for error messages.  Instead of a stack
-// trace, this will log the json of the error message
-// to the browser and pass along the status with it
-app.use(function(err, req, res, next) {
-    if(err) {
-        res.status(err.status);
-        res.json(err);
-    } else {
-        next();
-    }
-});
 
 // Passport configuration
 require('./auth');
@@ -94,6 +85,18 @@ app.get('/api/tokeninfo', token.info);
 
 //static resources for stylesheets, images, javascript files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Catch all for error messages.  Instead of a stack
+// trace, this will log the json of the error message
+// to the browser and pass along the status with it
+app.use(function(err, req, res, next) {
+    if(err) {
+        res.status(err.status);
+        res.json(err);
+    } else {
+        next();
+    }
+});
 
 //From time to time we need to clean up any expired tokens
 //in the database

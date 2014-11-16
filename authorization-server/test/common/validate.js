@@ -10,7 +10,7 @@ var validate = {};
  * {
  *     access_token: (some 256 characters)
  *     expires_in: 3600
- *     token_type: "bearer"
+ *     token_type: "Bearer"
  * }
  * @param response The http response
  * @param body The body of the message which contains the access token and refresh token
@@ -22,7 +22,7 @@ validate.validateAccessToken = function (response, body) {
     assert.equal(Object.keys(jsonResponse).length, 3);
     assert.equal(jsonResponse.access_token.length, 256);
     assert.equal(jsonResponse.expires_in, 3600);
-    assert.equal(jsonResponse.token_type, "bearer");
+    assert.equal(jsonResponse.token_type, "Bearer");
 };
 
 /**
@@ -31,7 +31,7 @@ validate.validateAccessToken = function (response, body) {
  *     access_token: (some 256 characters)
  *     refresh_token: (some 256 characters)
  *     expires_in: 3600
- *     token_type: "bearer"
+ *     token_type: "Bearer"
  * }
  * @param response The http response
  * @param body The body of the message which contains the access token and refresh token
@@ -43,7 +43,7 @@ validate.validateAccessRefreshToken = function (response, body) {
     assert.equal(Object.keys(jsonResponse).length, 4);
     assert.equal(jsonResponse.access_token.length, 256);
     assert.equal(jsonResponse.expires_in, 3600);
-    assert.equal(jsonResponse.token_type, "bearer");
+    assert.equal(jsonResponse.token_type, "Bearer");
 };
 
 /**
@@ -52,7 +52,7 @@ validate.validateAccessRefreshToken = function (response, body) {
  * {
  *     "user_d": "1"
  *     "name": "Bob Smith"
- *     "token_type": "bearer"
+ *     "token_type": "Bearer"
  * }
  * @param response The http response
  * @param body The body of the message which contains the user json message
@@ -98,12 +98,12 @@ validate.validateClientJson = function (response, body) {
  * @param body The body of the message which contains the error message
  */
 validate.validateInvalidCodeError = function (response, body) {
-    assert.equal(response.statusCode, 400);
+    assert.equal(response.statusCode, 403);
     var jsonResponse = JSON.parse(body);
     assert.equal(response.headers["content-type"], "application/json");
     assert.equal(Object.keys(jsonResponse).length, 2);
     assert.equal(jsonResponse.error, "invalid_grant");
-    assert.equal(jsonResponse.error_description, "invalid code");
+    assert.equal(jsonResponse.error_description, "Invalid authorization code");
 };
 
 /**

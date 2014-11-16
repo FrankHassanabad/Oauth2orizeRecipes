@@ -49,7 +49,7 @@ describe('Grant Type Implicit', function () {
                         var expiresIn = response.request.href.slice(305, 309);
                         assert.equal(expiresIn, 3600);
                         var tokenType = response.request.href.slice(321, 328);
-                        assert.equal(tokenType, 'bearer');
+                        assert.equal(tokenType, 'Bearer');
                         //Get the user info
                         helper.getUserInfo(accessToken,
                             function (error, response, body) {
@@ -69,7 +69,7 @@ describe('Grant Type Implicit', function () {
                 helper.getAuthorization({responseType: 'token', clientId: 'someinvalidclientid'},
                     function (error, response, body) {
                         //assert that we are getting an error code of 400
-                        assert.equal(response.statusCode, 400);
+                        assert.equal(response.statusCode, 403);
                         done();
                     }
                 );
@@ -98,7 +98,7 @@ describe('Grant Type Implicit', function () {
                 helper.getAuthorization({responseType: 'invalid'},
                     function (error, response, body) {
                         //assert that we are getting an error code of 400
-                        assert.equal(response.statusCode, 400);
+                        assert.equal(response.statusCode, 501);
                         done();
                     }
                 );
