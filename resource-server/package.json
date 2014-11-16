@@ -1,6 +1,6 @@
 {
   "name": "oauth2orize-resource-server",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
   "repository": {
     "type": "git",
