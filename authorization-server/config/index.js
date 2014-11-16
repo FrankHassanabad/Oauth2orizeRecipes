@@ -1,3 +1,5 @@
+'use strict';
+
 //
 // The configuration options of the server
 //

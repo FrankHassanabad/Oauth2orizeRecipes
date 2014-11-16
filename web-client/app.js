@@ -1,3 +1,5 @@
+'use strict';
+
 //Create a proxy that combines the authorization server and
 //resource server with this server so that we can make calls
 //to both without cross domain issues

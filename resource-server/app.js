@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express')
     , site = require('./site')
     , passport = require('passport')

@@ -1,3 +1,5 @@
+'use strict';
+
 var passport = require('passport')
     , login = require('connect-ensure-login')
     , config = require('./config')

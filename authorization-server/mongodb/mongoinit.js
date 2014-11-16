@@ -1,5 +1,7 @@
-MongoClient = require('mongodb').MongoClient;
-config = require('../config');
+'use strict';
+
+var MongoClient = require('mongodb').MongoClient;
+var config = require('../config');
 
 //TODO Configure the connection string for mongo to accept more than just local host
 
@@ -12,7 +14,7 @@ var localDb;
  * Gets the static collection of "storage" that is stored within mongo db
  * @param next Calls this when completed
  */
-getCollection = function (next) {
+var getCollection = function (next) {
     if (typeof localDb !== "undefined") {
         //The database is already initialized
         var localCollection = localDb.collection('storage');

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * This is the configuration of the clients that are allowed to connected to your authorization server.
  * These represent client applications that can connect.  At a minimum you need the required properties of

@@ -1,3 +1,5 @@
+'use strict';
+
 //TODO Document all of this
 
 var passport = require('passport')

@@ -1,3 +1,5 @@
+'use strict';
+
 exports.users = require('./users');
 exports.clients = require('./clients');
 exports.accessTokens = require('./accesstokens');

@@ -1,3 +1,5 @@
+'use strict';
+
 var passport = require('passport')
     , config = require('./config')
     , db = require('./' + config.db.type);
