@@ -1,48 +1,48 @@
 'use strict';
 
 var config = require('./config')
-    , express = require('express')
-    , passport = require('passport')
-    , site = require('./site')
-    , oauth2 = require('./oauth2')
-    , user = require('./user')
-    , client = require('./client')
-    , token = require('./token')
-    , https = require('https')
-    , cookieParser = require('cookie-parser')
-    , bodyParser = require('body-parser')
-    , fs = require('fs')
-    , expressSession = require("express-session")
-    , path = require('path');
+  , express = require('express')
+  , passport = require('passport')
+  , site = require('./site')
+  , oauth2 = require('./oauth2')
+  , user = require('./user')
+  , client = require('./client')
+  , token = require('./token')
+  , https = require('https')
+  , cookieParser = require('cookie-parser')
+  , bodyParser = require('body-parser')
+  , fs = require('fs')
+  , expressSession = require("express-session")
+  , path = require('path');
 
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the session configuration
 var sessionStorage;
 if (config.session.type === 'MongoStore') {
-    var MongoStore = require('connect-mongo')({session: expressSession});
-    console.log('Using MongoDB for the Session');
-    sessionStorage = new MongoStore({
-        db: config.session.dbName
-    });
-} else if(config.session.type === 'MemoryStore') {
-    var MemoryStore = expressSession.MemoryStore;
-    console.log('Using MemoryStore for the Session');
-    sessionStorage = new MemoryStore();
+  var MongoStore = require('connect-mongo')({session: expressSession});
+  console.log('Using MongoDB for the Session');
+  sessionStorage = new MongoStore({
+    db: config.session.dbName
+  });
+} else if (config.session.type === 'MemoryStore') {
+  var MemoryStore = expressSession.MemoryStore;
+  console.log('Using MemoryStore for the Session');
+  sessionStorage = new MemoryStore();
 } else {
-    //We have no idea here
-    throw new Error("Within config/index.js the session.type is unknown: " + config.session.type )
+  //We have no idea here
+  throw new Error("Within config/index.js the session.type is unknown: " + config.session.type)
 }
 
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the database configuration
 var db = require('./' + config.db.type);
-if(config.db.type === 'mongodb') {
-    console.log('Using MongoDB for the data store');
-} else if(config.db.type === 'db') {
-    console.log('Using MemoryStore for the data store');
+if (config.db.type === 'mongodb') {
+  console.log('Using MongoDB for the data store');
+} else if (config.db.type === 'db') {
+  console.log('Using MemoryStore for the data store');
 } else {
-    //We have no idea here
-    throw new Error("Within config/index.js the db.type is unknown: " + config.db.type );
+  //We have no idea here
+  throw new Error("Within config/index.js the db.type is unknown: " + config.db.type);
 }
 
 // Express configuration
@@ -52,15 +52,15 @@ app.use(cookieParser());
 
 //Session Configuration
 app.use(expressSession({
-    saveUninitialized: true,
-    resave: true,
-    secret: config.session.secret,
-    store: sessionStorage,
-    key: "authorization.sid",
-    cookie: {maxAge: config.session.maxAge }
+  saveUninitialized: true,
+  resave: true,
+  secret: config.session.secret,
+  store: sessionStorage,
+  key: "authorization.sid",
+  cookie: {maxAge: config.session.maxAge}
 }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,23 +91,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Catch all for error messages.  Instead of a stack
 // trace, this will log the json of the error message
 // to the browser and pass along the status with it
-app.use(function(err, req, res, next) {
-    if(err) {
-        res.status(err.status);
-        res.json(err);
-    } else {
-        next();
-    }
+app.use(function (err, req, res, next) {
+  if (err) {
+    res.status(err.status);
+    res.json(err);
+  } else {
+    next();
+  }
 });
 
 //From time to time we need to clean up any expired tokens
 //in the database
 setInterval(function () {
-    db.accessTokens.removeExpired(function(err) {
-        if(err) {
-            console.error("Error removing expired tokens");
-        }
-    });
+  db.accessTokens.removeExpired(function (err) {
+    if (err) {
+      console.error("Error removing expired tokens");
+    }
+  });
 }, config.db.timeToCheckExpiredTokens * 1000);
 
 //TODO: Change these for your own certificates.  This was generated
@@ -116,8 +116,8 @@ setInterval(function () {
 //openssl req -new -key privatekey.pem -out certrequest.csr
 //openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 var options = {
-    key: fs.readFileSync('certs/privatekey.pem'),
-    cert: fs.readFileSync('certs/certificate.pem')
+  key: fs.readFileSync('certs/privatekey.pem'),
+  cert: fs.readFileSync('certs/certificate.pem')
 };
 
 // Create our HTTPS server listening on port 3000.

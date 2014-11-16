@@ -14,16 +14,16 @@ var mongodb = require('./mongoinit.js');
  * @returns The access token if found, otherwise returns null
  */
 exports.find = function (key, done) {
-    mongodb.getCollection(function(collection) {
-        var cursor = collection.find({token: key});
-        cursor.nextObject(function(err, token) {
-            if(!err && token) {
-                return done(null, token);
-            } else {
-                return done(null);
-            }
-        });
+  mongodb.getCollection(function (collection) {
+    var cursor = collection.find({token: key});
+    cursor.nextObject(function (err, token) {
+      if (!err && token) {
+        return done(null, token);
+      } else {
+        return done(null);
+      }
     });
+  });
 };
 
 /**
@@ -37,21 +37,21 @@ exports.find = function (key, done) {
  * @returns returns this with null
  */
 exports.save = function (token, expirationDate, userID, clientID, scope, done) {
-    mongodb.getCollection(function (collection) {
-        collection.insert({
-            token: token,
-            userID: userID,
-            expirationDate: expirationDate,
-            clientID: clientID,
-            scope: scope
-        }, function (err, inserted) {
-            if (err) {
-                return done(err);
-            } else {
-                return done(null);
-            }
-        });
+  mongodb.getCollection(function (collection) {
+    collection.insert({
+      token: token,
+      userID: userID,
+      expirationDate: expirationDate,
+      clientID: clientID,
+      scope: scope
+    }, function (err, inserted) {
+      if (err) {
+        return done(err);
+      } else {
+        return done(null);
+      }
     });
+  });
 };
 
 /**
@@ -60,17 +60,17 @@ exports.save = function (token, expirationDate, userID, clientID, scope, done) {
  * @param done returns this when done
  */
 exports.delete = function (key, done) {
-    mongodb.getCollection(function (collection) {
-        collection.remove({
-            token: key
-        }, function (err, result) {
-            if (err) {
-                return done(err, result);
-            } else {
-                return done(null, result);
-            }
-        });
+  mongodb.getCollection(function (collection) {
+    collection.remove({
+      token: key
+    }, function (err, result) {
+      if (err) {
+        return done(err, result);
+      } else {
+        return done(null, result);
+      }
     });
+  });
 };
 
 /**
@@ -80,27 +80,29 @@ exports.delete = function (key, done) {
  * @returns done
  */
 exports.removeExpired = function (done) {
-    mongodb.getCollection(function (collection) {
-        collection.find().each(function (err, token) {
-            if (token != null) {
-                if (new Date() > token.expirationDate) {
-                    collection.remove({
-                        token: token
-                    }, function (err, result) { });
-                }
-            }
-        });
+  mongodb.getCollection(function (collection) {
+    collection.find().each(function (err, token) {
+      if (token != null) {
+        if (new Date() > token.expirationDate) {
+          collection.remove({
+            token: token
+          }, function (err, result) {
+          });
+        }
+      }
     });
-    return done(null);
+  });
+  return done(null);
 };
 
 /**
  * Removes all access tokens.
  * @param done returns this when done.
  */
-exports.removeAll = function(done) {
-    mongodb.getCollection(function (collection) {
-        collection.remove(function(err, result) {});
-        return done(null);
+exports.removeAll = function (done) {
+  mongodb.getCollection(function (collection) {
+    collection.remove(function (err, result) {
     });
+    return done(null);
+  });
 };

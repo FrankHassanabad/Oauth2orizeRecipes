@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <script type="text/javascript">
-    document.write("\<script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js' type='text/javascript'>\<\/script>");
+  document.write("\<script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js' type='text/javascript'>\<\/script>");
 </script>
 <p>
-Your access token (Authorization Bearer) is:<pre><%= access_token %></pre>
+  Your access token (Authorization Bearer) is:
+<pre><%= access_token %></pre>
 Your refresh token is:
 <pre><%= refresh_token %></pre>
 </p>
@@ -12,23 +13,23 @@ Your refresh token is:
 <button id="button_1">Get Protected EndPoint Data</button>
 </p>
 <p>
-  <div id="protectedEndPointData">No Protected EndPoint Data yet</div>
+<div id="protectedEndPointData">No Protected EndPoint Data yet</div>
 </p>
 <script>
-$(document).ready(function(){
+  $(document).ready(function () {
     $("#button_1").click(function () {
-        $.ajax({
-            headers: {
-                "Authorization": "Bearer <%= access_token %>"
-            },
-            url: "/api/protectedEndPoint",
-            success: function (result) {
-                $("#protectedEndPointData").html(result);
-            },
-            failure: function(result) {
-                $("#protectedEndPointData").html(result);
-            }
-        });
+      $.ajax({
+        headers: {
+          "Authorization": "Bearer <%= access_token %>"
+        },
+        url: "/api/protectedEndPoint",
+        success: function (result) {
+          $("#protectedEndPointData").html(result);
+        },
+        failure: function (result) {
+          $("#protectedEndPointData").html(result);
+        }
+      });
     });
-});
+  });
 </script>

@@ -10,7 +10,7 @@
  * @return {String}
  * @api private
  */
-exports.uid = function(len) {
+exports.uid = function (len) {
   var buf = []
     , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     , charlen = chars.length;

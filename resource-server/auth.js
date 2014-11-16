@@ -1,11 +1,11 @@
 'use strict';
 
 var passport = require('passport')
-    , LocalStrategy = require('passport-local').Strategy
-    , db = require('./db')
-    , config = require('./config')
-    , BearerStrategy = require('passport-http-bearer').Strategy
-    , request = require('request');
+  , LocalStrategy = require('passport-local').Strategy
+  , db = require('./db')
+  , config = require('./config')
+  , BearerStrategy = require('passport-http-bearer').Strategy
+  , request = require('request');
 
 /**
  * LocalStrategy
@@ -26,46 +26,46 @@ var passport = require('passport')
  * token passed to them through the Authorization Bearer usage.
  */
 passport.use(new LocalStrategy(
-    function (username, password, done) {
-        request.post('https://localhost:3000/oauth/token', {
-            form: {
-                grant_type: 'password',
-                username: username,
-                password: password,
-                scope: 'offline_access'
-            },
-            headers: {
-                Authorization: 'Basic ' + new Buffer(config.client.clientID + ':' + config.client.clientSecret).toString('base64')
+  function (username, password, done) {
+    request.post('https://localhost:3000/oauth/token', {
+      form: {
+        grant_type: 'password',
+        username: username,
+        password: password,
+        scope: 'offline_access'
+      },
+      headers: {
+        Authorization: 'Basic ' + new Buffer(config.client.clientID + ':' + config.client.clientSecret).toString('base64')
+      }
+    }, function (error, response, body) {
+      var jsonResponse = JSON.parse(body);
+      if (response.statusCode === 200 && jsonResponse.access_token) {
+        //TODO scopes
+        var expirationDate = null;
+        if (jsonResponse.expires_in) {
+          expirationDate = new Date(new Date().getTime() + (jsonResponse.expires_in * 1000));
+        }
+        var saveAccessToken = function (err) {
+          if (err) {
+            return done(null, false);
+          }
+          return done(null, {accessToken: jsonResponse.access_token, refreshToken: jsonResponse.refresh_token});
+        };
+        if (jsonResponse.refresh_token) {
+          db.refreshTokens.save(jsonResponse.refresh_token, config.client.clientID, null, function (err) {
+            if (err) {
+              return done(null, false);
             }
-        }, function (error, response, body) {
-            var jsonResponse = JSON.parse(body);
-            if (response.statusCode === 200 && jsonResponse.access_token) {
-                //TODO scopes
-                var expirationDate = null;
-                if (jsonResponse.expires_in) {
-                    expirationDate = new Date(new Date().getTime() + (jsonResponse.expires_in * 1000));
-                }
-                var saveAccessToken = function (err) {
-                    if (err) {
-                        return done(null, false);
-                    }
-                    return done(null, {accessToken: jsonResponse.access_token, refreshToken: jsonResponse.refresh_token});
-                };
-                if (jsonResponse.refresh_token) {
-                    db.refreshTokens.save(jsonResponse.refresh_token, config.client.clientID, null, function (err) {
-                        if (err) {
-                            return done(null, false);
-                        }
-                        db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-                    });
-                } else {
-                    db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-                }
-            } else {
-                return done(null, false);
-            }
-        });
-    }
+            db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+          });
+        } else {
+          db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+        }
+      } else {
+        return done(null, false);
+      }
+    });
+  }
 ));
 
 /**
@@ -77,54 +77,54 @@ passport.use(new LocalStrategy(
  * the authorizing user.
  */
 passport.use(new BearerStrategy(
-    function (accessToken, done) {
-        db.accessTokens.find(accessToken, function (err, token) {
+  function (accessToken, done) {
+    db.accessTokens.find(accessToken, function (err, token) {
+      if (err) {
+        return done(err);
+      }
+      if (!token) {
+        request.get(config.authorization.tokeninfoURL + accessToken,
+          function (error, response, body) {
             if (err) {
-                return done(err);
+              console.log('Error:' + error);
             }
-            if (!token) {
-                request.get(config.authorization.tokeninfoURL + accessToken,
-                    function (error, response, body) {
-                        if (err) {
-                            console.log('Error:' + error);
-                        }
-                        if(response.statusCode === 200) {
-                            var jsonReturn = JSON.parse(body);
-                            if (jsonReturn.error) {
-                                return done(null, false);
-                            } else {
-                                var expirationDate = null;
-                                if(jsonReturn.expires_in) {
-                                    expirationDate = new Date(new Date().getTime() + (jsonReturn.expires_in * 1000));
-                                }
-                                //TODO scopes
-                                db.accessTokens.save(accessToken, expirationDate, config.client.clientID, null, function (err) {
-                                    if(err) {
-                                        return done(err);
-                                    }
-                                    return done(null, accessToken);
-                                });
-                            }
-                        } else {
-                            return done(null, false);
-                        }
-                    }
-                );
-            } else {
-                if(token.expirationDate && (new Date() > token.expirationDate)) {
-                    db.accessTokens.delete(token, function(err) {
-                        if(err) {
-                            return done(err);
-                        } else {
-                            return done(null, false);
-                        }
-                    });
-                } else {
-                    return done(null, token);
+            if (response.statusCode === 200) {
+              var jsonReturn = JSON.parse(body);
+              if (jsonReturn.error) {
+                return done(null, false);
+              } else {
+                var expirationDate = null;
+                if (jsonReturn.expires_in) {
+                  expirationDate = new Date(new Date().getTime() + (jsonReturn.expires_in * 1000));
                 }
+                //TODO scopes
+                db.accessTokens.save(accessToken, expirationDate, config.client.clientID, null, function (err) {
+                  if (err) {
+                    return done(err);
+                  }
+                  return done(null, accessToken);
+                });
+              }
+            } else {
+              return done(null, false);
             }
-        });
-    }
+          }
+        );
+      } else {
+        if (token.expirationDate && (new Date() > token.expirationDate)) {
+          db.accessTokens.delete(token, function (err) {
+            if (err) {
+              return done(err);
+            } else {
+              return done(null, false);
+            }
+          });
+        } else {
+          return done(null, token);
+        }
+      }
+    });
+  }
 ));
 
 // Register serialialization and deserialization functions.
@@ -140,11 +140,11 @@ passport.use(new BearerStrategy(
 // simple matter of serializing the client's ID, and deserializing by finding
 // the client by ID from the database.
 
-passport.serializeUser(function(user, done) {
-    done(null, user);
+passport.serializeUser(function (user, done) {
+  done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
-    done(null, user);
+passport.deserializeUser(function (user, done) {
+  done(null, user);
 });
 

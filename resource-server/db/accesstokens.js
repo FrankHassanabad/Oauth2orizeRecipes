@@ -8,7 +8,7 @@
 /**
  * Tokens in-memory data structure which stores all of the access tokens
  */
-var tokens = { };
+var tokens = {};
 
 /**
  * Returns an access token if it finds one, otherwise returns
@@ -17,9 +17,9 @@ var tokens = { };
  * @param done The function to call next
  * @returns The access token if found, otherwise returns null
  */
-exports.find = function(accessToken, done) {
-    var token = tokens[accessToken];
-    return done(null, token);
+exports.find = function (accessToken, done) {
+  var token = tokens[accessToken];
+  return done(null, token);
 };
 
 /**
@@ -30,9 +30,9 @@ exports.find = function(accessToken, done) {
  * @param scope The scope (optional)
  * @param done Calls this with null always
  */
-exports.save = function(accessToken, expirationDate, clientID, scope, done) {
-    tokens[accessToken] = { accessToken: accessToken, expirationDate: expirationDate, clientID: clientID, scope: scope };
-    return done(null);
+exports.save = function (accessToken, expirationDate, clientID, scope, done) {
+  tokens[accessToken] = {accessToken: accessToken, expirationDate: expirationDate, clientID: clientID, scope: scope};
+  return done(null);
 };
 
 /**
@@ -40,9 +40,9 @@ exports.save = function(accessToken, expirationDate, clientID, scope, done) {
  * @param accessToken The access token to delete
  * @param done Calls this with null always
  */
-exports.delete = function(accessToken, done) {
-    delete tokens[accessToken];
-    return done(null);
+exports.delete = function (accessToken, done) {
+  delete tokens[accessToken];
+  return done(null);
 };
 
 /**
@@ -51,19 +51,19 @@ exports.delete = function(accessToken, done) {
  * @param done returns this when done.
  * @returns done
  */
-exports.removeExpired = function(done) {
-    var tokensToDelete = [];
-    for (var key in tokens) {
-        if (tokens.hasOwnProperty(key)) {
-            var token = tokens[key];
-            if(new Date() > token.expirationDate) {
-                tokensToDelete.push(key);
-            }
-        }
+exports.removeExpired = function (done) {
+  var tokensToDelete = [];
+  for (var key in tokens) {
+    if (tokens.hasOwnProperty(key)) {
+      var token = tokens[key];
+      if (new Date() > token.expirationDate) {
+        tokensToDelete.push(key);
+      }
     }
-    for(var i = 0; i < tokensToDelete.length; ++i) {
-        console.log("Deleting token:" + key);
-        delete tokens[tokensToDelete[i]];
-    }
-    return done(null);
+  }
+  for (var i = 0; i < tokensToDelete.length; ++i) {
+    console.log("Deleting token:" + key);
+    delete tokens[tokensToDelete[i]];
+  }
+  return done(null);
 };
