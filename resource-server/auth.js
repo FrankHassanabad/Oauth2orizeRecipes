@@ -83,7 +83,9 @@ passport.use(new BearerStrategy(
             if (!token) {
                 request.get(config.authorization.tokeninfoURL + accessToken,
                     function (error, response, body) {
-                        console.log(error);
+                        if (err) {
+                            console.log('Error:' + error);
+                        }
                         if(response.statusCode === 200) {
                             var jsonReturn = JSON.parse(body);
                             if (jsonReturn.error) {

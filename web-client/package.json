@@ -1,12 +1,19 @@
 {
     "name": "oauth2orize-web-client",
-    "version": "1.0.1",
+    "version": "3.0.0",
+    "description": "OAuth2 security recipes and examples based on OAuth2orize",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
+    },
     "dependencies": {
-        "http-proxy": "0.10.3",
-        "connect": "2.8.4"
+        "http-proxy": "1.6.x",
+        "connect": "3.3.x",
+        "serve-static": "1.7.x",
+        "finalhandler": "0.3.x"
     },
     "engines": {
         "node": "0.10.x",
-        "npm":  "1.2.x"
+        "npm":  "1.4.x"
     }
 }

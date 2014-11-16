@@ -3,10 +3,11 @@
 //to both without cross domain issues
 
 var httpProxy = require('http-proxy')
-    , http = http = require('http')
     , connect = require('connect')
     , https = require('https')
-    , fs = require('fs');
+    , fs = require('fs')
+    , finalhandler = require('finalhandler')
+    , serveStatic = require('serve-static');
 
 //TODO: Change these for your own certificates.  This was generated
 //through the commands:
@@ -14,45 +15,38 @@ var httpProxy = require('http-proxy')
 //openssl req -new -key privatekey.pem -out certrequest.csr
 //openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 var options = {
-    https: {
+    //This is for the proxy
+    ssl: {
         key: fs.readFileSync('certs/privatekey.pem'),
         cert: fs.readFileSync('certs/certificate.pem')
-    }
+    },
+    //This is duplicated for the regular https server
+    key: fs.readFileSync('certs/privatekey.pem'),
+    cert: fs.readFileSync('certs/certificate.pem')
 };
 
 /**
  * The HTTPS Authorization Server
  */
-var authServer = new httpProxy.HttpProxy({
-    target: {
-        host: 'localhost',
-        port: 3000,
-        rejectUnauthorized: false,
-        https: true
-    }
+var authServer = httpProxy.createProxyServer({
+    target: 'https://localhost:3000',
+    secure: false
 });
 
 /**
  * The HTTPS Resource Server
  */
-var resourceServer = new httpProxy.HttpProxy({
-    target: {
-        host: 'localhost',
-        port: 4000,
-        rejectUnauthorized: false,
-        https: true
-    }
+var resourceServer = httpProxy.createProxyServer({
+    target: 'https://localhost:4000',
+    secure: false
 });
 
 /**
  * The local HTTP Resource Server
  */
-var localServer = new httpProxy.HttpProxy({
-    target: {
-        host: 'localhost',
-        port: 6000,
-        rejectUnauthorized: false
-    }
+var localServer = httpProxy.createProxyServer({
+    target: 'https://localhost:6000',
+    secure: false
 });
 
 /**
@@ -60,13 +54,13 @@ var localServer = new httpProxy.HttpProxy({
  * Authorization requests to port 3000 and all
  * Resource Servers to 4000
  */
-httpProxy.createServer(options, function (req, res) {
+https.createServer(options, function (req, res) {
     if(startsWith(req.url, '/api/tokeninfo') || startsWith(req.url, '/oauth/token')) {
-        authServer.proxyRequest(req, res);
+        authServer.web(req, res);
     } else if(startsWith(req.url, '/login') || startsWith(req.url, '/info') || startsWith(req.url, '/api/protectedEndPoint')) {
-        resourceServer.proxyRequest(req, res);
+        resourceServer.web(req, res);
     } else {
-        localServer.proxyRequest(req, res);
+        localServer.web(req, res);
     }
 }).listen(5000);
 
@@ -74,11 +68,16 @@ httpProxy.createServer(options, function (req, res) {
  * Create a very simple static file server which listens
  * on port 6000, to server up our local static content
  */
-connect.createServer(
-    connect.static('views')
-).listen(6000);
+var serve = serveStatic('views', {'index': ['index.html', 'index.htm']});
+// Create server
+var server = https.createServer(options, function (req, res) {
+    var done = finalhandler(req, res);
+    serve(req, res, done);
+});
 
-console.log("Web Client Server started on port 3000");
+server.listen(6000);
+
+console.log("Web Client Server started on port 5000");
 
 /**
  * Function which returns true if str1 starts with str2

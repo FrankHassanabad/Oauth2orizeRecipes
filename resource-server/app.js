@@ -7,20 +7,24 @@ var express = require('express')
     , config = require('./config')
     , path = require('path')
     , db = require('./db')
+    , cookieParser = require('cookie-parser')
+    , bodyParser = require('body-parser')
+    , expressSession = require("express-session")
     , sso = require('./sso');
 
 // Express configuration
 var app = express();
 app.set('view engine', 'ejs');
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.urlencoded());
-app.use(express.json());
-app.use(express.session({ secret: config.session.secret }));
-
+app.use(cookieParser());
+app.use(expressSession({
+    saveUninitialized: true,
+    resave: true,
+    secret: config.session.secret
+}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(app.router);
 
 // Catch all for error messages.  Instead of a stack
 // trace, this will log the json of the error message

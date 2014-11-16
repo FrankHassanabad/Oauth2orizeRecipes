@@ -115,7 +115,7 @@ describe('Grant Type Authorization Code', function () {
                 helper.getAuthorization({clientId: 'someinvalidclientid'},
                     function (error, response, body) {
                         //assert that we are getting an error code of 400
-                        assert.equal(response.statusCode, 400);
+                        assert.equal(response.statusCode, 403);
                         done();
                     }
                 );
@@ -144,7 +144,7 @@ describe('Grant Type Authorization Code', function () {
                 helper.getAuthorization({responseType: 'invalid'},
                     function (error, response, body) {
                         //assert that we are getting an error code of 400
-                        assert.equal(response.statusCode, 400);
+                        assert.equal(response.statusCode, 501);
                         done();
                     }
                 );
