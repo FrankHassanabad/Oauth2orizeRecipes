@@ -70,13 +70,13 @@ describe('Grant Type Authorization Code', function () {
                 helper.postRefeshToken(tokens.refresh_token, function (error, response, body) {
                   validate.validateAccessToken(response, body);
                 });
-              }
-            );
-            //Try to get the token again but we shouldn't be able to reuse the same code
-            helper.postOAuthCode(code,
-              function (error, response, body) {
-                validate.validateInvalidCodeError(response, body);
-                done();
+                //Try to get the token again but we shouldn't be able to reuse the same code
+                helper.postOAuthCode(code,
+                  function (error, response, body) {
+                    validate.validateInvalidCodeError(response, body);
+                    done();
+                  }
+                );
               }
             );
           }
