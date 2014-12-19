@@ -8,6 +8,8 @@
 //in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
 //(http://tools.ietf.org/html/rfc6750)
 
+var mongodb = require('./mongoinit.js');
+
 /**
  * Returns a refresh token if it finds one, otherwise returns
  * null if one is not found.
