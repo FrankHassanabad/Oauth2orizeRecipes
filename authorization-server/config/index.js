@@ -5,6 +5,8 @@
 // The configuration options of the server
 //
 
+exports.env = 'test';
+
 /**
  * Configuration of access tokens.
  *

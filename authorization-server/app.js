@@ -16,6 +16,8 @@ var fs = require('fs');
 var expressSession = require("express-session");
 var path = require('path');
 
+
+
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the session configuration
 var sessionStorage;

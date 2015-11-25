@@ -32,7 +32,7 @@ var server = oauth2orize.createServer();
  */
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
   var code = utils.uid(config.token.authorizationCodeLength);
-  db.authorizationCodes.save(code, client.id, redirectURI, user.id, client.scope, function (err) {
+  db.authorizationCodes.save(code, client.id, redirectURI, user.UserId, client.scope, function (err) {
     if (err) {
       return done(err);
     }
@@ -50,7 +50,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
  */
 server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
   var token = utils.uid(config.token.accessTokenLength);
-  db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, client.scope, function (err) {
+  db.accessTokens.save(token, config.token.calculateExpirationDate(), user.UserId, client.id, client.scope, function (err) {
     if (err) {
       return done(err);
     }
@@ -135,7 +135,7 @@ server.exchange(oauth2orize.exchange.password(function (client, username, passwo
       return done(null, false);
     }
     var token = utils.uid(config.token.accessTokenLength);
-    db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, scope, function (err) {
+    db.accessTokens.save(token, config.token.calculateExpirationDate(), user.UserId, client.id, scope, function (err) {
       if (err) {
         return done(err);
       }
@@ -144,7 +144,7 @@ server.exchange(oauth2orize.exchange.password(function (client, username, passwo
       //a refresh token or not
       if (scope && scope.indexOf("offline_access") === 0) {
         refreshToken = utils.uid(config.token.refreshTokenLength);
-        db.refreshTokens.save(refreshToken, user.id, client.id, scope, function (err) {
+        db.refreshTokens.save(refreshToken, user.UserId, client.id, scope, function (err) {
           if (err) {
             return done(err);
           }
