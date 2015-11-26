@@ -20,7 +20,7 @@
 var couchbase = require('couchbase');
 var ViewQuery = couchbase.ViewQuery;
 var cluster = new couchbase.Cluster('http://wiki:8091');
-var bucket = cluster.openBucket('oauth_clients', 'J5ELwZrL2yvPLpxA8VVu');
+var bucket = cluster.openBucket('oauth', 'J5ELwZrL2yvPLpxA8VVu');
 
 
 /**
@@ -55,7 +55,7 @@ exports.find = function (id, done) {
  * @returns The client if found, otherwise returns null
  */
 exports.findByClientId = function (clientId, done) {
-    var query = ViewQuery.from('dev_clientId', 'clientId');
+    var query = ViewQuery.from('dev_oauth_views', 'clients');
     bucket.query(query, function (err, result) {
         if (err) {
             return done(err, null);
