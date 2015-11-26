@@ -16,6 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="stores\accesstokenscouchbase.js" />
     <Compile Include="stores\clientscouchbase.js" />
     <Compile Include="stores\userssql.js" />
     <Compile Include="utils\crypt.js" />
@@ -31,7 +32,7 @@
     <Compile Include="utils.js" />
     <Content Include="certs\README.txt" />
     <Compile Include="config\index.js" />
-    <Compile Include="db\accesstokens.js" />
+    <Compile Include="stores\accesstokens.js" />
     <Compile Include="db\authorizationcodes.js" />
     <Compile Include="stores\clients.js" />
     <Compile Include="db\index.js" />
