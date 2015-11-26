@@ -5,6 +5,7 @@
 // The configuration options of the server
 //
 
+// dev, test, prod
 exports.env = 'test';
 
 /**
