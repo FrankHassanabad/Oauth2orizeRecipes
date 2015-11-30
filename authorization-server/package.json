@@ -15,6 +15,7 @@
     "ejs": "^1.0.0",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
+    "mocha": "^2.3.4",
     "mongodb": "^2.0.49",
     "mssql": "^2.3.2",
     "oauth2orize": "^1.2.0",
@@ -32,7 +33,6 @@
     "npm": "1.4.x"
   },
   "devDependencies": {
-    "mocha": "2.0.x",
     "request": "2.48.x"
   }
 }

@@ -17,6 +17,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Compile Include="stores\accesstokenscouchbase.js" />
+    <Compile Include="stores\authorizationcodescouchbase.js" />
     <Compile Include="stores\clientscouchbase.js" />
     <Compile Include="stores\userssql.js" />
     <Compile Include="utils\crypt.js" />
@@ -33,7 +34,7 @@
     <Content Include="certs\README.txt" />
     <Compile Include="config\index.js" />
     <Compile Include="stores\accesstokens.js" />
-    <Compile Include="db\authorizationcodes.js" />
+    <Compile Include="stores\authorizationcodes.js" />
     <Compile Include="stores\clients.js" />
     <Compile Include="db\index.js" />
     <Compile Include="db\refreshtokens.js" />
@@ -45,11 +46,21 @@
     <Compile Include="mongodb\mongoinit.js" />
     <Compile Include="mongodb\refreshtokens.js" />
     <Compile Include="mongodb\users.js" />
-    <Compile Include="test\db_accesstokens.js" />
-    <Compile Include="test\grant_type_client.js" />
-    <Compile Include="test\grant_type_code.js" />
-    <Compile Include="test\grant_type_implicit.js" />
-    <Compile Include="test\grant_type_password.js" />
+    <Compile Include="test\db_accesstokens.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_client.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_code.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_implicit.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_password.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
     <Content Include="views\account.ejs" />
     <Content Include="views\dialog.ejs" />
     <Content Include="views\index-with-code.ejs" />

@@ -6,7 +6,7 @@
 //
 
 // dev, test, prod
-exports.env = 'test';
+exports.env = 'dev';
 
 /**
  * Configuration of access tokens.
