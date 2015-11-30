@@ -1,2 +1,0 @@
-C:\Users\nlucero\Documents\GitHub\Oauth2orizeRecipes\bin\Microsoft.NodejsTools.WebRole.dll
-C:\Users\nlucero\Documents\GitHub\Oauth2orizeRecipes\obj\Debug\Oauth2orizeRecipes.njsprojResolveAssemblyReference.cache

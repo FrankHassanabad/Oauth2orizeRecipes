@@ -4,3 +4,6 @@ node_modules
 *.iml
 npm-debug.log
 certs
+.ntvs_analysis.dat
+/bin
+/obj
