@@ -13,15 +13,13 @@ if (config.env == 'dev') {
     exports.clients = require('../stores/clients.js');
     exports.accessTokens = require('../stores/accesstokens');
     exports.authorizationCodes = require('../stores/authorizationcodes');
+    exports.refreshTokens = require('../stores/refreshtokens');
 } else if (config.env == 'test' || config.env == 'prod') {
     exports.users = require('../stores/userssql.js');
     exports.clients = require('../stores/clientscouchbase.js');
     exports.accessTokens = require('../stores/accesstokenscouchbase.js');
     exports.authorizationCodes = require('../stores/authorizationcodescouchbase');
+    exports.refreshTokens = require('../stores/refreshtokenscouchbase');
 } else {
     throw new Error("Invalid environment.");
 }
-
-
-
-exports.refreshTokens = require('./refreshtokens');
