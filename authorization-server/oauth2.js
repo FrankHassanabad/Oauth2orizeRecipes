@@ -124,14 +124,11 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
  */
 server.exchange(oauth2orize.exchange.password(function (client, username, password, scope, done) {
   //Validate the user
-  db.users.findByUsername(username, function (err, user) {
+  db.users.find(username, password, function (err, user) {
     if (err) {
       return done(err);
     }
     if (!user) {
-      return done(null, false);
-    }
-    if (password !== user.password) {
       return done(null, false);
     }
     var token = utils.uid(config.token.accessTokenLength);
