@@ -296,14 +296,15 @@ exports.token = [
 // the client by ID from the database.
 
 server.serializeClient(function (client, done) {
-  return done(null, client.id);
+  return done(null, {id: client.id, scope: client.scope});
 });
 
-server.deserializeClient(function (id, done) {
-  db.clients.find(id, function (err, client) {
+server.deserializeClient(function (obj, done) {
+  db.clients.find(obj.id, function (err, client) {
     if (err) {
       return done(err);
     }
+    client.scope = obj.scope;    
     return done(null, client);
   });
 });
