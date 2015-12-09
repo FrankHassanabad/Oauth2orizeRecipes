@@ -15,7 +15,10 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var expressSession = require("express-session");
 var path = require('path');
+var csrf = require('csurf');
 
+var csrfProtection = csrf({ cookie: true });
+var parseForm = bodyParser.urlencoded({ extended: false });
 
 
 //Pull in the mongo store if we're configured to use it
@@ -50,8 +53,23 @@ if (config.db.type === 'mongodb') {
 
 // Express configuration
 var app = express();
-app.set('view engine', 'ejs');
 app.use(cookieParser());
+app.set('view engine', 'ejs');
+
+
+
+
+
+
+//app.use(express.csrf());
+//app.use(function (req, res, next) {
+//    res.locals.token = req.csrfToken();
+//    next();
+//});
+
+
+
+
 
 //Session Configuration
 app.use(expressSession({
@@ -72,8 +90,8 @@ app.use(passport.session());
 require('./auth');
 
 app.get('/', site.index);
-app.get('/login', site.loginForm);
-app.post('/login', site.login);
+app.get('/login', csrfProtection, site.loginForm);
+app.post('/login', csrfProtection, site.login);
 app.get('/logout', site.logout);
 app.get('/account', site.account);
 

@@ -15,6 +15,7 @@
 
 <!-- HTML login screen form -->
 <form action="/login" method="post" class="pure-form pure-form-stacked">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   <fieldset>
     <!-- Upper box with Title, username, and password -->
     <div class="upper-box">

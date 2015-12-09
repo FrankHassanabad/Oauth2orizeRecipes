@@ -16,7 +16,7 @@ exports.index = function (req, res) {
 };
 
 exports.loginForm = function (req, res) {
-  res.render('login');
+  res.render('login', { csrfToken: req.csrfToken() });
 };
 
 exports.login = [
