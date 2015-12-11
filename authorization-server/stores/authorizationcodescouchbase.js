@@ -7,7 +7,6 @@
 //(http://tools.ietf.org/html/rfc6750)
 
 var couchbase = require('couchbase');
-var ViewQuery = couchbase.ViewQuery;
 var cluster = new couchbase.Cluster('http://wiki:8091');
 var bucket = cluster.openBucket('oauth', 'J5ELwZrL2yvPLpxA8VVu');
 

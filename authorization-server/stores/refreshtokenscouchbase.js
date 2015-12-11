@@ -7,20 +7,8 @@
 //(http://tools.ietf.org/html/rfc6750)
 
 var couchbase = require('couchbase');
-var ViewQuery = couchbase.ViewQuery;
 var cluster = new couchbase.Cluster('http://wiki:8091');
 var bucket = cluster.openBucket('oauth', 'J5ELwZrL2yvPLpxA8VVu');
-
-// Initialize counter if it does not exist
-var counter = bucket.counter("refreshtoken::count", 1, function (err, result) {
-    if (err && err.code === 13) {
-        bucket.insert("refreshtoken::count", 0, function (err, result) {
-            if (err) {
-                throw new Error(err);
-            }
-        });
-    }
-});
 
 /**
  * Returns a refresh token if it finds one, otherwise returns
@@ -30,9 +18,7 @@ var counter = bucket.counter("refreshtoken::count", 1, function (err, result) {
  * @returns The refresh token if found, otherwise returns null
  */
 exports.find = function (key, done) {
-    var query = ViewQuery.from('dev_oauth_views', 'refreshtokens').stale(ViewQuery.Update.BEFORE);
-    
-    bucket.query(query, function (err, result) {
+    bucket.get('refreshtoken_' + key, function (err, result) {
         if (err) {
             return done(err, null);
         }
@@ -41,16 +27,7 @@ exports.find = function (key, done) {
             return done(null, null);
         }
         
-        for (var i = 0; i < result.length; i++) {
-            var currentAccessToken = result[i].value;
-            
-            if (currentAccessToken.token === key) {
-                currentAccessToken.id = result[i].key;
-                return done(null, currentAccessToken);
-            }
-        }
-        
-        return done(null, null);
+        return done(null, result.value);
     });
 };
 
@@ -64,22 +41,14 @@ exports.find = function (key, done) {
  * @returns returns this with null
  */
 exports.save = function (token, userID, clientID, scope, done) {
-    var newToken = { token: token, type: "refreshtoken", userID: userID, clientID: clientID, scope: scope };
+    var newToken = { type: "refreshtoken", userID: userID, clientID: clientID, scope: scope };
 
-    bucket.counter("refreshtoken::count", 1, function (err, result) {
+    bucket.insert('refreshtoken_' + token, newToken, function (err, result) {
         if (err) {
             return done(err, null);
         }
         
-        var nextID = result.value;
-        
-        bucket.insert("refreshtoken_" + nextID, JSON.stringify(newToken), function (err, result) {
-            if (err) {
-                return done(err, null);
-            }
-            
-            return done(null);
-        });
+        return done(null);
     });
 };
 
@@ -89,31 +58,9 @@ exports.save = function (token, userID, clientID, scope, done) {
  * @param done returns this when done
  */
 exports.delete = function (key, done) {
-    var query = ViewQuery.from('dev_oauth_views', 'refreshtokens').stale(ViewQuery.Update.BEFORE);
-    
-    bucket.query(query, function (err, result) {
+    bucket.remove('refreshtoken_' + key, function (err, result) {
         if (err) {
             return done(err, null);
-        }
-        
-        if (!result) {
-            return done(null);
-        }
-        
-        for (var i = 0; i < result.length; i++) {
-            var currentAccessToken = result[i].value;
-            
-            if (currentAccessToken.token === key) {
-                bucket.remove(result[i].key, function (err, result) {
-                    if (err) {
-                        return done(err, null);
-                    }
-                    
-                    return done(null);
-                });
-                
-                return;
-            }
         }
         
         return done(null);

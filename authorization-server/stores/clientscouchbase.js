@@ -76,16 +76,4 @@ exports.findByClientId = function (clientId, done) {
         
         return done(null, null);
     });
-
-    //bucket.get('1', function (err, result) {
-    //    if (err) {
-    //        return done(err, null);
-    //    }
-        
-    //    if (!(result && result.value)) {
-    //        return done(null, null);
-    //    }
-        
-    //    return done(null, result.value);
-    //});
 };
