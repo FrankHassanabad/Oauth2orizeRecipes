@@ -24,8 +24,8 @@ exports.token = {
     return new Date(new Date().getTime() + (this.expiresIn * 1000));
   },
   authorizationCodeLength: 16,
-  accessTokenLength: 256,
-  refreshTokenLength: 256
+  accessTokenLength: 128,
+  refreshTokenLength: 128
 };
 
 /**

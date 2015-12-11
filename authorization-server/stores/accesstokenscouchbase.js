@@ -11,18 +11,6 @@ var ViewQuery = couchbase.ViewQuery;
 var cluster = new couchbase.Cluster('http://wiki:8091');
 var bucket = cluster.openBucket('oauth', 'J5ELwZrL2yvPLpxA8VVu');
 
-// Initialize counter if it does not exist
-var counter = bucket.counter("accesstoken::count", 1, function (err, result) {
-    if (err && err.code === 13) {
-        bucket.insert("accesstoken::count", 0, function (err, result) {
-            if (err) {
-                throw new Error(err);
-            }
-        });
-    }
-});
-
-
 /**
  * Returns an access token if it finds one, otherwise returns
  * null if one is not found.
@@ -31,27 +19,16 @@ var counter = bucket.counter("accesstoken::count", 1, function (err, result) {
  * @returns The access token if found, otherwise returns null
  */
 exports.find = function (key, done) {
-    var query = ViewQuery.from('dev_oauth_views', 'accesstokens').stale(ViewQuery.Update.BEFORE);
-    
-    bucket.query(query, function (err, result) {
+    bucket.get('accesstoken_' + key, function (err, result) { 
         if (err) {
             return done(err, null);
         }
-        
+
         if (!result) {
             return done(null, null);
         }
-        
-        for (var i = 0; i < result.length; i++) {
-            var currentAccessToken = result[i].value;
-            
-            if (currentAccessToken.token === key) {
-                currentAccessToken.id = result[i].key;
-                return done(null, currentAccessToken);
-            }
-        }
-        
-        return done(null, null);
+
+        return done(null, result.value);
     });
 };
 
@@ -66,22 +43,14 @@ exports.find = function (key, done) {
  * @returns returns this with null
  */
 exports.save = function (token, expirationDate, userID, clientID, scope, done) {
-    var newToken = { token: token, type: "accesstoken", userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope };
-    
-    bucket.counter("accesstoken::count", 1, function (err, result) {
+    var newToken = { type: 'accesstoken', userID: userID, expirationDate: expirationDate, clientID: clientID, scope: scope };
+
+    bucket.insert('accesstoken_' + token, newToken, function (err, result) { 
         if (err) {
             return done(err, null);
         }
-
-        var nextID = result.value;
-
-        bucket.insert("accesstoken_" + nextID, JSON.stringify(newToken), function (err, result) {
-            if (err) {
-                return done(err, null);
-            }
             
-            return done(null);
-        });
+        return done(null);
     });
 };
 
@@ -91,33 +60,11 @@ exports.save = function (token, expirationDate, userID, clientID, scope, done) {
  * @param done returns this when done
  */
 exports.delete = function (key, done) {
-    var query = ViewQuery.from('dev_oauth_views', 'accesstokens').stale(ViewQuery.Update.BEFORE);
-    
-    bucket.query(query, function (err, result) {
+    bucket.remove('accesstoken_' + token, function (err, result) {
         if (err) {
             return done(err, null);
         }
-        
-        if (!result) {
-            return done(null);
-        }
-        
-        for (var i = 0; i < result.length; i++) {
-            var currentAccessToken = result[i].value;
-            
-            if (currentAccessToken.token === key) {
-                bucket.remove(result[i].key, function (err, result) {
-                    if (err) {
-                        return done(err, null);
-                    }
 
-                    return done(null);
-                });
-
-                return;
-            }
-        }
-        
         return done(null);
     });
 };
@@ -129,7 +76,7 @@ exports.delete = function (key, done) {
  * @returns done
  */
 exports.removeExpired = function (done) {
-    var query = ViewQuery.from('dev_oauth_views', 'accesstokens');
+    var query = ViewQuery.from('dev_oauth_views', 'accesstokens').stale(ViewQuery.Update.BEFORE);
     
     bucket.query(query, function (err, result) {
         if (err) {
@@ -141,7 +88,7 @@ exports.removeExpired = function (done) {
         for (var i = 0; i < result.length; i++) {
             var currentAccessToken = result[i].value;
             
-            if (new Date() > currentAccessToken.expirationDate) {
+            if (new Date() > new Date(currentAccessToken.expirationDate)) {
                 tokensToDelete.push(result[i].key);
             }
         }
@@ -165,7 +112,7 @@ exports.removeExpired = function (done) {
  * @param done returns this when done.
  */
 exports.removeAll = function (done) {
-    var query = ViewQuery.from('dev_oauth_views', 'accesstokens');
+    var query = ViewQuery.from('dev_oauth_views', 'accesstokens').stale(ViewQuery.Update.BEFORE);
     
     bucket.query(query, function (err, result) {
         if (err) {
