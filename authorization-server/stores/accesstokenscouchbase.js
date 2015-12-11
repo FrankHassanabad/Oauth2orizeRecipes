@@ -60,7 +60,7 @@ exports.save = function (token, expirationDate, userID, clientID, scope, done) {
  * @param done returns this when done
  */
 exports.delete = function (key, done) {
-    bucket.remove('accesstoken_' + token, function (err, result) {
+    bucket.remove('accesstoken_' + key, function (err, result) {
         if (err) {
             return done(err, null);
         }
