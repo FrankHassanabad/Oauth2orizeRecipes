@@ -7,7 +7,7 @@
     "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
   },
   "dependencies": {
-    "http-proxy": "1.6.x",
+    "http-proxy": "1.13.2",
     "connect": "3.3.x",
     "serve-static": "1.7.x",
     "finalhandler": "0.3.x"
