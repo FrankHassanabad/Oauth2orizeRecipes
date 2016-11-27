@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{bb2964fb-d603-4623-9bcf-db69f78071c3}</ProjectGuid>
+    <ProjectHome>authorization-server\</ProjectHome>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <StartupFile>app.js</StartupFile>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Compile Include="stores\accesstokenscouchbase.js" />
+    <Compile Include="stores\authorizationcodescouchbase.js" />
+    <Compile Include="stores\clientscouchbase.js" />
+    <Compile Include="stores\refreshtokenscouchbase.js" />
+    <Compile Include="stores\userssql.js" />
+    <Compile Include="utils\crypt.js" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Compile Include="app.js" />
+    <Compile Include="auth.js" />
+    <Compile Include="client.js" />
+    <Compile Include="oauth2.js" />
+    <Compile Include="site.js" />
+    <Compile Include="token.js" />
+    <Compile Include="user.js" />
+    <Compile Include="utils.js" />
+    <Content Include="certs\README.txt" />
+    <Compile Include="config\index.js" />
+    <Compile Include="stores\accesstokens.js" />
+    <Compile Include="stores\authorizationcodes.js" />
+    <Compile Include="stores\clients.js" />
+    <Compile Include="db\index.js" />
+    <Compile Include="stores\refreshtokens.js" />
+    <Compile Include="stores\users.js" />
+    <Compile Include="mongodb\accesstokens.js" />
+    <Compile Include="mongodb\authorizationcodes.js" />
+    <Compile Include="mongodb\clients.js" />
+    <Compile Include="mongodb\index.js" />
+    <Compile Include="mongodb\mongoinit.js" />
+    <Compile Include="mongodb\refreshtokens.js" />
+    <Compile Include="mongodb\users.js" />
+    <Compile Include="test\db_accesstokens.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_client.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_code.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_implicit.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\grant_type_password.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Content Include="views\account.ejs" />
+    <Content Include="views\dialog.ejs" />
+    <Content Include="views\index-with-code.ejs" />
+    <Content Include="views\index.ejs" />
+    <Content Include="views\layout.ejs" />
+    <Content Include="views\login.ejs" />
+    <Compile Include="public\javascripts\jquery.min.js" />
+    <Content Include="public\stylesheets\base.css" />
+    <Content Include="public\stylesheets\dialog-modules.css" />
+    <Content Include="public\stylesheets\index-modules.css" />
+    <Content Include="public\stylesheets\pure-min.css" />
+    <Content Include="public\stylesheets\sign-in-modules.css" />
+    <Compile Include="test\common\index.js" />
+    <Compile Include="test\common\properties.js" />
+    <Compile Include="test\common\request.js" />
+    <Compile Include="test\common\validate.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="certs" />
+    <Folder Include="config" />
+    <Folder Include="db" />
+    <Folder Include="mongodb" />
+    <Folder Include="stores\" />
+    <Folder Include="public" />
+    <Folder Include="public\javascripts" />
+    <Folder Include="public\stylesheets" />
+    <Folder Include="test" />
+    <Folder Include="test\common" />
+    <Folder Include="utils\" />
+    <Folder Include="views" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

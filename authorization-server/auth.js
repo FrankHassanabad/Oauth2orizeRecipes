@@ -18,14 +18,11 @@ var db = require('./' + config.db.type);
  */
 passport.use(new LocalStrategy(
   function (username, password, done) {
-    db.users.findByUsername(username, function (err, user) {
+    db.users.find(username, password, function (err, user) {
       if (err) {
         return done(err);
       }
       if (!user) {
-        return done(null, false);
-      }
-      if (user.password != password) {
         return done(null, false);
       }
       return done(null, user);
@@ -108,7 +105,7 @@ passport.use(new BearerStrategy(
         });
       } else {
         if (token.userID !== null) {
-          db.users.find(token.userID, function (err, user) {
+          db.users.findById(token.userID, function (err, user) {
             if (err) {
               return done(err);
             }
@@ -155,11 +152,11 @@ passport.use(new BearerStrategy(
 // the client by ID from the database.
 
 passport.serializeUser(function (user, done) {
-  done(null, user.id);
+  done(null, user.UserId);
 });
 
 passport.deserializeUser(function (id, done) {
-  db.users.find(id, function (err, user) {
+  db.users.findById(id, function (err, user) {
     done(err, user);
   });
 });

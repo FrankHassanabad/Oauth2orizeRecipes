@@ -13,14 +13,14 @@
  */
 var users = [
   {
-    id: '1',
-    username: 'bob',
+    UserId: '1',
+    UserName: 'bob',
     password: 'secret',
     name: 'Bob Smith'
   },
   {
-    id: '2',
-    username: 'joe',
+    UserId: '2',
+    UserName: 'joe',
     password: 'password',
     name: 'Joe Davis'
   }
@@ -33,10 +33,10 @@ var users = [
  * @param done The function to call next
  * @returns The user if found, otherwise returns null
  */
-exports.find = function (id, done) {
+exports.findById = function (id, done) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    if (user.id === id) {
+    if (user.UserId === id) {
       return done(null, user);
     }
   }
@@ -50,10 +50,10 @@ exports.find = function (id, done) {
  * @param done The function to call next
  * @returns The user if found, otherwise returns null
  */
-exports.findByUsername = function (username, done) {
+exports.find = function (username, password, done) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    if (user.username === username) {
+    if (user.UserName === username && user.password == password) {
       return done(null, user);
     }
   }

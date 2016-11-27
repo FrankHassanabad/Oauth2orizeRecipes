@@ -57,6 +57,10 @@
       });
 
       $("#resourceOwnerSubmitPostButton").click(function (event) {
+		debugger;
+		var username = $("#resourceOwnerUsername").val();
+		var password = $("#resourceOwnerPassword").val();
+		
         //They clicked on the Submit Post button underneath the resource owner section
         $.ajax({
           type: 'POST',
@@ -66,7 +70,7 @@
             //This is abc123:ssh-secret base 64 encoded
             "Authorization": "Basic YWJjMTIzOnNzaC1zZWNyZXQ="
           },
-          data: 'grant_type=password&username=bob&password=secret&scope=offline_access',
+          data: 'grant_type=password&username=' + username + '&password=' + password + '&scope=offline_access',
           success: function (result) {
             //Hide the main screen because we were successful, add the access token info, and
             //show the resource owner token section
@@ -191,8 +195,8 @@
   Authorization: Basic YWJjMTIzOnNzaC1zZWNyZXQ=
 
   grant_type=password&
-  username=bob&
-  password=secret&
+  username=<input id="resourceOwnerUsername" type="text">&
+  password=<input id="resourceOwnerPassword" type="password">&
   scope=offline_access
                 </pre>
     <p>

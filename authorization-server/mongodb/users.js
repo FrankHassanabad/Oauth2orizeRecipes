@@ -14,14 +14,14 @@
  */
 var users = [
   {
-    id: '1',
-    username: 'bob',
+    UserId: '1',
+    UserName: 'bob',
     password: 'secret',
     name: 'Bob Smith'
   },
   {
-    id: '2',
-    username: 'joe',
+    UserId: '2',
+    UserName: 'joe',
     password: 'password',
     name: 'Joe Davis'
   }
@@ -37,7 +37,7 @@ var users = [
 exports.find = function (id, done) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    if (user.id === id) {
+    if (user.UserId === id) {
       return done(null, user);
     }
   }
@@ -54,7 +54,7 @@ exports.find = function (id, done) {
 exports.findByUsername = function (username, done) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    if (user.username === username) {
+    if (user.UserName === username) {
       return done(null, user);
     }
   }
