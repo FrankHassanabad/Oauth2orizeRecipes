@@ -1,7 +1,10 @@
 {
   "name": "oauth2orize-web-client",
-  "version": "3.0.2",
+  "version": "3.0.4",
+  "author": "Frank Hassanabad <frankhassanabad@gmail.com>",  
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
+  "license": "MIT",
+  "main": "app.js",  
   "repository": {
     "type": "git",
     "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
@@ -12,8 +15,17 @@
     "serve-static": "1.7.x",
     "finalhandler": "0.3.x"
   },
+  "scripts": {
+    "start": "node app.js"
+  },
   "engines": {
     "node": "0.10.x",
     "npm": "1.4.x"
-  }
+  },
+  "keywords": [
+    "authentication",
+    "oauth2",
+    "security",
+    "passport"
+  ]
 }
