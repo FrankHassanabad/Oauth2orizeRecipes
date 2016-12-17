@@ -1,7 +1,10 @@
 {
   "name": "oauth2orize-authorization-server",
-  "version": "3.0.3",
+  "version": "3.0.4",
+  "author": "Frank Hassanabad <frankhassanabad@gmail.com>",
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
+  "license": "MIT",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
@@ -23,6 +26,7 @@
     "mongodb": "2.0.x"
   },
   "scripts": {
+    "start": "node app.js",
     "test": "mocha"
   },
   "engines": {
@@ -32,5 +36,11 @@
   "devDependencies": {
     "mocha": "2.0.x",
     "request": "2.48.x"
-  }
+  },
+  "keywords": [
+    "authentication",
+    "oauth2",
+    "security",
+    "passport"
+  ]
 }

@@ -8,7 +8,7 @@ This is the authorization server example.
 git clone https://github.com/FrankHassanabad/Oauth2orizeRecipes.git
 cd Oauth2orizeRecipes/authorization-server
 npm install
-node app.js
+npm start
 ```
 
 Go here for how to use the REST API
