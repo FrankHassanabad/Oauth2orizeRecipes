@@ -1,52 +1,32 @@
-/*jslint node: true */
-/*global it */
-/*global describe */
 'use strict';
 
-var assert = require("assert");
-var config = require('../config');
-var dbTokens = require('../' + config.db.type);
+const assert   = require('assert');
+const config   = require('../config');
 
-describe('access token saving/deleting', function () {
+const dbTokens = require(`../${config.db.type}`); // eslint-disable-line
 
-  it('should remove all tokens', function (done) {
-    dbTokens.accessTokens.removeAll(function () {
+describe('access token saving/deleting', () => {
+  it('should not find any empty access tokens', (done) => {
+    dbTokens.accessTokens.find('', (token) => {
+      assert.equal(token, null);
       done();
     });
   });
 
-  it('should not find any empty access tokens', function (done) {
-    dbTokens.accessTokens.find('', function (token) {
-      assert.equal(token, null);
-    });
-    done();
-  });
-
-  it('should save an access token, then delete it correctly', function (done) {
+  it('should save an access token, then delete it correctly', (done) => {
     dbTokens.accessTokens.save('someMadeUpAccessTokenLookAtMe',
-      new Date(),
-      "madeUpUser",
-      "madeUpClient",
-      "madeUpScope",
-      function (err) {
-        dbTokens.accessTokens.find('someMadeUpAccessTokenLookAtMe', function (err, token) {
-          assert.equal(token.userID, 'madeUpUser');
+      new Date(), 'madeUpUser', 'madeUpClient', 'madeUpScope', () => {
+        dbTokens.accessTokens.find('someMadeUpAccessTokenLookAtMe', (err, token) => {
+          assert.equal(token.userID,   'madeUpUser');
           assert.equal(token.clientID, 'madeUpClient');
-          assert.equal(token.scope, 'madeUpScope');
-          dbTokens.accessTokens.delete('someMadeUpAccessTokenLookAtMe', function (err) {
-            dbTokens.accessTokens.find('someMadeUpAccessTokenLookAtMe', function (err, token) {
-              assert.equal(token, null);
+          assert.equal(token.scope,    'madeUpScope');
+          dbTokens.accessTokens.delete('someMadeUpAccessTokenLookAtMe', () => {
+            dbTokens.accessTokens.find('someMadeUpAccessTokenLookAtMe', (accessErr, accessToken) => {
+              assert.equal(accessToken, null);
               done();
             });
           });
         });
-      }
-    );
-  });
-
-  it('should remove all tokens', function (done) {
-    dbTokens.accessTokens.removeAll(function () {
-      done();
-    });
+      });
   });
 });

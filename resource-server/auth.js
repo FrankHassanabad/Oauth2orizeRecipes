@@ -1,12 +1,13 @@
-/*jslint node: true */
 'use strict';
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var db = require('./db');
-var config = require('./config');
-var BearerStrategy = require('passport-http-bearer').Strategy;
-var request = require('request');
+const BearerStrategy = require('passport-http-bearer').Strategy;
+const config         = require('./config');
+const db             = require('./db');
+const LocalStrategy  = require('passport-local').Strategy;
+const passport       = require('passport');
+const request        = require('request');
+
+/* eslint-disable camelcase */
 
 /**
  * LocalStrategy
@@ -26,48 +27,47 @@ var request = require('request');
  * HTML page loading.  However, end points that are protected still will need the access
  * token passed to them through the Authorization Bearer usage.
  */
-passport.use(new LocalStrategy(
-  function (username, password, done) {
-    request.post('https://localhost:3000/oauth/token', {
-      form: {
-        grant_type: 'password',
-        username: username,
-        password: password,
-        scope: 'offline_access'
-      },
-      headers: {
-        Authorization: 'Basic ' + new Buffer(config.client.clientID + ':' + config.client.clientSecret).toString('base64')
+passport.use(new LocalStrategy((username, password, done) => {
+  const basicAuth = new Buffer(`${config.client.clientID}:${config.client.clientSecret}`).toString('base64');
+  request.post('https://localhost:3000/oauth/token', {
+    form : {
+      username,
+      password,
+      grant_type : 'password',
+      scope      : 'offline_access',
+    },
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+    },
+  }, (error, response, body) => {
+    const { access_token, refresh_token, expires_in } = JSON.parse(body);
+    if (response.statusCode === 200 && access_token) {
+      // TODO: scopes
+      let expirationDate = null;
+      if (expires_in) {
+        expirationDate = new Date(Date.now() + (expires_in * 1000));
       }
-    }, function (error, response, body) {
-      var jsonResponse = JSON.parse(body);
-      if (response.statusCode === 200 && jsonResponse.access_token) {
-        //TODO scopes
-        var expirationDate = null;
-        if (jsonResponse.expires_in) {
-          expirationDate = new Date(new Date().getTime() + (jsonResponse.expires_in * 1000));
+      const saveAccessToken = (err) => {
+        if (err) {
+          return done(null, false);
         }
-        var saveAccessToken = function (err) {
+        return done(null, { accessToken: access_token, refreshToken: refresh_token });
+      };
+      if (refresh_token) {
+        return db.refreshTokens.save(refresh_token, config.client.clientID, null, (err) => {
           if (err) {
             return done(null, false);
           }
-          return done(null, {accessToken: jsonResponse.access_token, refreshToken: jsonResponse.refresh_token});
-        };
-        if (jsonResponse.refresh_token) {
-          db.refreshTokens.save(jsonResponse.refresh_token, config.client.clientID, null, function (err) {
-            if (err) {
-              return done(null, false);
-            }
-            db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-          });
-        } else {
-          db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-        }
-      } else {
-        return done(null, false);
+          return db.accessTokens.save(
+            access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+        });
       }
-    });
-  }
-));
+      return db.accessTokens.save(
+        access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+    }
+    return done(null, false);
+  });
+}));
 
 /**
  * BearerStrategy
@@ -77,56 +77,49 @@ passport.use(new LocalStrategy(
  * application, which is issued an access token to make requests on behalf of
  * the authorizing user.
  */
-passport.use(new BearerStrategy(
-  function (accessToken, done) {
-    db.accessTokens.find(accessToken, function (err, token) {
-      if (err) {
-        return done(err);
-      }
-      if (!token) {
-        request.get(config.authorization.tokeninfoURL + accessToken,
-          function (error, response, body) {
-            if (err) {
-              console.log('Error:' + error);
-            }
-            if (response.statusCode === 200) {
-              var jsonReturn = JSON.parse(body);
-              if (jsonReturn.error) {
-                return done(null, false);
-              } else {
-                var expirationDate = null;
-                if (jsonReturn.expires_in) {
-                  expirationDate = new Date(new Date().getTime() + (jsonReturn.expires_in * 1000));
-                }
-                //TODO scopes
-                db.accessTokens.save(accessToken, expirationDate, config.client.clientID, null, function (err) {
-                  if (err) {
-                    return done(err);
-                  }
-                  return done(null, accessToken);
-                });
-              }
-            } else {
-              return done(null, false);
-            }
-          }
-        );
-      } else {
-        if (token.expirationDate && (new Date() > token.expirationDate)) {
-          db.accessTokens.delete(token, function (err) {
-            if (err) {
-              return done(err);
-            } else {
-              return done(null, false);
-            }
-          });
-        } else {
-          return done(null, token);
+passport.use(new BearerStrategy((accessToken, done) => {
+  db.accessTokens.find(accessToken, (err, token) => {
+    if (err) {
+      return done(err);
+    }
+    if (!token) {
+      const tokeninfoURL = config.authorization.tokeninfoURL;
+      return request.get(tokeninfoURL + accessToken, (error, response, body) => {
+        if (error) {
+          console.log(`Error: ${error}`);
         }
-      }
-    });
-  }
-));
+        if (response.statusCode === 200) {
+          const jsonReturn = JSON.parse(body);
+          if (jsonReturn.error) {
+            return done(null, false);
+          }
+          let expirationDate = null;
+          if (jsonReturn.expires_in) {
+            expirationDate = new Date(Date.now() + (jsonReturn.expires_in * 1000));
+          }
+          // TODO: scopes
+          return db.accessTokens.save(
+            accessToken, expirationDate, config.client.clientID, null, (saveErr) => {
+              if (saveErr) {
+                return done(saveErr);
+              }
+              return done(null, accessToken);
+            });
+        }
+        return done(null, false);
+      });
+    } else if (token.expirationDate && (new Date() > token.expirationDate)) {
+      return db.accessTokens.delete(token, (delErr) => {
+        if (delErr) {
+          return done(delErr);
+        }
+        return done(null, false);
+      });
+    }
+
+    return done(null, token);
+  });
+}));
 
 // Register serialialization and deserialization functions.
 //
@@ -141,11 +134,11 @@ passport.use(new BearerStrategy(
 // simple matter of serializing the client's ID, and deserializing by finding
 // the client by ID from the database.
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser((user, done) => {
   done(null, user);
 });
 

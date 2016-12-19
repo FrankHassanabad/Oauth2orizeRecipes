@@ -1,13 +1,11 @@
-/*jslint node: true */
-/*global exports */
 'use strict';
 
-var assert = require("assert");
+const assert = require('assert');
 
 /**
  * Our validate module object we export at the bottom
  */
-var validate = {};
+const validate = Object.create(null);
 
 /**
  * Validates an access token.  An access token should be in the form of:
@@ -16,17 +14,18 @@ var validate = {};
  *     expires_in: 3600
  *     token_type: "Bearer"
  * }
- * @param response The http response
- * @param body The body of the message which contains the access token and refresh token
+ * @param   {Object}   response - The http response
+ * @param   {Object}   body     - The body of the message with the access token and refresh token
+ * @returns {undefined}
  */
-validate.validateAccessToken = function (response, body) {
+validate.validateAccessToken = (response, body) => {
   assert.equal(response.statusCode, 200);
-  var jsonResponse = JSON.parse(body);
-  assert.equal(response.headers["content-type"], "application/json");
+  const jsonResponse = JSON.parse(body);
+  assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 3);
   assert.equal(jsonResponse.access_token.length, 256);
   assert.equal(jsonResponse.expires_in, 3600);
-  assert.equal(jsonResponse.token_type, "Bearer");
+  assert.equal(jsonResponse.token_type, 'Bearer');
 };
 
 /**
@@ -37,17 +36,18 @@ validate.validateAccessToken = function (response, body) {
  *     expires_in: 3600
  *     token_type: "Bearer"
  * }
- * @param response The http response
- * @param body The body of the message which contains the access token and refresh token
+ * @param {Object}     response - The http response
+ * @param {Object}     body     - The body of the message with the access token and refresh token
+ * @returns {undefined}
  */
-validate.validateAccessRefreshToken = function (response, body) {
+validate.validateAccessRefreshToken = (response, body) => {
   assert.equal(response.statusCode, 200);
-  var jsonResponse = JSON.parse(body);
-  assert.equal(response.headers["content-type"], "application/json");
+  const jsonResponse = JSON.parse(body);
+  assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 4);
   assert.equal(jsonResponse.access_token.length, 256);
   assert.equal(jsonResponse.expires_in, 3600);
-  assert.equal(jsonResponse.token_type, "Bearer");
+  assert.equal(jsonResponse.token_type, 'Bearer');
 };
 
 /**
@@ -58,17 +58,18 @@ validate.validateAccessRefreshToken = function (response, body) {
  *     "name": "Bob Smith"
  *     "token_type": "Bearer"
  * }
- * @param response The http response
- * @param body The body of the message which contains the user json message
+ * @param {Object}     response - The http response
+ * @param {Object}     body     - The body of the message which contains the user json message
+ * @returns {undefined}
  */
-validate.validateUserJson = function (response, body) {
+validate.validateUserJson = (response, body) => {
   assert.equal(response.statusCode, 200);
-  var jsonResponse = JSON.parse(body);
-  assert.equal(response.headers["content-type"], "application/json; charset=utf-8");
+  const jsonResponse = JSON.parse(body);
+  assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
   assert.equal(Object.keys(jsonResponse).length, 3);
-  assert.equal(jsonResponse.user_id, "1");
-  assert.equal(jsonResponse.name, "Bob Smith");
-  assert.equal(jsonResponse.scope, "*");
+  assert.equal(jsonResponse.user_id, '1');
+  assert.equal(jsonResponse.name, 'Bob Smith');
+  assert.equal(jsonResponse.scope, '*');
 };
 
 /**
@@ -79,17 +80,18 @@ validate.validateUserJson = function (response, body) {
  *     "name": "Samplr3"
  *     "scope": "*"
  * }
- * @param response The http response
- * @param body The body of the message which contains the client json message
+ * @param   {Object}   response - The http response
+ * @param   {Object}   body     - The body of the message which contains the client json message
+ * @returns {undefined}
  */
-validate.validateClientJson = function (response, body) {
+validate.validateClientJson = (response, body) => {
   assert.equal(response.statusCode, 200);
-  var jsonResponse = JSON.parse(body);
-  assert.equal(response.headers["content-type"], "application/json; charset=utf-8");
+  const jsonResponse = JSON.parse(body);
+  assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
   assert.equal(Object.keys(jsonResponse).length, 3);
-  assert.equal(jsonResponse.client_id, "3");
-  assert.equal(jsonResponse.name, "Samplr3");
-  assert.equal(jsonResponse.scope, "*");
+  assert.equal(jsonResponse.client_id, '3');
+  assert.equal(jsonResponse.name, 'Samplr3');
+  assert.equal(jsonResponse.scope, '*');
 };
 
 /**
@@ -98,25 +100,26 @@ validate.validateClientJson = function (response, body) {
  *     error: invalid_grant
  *     error_description: invalid_code
  * }
- * @param response The http response
- * @param body The body of the message which contains the error message
+ * @param {Object}     response - The http response
+ * @param {Object}     body     - The body of the message which contains the error message
+ * @returns {undefined}
  */
-validate.validateInvalidCodeError = function (response, body) {
+validate.validateInvalidCodeError = (response, body) => {
   assert.equal(response.statusCode, 403);
-  var jsonResponse = JSON.parse(body);
-  assert.equal(response.headers["content-type"], "application/json");
+  const jsonResponse = JSON.parse(body);
+  assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 2);
-  assert.equal(jsonResponse.error, "invalid_grant");
-  assert.equal(jsonResponse.error_description, "Invalid authorization code");
+  assert.equal(jsonResponse.error, 'invalid_grant');
+  assert.equal(jsonResponse.error_description, 'Invalid authorization code');
 };
 
 /**
  * Given an access code, this will validate its length
- * @param code The code to validate the access code against the
- * correct length.
+ * @param {String}     code - The code to validate the access code against the correct length.
+ * @returns {undefined}
  */
-validate.validateAuthorizationCode = function (code) {
+validate.validateAuthorizationCode = (code) => {
   assert.equal(code.length, 16);
 };
 
-exports.validate = validate;
+module.exports = validate;
