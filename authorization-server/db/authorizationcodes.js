@@ -11,15 +11,13 @@
 const codes = Object.create(null);
 
 /**
- * Returns an authorization code if it finds one, otherwise returns
- * null if one is not found.
+ * Returns an authorization code if it finds one, otherwise returns null if one is not found.
  * @param   {String}   key  - The key to the authorization code
- * @param   {Function} done - Calls this with the authorization code if found else undefined
- * @returns {undefined}
+ * @returns {Promise}  resolved with the authorization code if found, otherwise undefined
  */
-exports.find = (key, done) => {
+exports.find = (key) => {
   const code = codes[key];
-  return done(null, code);
+  return Promise.resolve(code);
 };
 
 /**
@@ -29,22 +27,21 @@ exports.find = (key, done) => {
  * @param   {String}   redirectURI - The redirect URI of where to send access tokens once exchanged
  * @param   {String}   userID      - The user ID (required)
  * @param   {String}   scope       - The scope (optional)
- * @param   {Function} done        - Calls this with undefined always
- * @returns {undefined}
+ * @returns {Promise}  resolved with the saved token
  */
-exports.save = (code, clientID, redirectURI, userID, scope, done) => {
+exports.save = (code, clientID, redirectURI, userID, scope) => {
   codes[code] = { clientID, redirectURI, userID, scope };
-  return done();
+  return Promise.resolve(codes[code]);
 };
 
 /**
  * Deletes an authorization code
  * @param   {String}   key  - The authorization code to delete
- * @param   {Function} done - Calls this with undefined always
- * @returns {undefined}
+ * @returns {Promise}  resolved with the deleted value
  */
-exports.delete = (key, done) => {
+exports.delete = (key) => {
+  const deletedValue = codes[key];
   delete codes[key];
-  return done();
+  return Promise.resolve(deletedValue);
 };
 

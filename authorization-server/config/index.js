@@ -16,7 +16,7 @@
  */
 exports.token = {
   expiresIn               : 3600,
-  calculateExpirationDate : () => new Date(Date.now() + (this.expiresIn * 1000)),
+  calculateExpirationDate : () => new Date(Date.now() + (this.token.expiresIn * 1000)),
   authorizationCodeLength : 16,
   accessTokenLength       : 256,
   refreshTokenLength      : 256,
@@ -28,14 +28,9 @@ exports.token = {
  * timeToCheckExpiredTokens - The time in seconds to check the database for expired access tokens.
  *                            For example, if it's set to 3600, then that's one hour to check for
  *                            expired access tokens.
- * type                     - The type of database to use. "db" for "in-memory", or "mongodb" for
- *                            the mongo database store.
- * dbName                   - The database name to use.
  */
 exports.db = {
   timeToCheckExpiredTokens : 3600,
-  type                     : 'db',
-  dbName                   : 'OAuth2orizeRecipeTokens',
 };
 
 /**
@@ -49,8 +44,6 @@ exports.db = {
  * dbName - The database name if you're using Mongo
  */
 exports.session = {
-  type   : 'MemoryStore',
   maxAge : 3600000 * 24 * 7 * 52,
   secret : 'A Secret That Should Be Changed', // TODO: You need to change this secret to something that you choose for your secret
-  dbName : 'Session',
 };

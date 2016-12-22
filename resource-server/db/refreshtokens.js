@@ -11,37 +11,33 @@
 const tokens = Object.create(null);
 
 /**
- * Returns an access token if it finds one, otherwise returns
+ * Returns a refresh token if it finds one, otherwise returns
  * null if one is not found.
  * @param   {String}   key  - The key to the access token
- * @param   {Function} done - The access token if found, otherwise returns null
- * @returns {undefined}
+ * @returns {Promise}  resolved with the token
  */
-exports.find = (key, done) => {
-  const token = tokens[key];
-  return done(null, token);
+exports.find = key => Promise.resolve(tokens[key]);
+
+/**
+ * Saves a refresh token, user id, client id, and scope.
+ * @param   {Object}  token    - The refresh token (required)
+ * @param   {String}  userID   - The user ID (required)
+ * @param   {String}  clientID - The client ID (required)
+ * @param   {String}  scope    - The scope (optional)
+ * @returns {Promise} resolved with the saved token
+ */
+exports.save = (token, userID, clientID, scope) => {
+  tokens[token] = { userID, clientID, scope };
+  return Promise.resolve(tokens[token]);
 };
 
 /**
- * Saves a access token, expiration date, user id, client id, and scope.
- * @param   {Object}   token    - The access token (required)
- * @param   {String}   clientID - The client ID (required)
- * @param   {String}   scope    - The scope (optional)
- * @param   {Function} done     - Calls this with undefined` always
- * @returns {undefined}
+ * Deletes a refresh token
+ * @param   {String}   key  - The refresh token to delete
+ * @returns {Promise} resolved with the deleted token
  */
-exports.save = (token, clientID, scope, done) => {
-  tokens[token] = { clientID, scope };
-  return done();
-};
-
-/**
- * Deletes an access token
- * @param   {String}   key  - The access token to delete
- * @param   {Function} done - Calls this with undefined always
- * @returns {undefined}
- */
-exports.delete = (key, done) => {
+exports.delete = (key) => {
+  const deletedToken = tokens[key];
   delete tokens[key];
-  return done();
+  return Promise.resolve(deletedToken);
 };

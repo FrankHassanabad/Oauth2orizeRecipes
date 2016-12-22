@@ -29,11 +29,9 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 # Features of the Authorization Server
 * All 4 grant types exposed out of the box
 * Access/Refresh Tokens
-* Configurable expriation times on tokens
+* Configurable expiration times on tokens
 * Single Sign On (SSO) Example
 * Example of trusted clients
-* In-Memory or persistent tokens through MongoDB
-* In-Memory or persistent web sessions through connect-mongo
 * REST tokeninfo endPoint for verifying a token is valid.
 * Authorization tokens are only useable once
 * SSL/HTTPS usage

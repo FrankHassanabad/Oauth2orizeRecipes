@@ -1,10 +1,7 @@
 'use strict';
 
-const config   = require('../config');
 const helper   = require('./common').request;
 const validate = require('./common').validate;
-
-const dbTokens = require(`../${config.db.type}`); // eslint-disable-line
 
 /**
  * Tests for the Grant Type of Client.

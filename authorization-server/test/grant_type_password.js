@@ -3,11 +3,8 @@
 // This is needed to start the server for the tests since these are more integration than unit tests
 require('../app.js');
 
-const config   = require('../config');
 const helper   = require('./common').request;
 const validate = require('./common').validate;
-
-const dbTokens = require(`../${config.db.type}`); // eslint-disable-line
 
 /**
  * Tests for the Grant Type of Password.
