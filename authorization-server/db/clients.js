@@ -38,25 +38,17 @@ const clients = [{
 }];
 
 /**
- * Returns a client if it finds one, otherwise returns
- * null if a client is not found.
+ * Returns a client if it finds one, otherwise returns null if a client is not found.
  * @param   {String}   id   - The unique id of the client to find
- * @param   {Function} done - The client if found, otherwise returns undefined
- * @returns {undefined}
+ * @returns {Promise}  resolved promise with the client if found, otherwise undefined
  */
-exports.find = (id, done) => {
-  const foundClient = clients.find(client => client.id === id);
-  return done(null, foundClient);
-};
+exports.find = id => Promise.resolve(clients.find(client => client.id === id));
 
 /**
- * Returns a client if it finds one, otherwise returns
- * null if a client is not found.
+ * Returns a client if it finds one, otherwise returns null if a client is not found.
  * @param   {String}   clientId - The unique client id of the client to find
  * @param   {Function} done     - The client if found, otherwise returns undefined
- * @returns {undefined}
+ * @returns {Promise} resolved promise with the client if found, otherwise undefined
  */
-exports.findByClientId = (clientId, done) => {
-  const foundClient = clients.find(client => client.clientId === clientId);
-  return done(null, foundClient);
-};
+exports.findByClientId = clientId =>
+  Promise.resolve(clients.find(client => client.clientId === clientId));

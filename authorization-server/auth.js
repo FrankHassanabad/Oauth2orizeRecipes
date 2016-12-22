@@ -1,13 +1,12 @@
 'use strict';
 
-const config                               = require('./config');
+const db                                   = require('./db');
 const passport                             = require('passport');
 const { Strategy: LocalStrategy }          = require('passport-local');
 const { BasicStrategy }                    = require('passport-http');
 const { Strategy: ClientPasswordStrategy } = require('passport-oauth2-client-password');
 const { Strategy: BearerStrategy }         = require('passport-http-bearer');
-
-const db                                   = require(`./${config.db.type}`); // eslint-disable-line
+const validate                             = require('./validate');
 
 /**
  * LocalStrategy
@@ -17,18 +16,10 @@ const db                                   = require(`./${config.db.type}`); // 
  * a user is logged in before asking them to approve the request.
  */
 passport.use(new LocalStrategy((username, password, done) => {
-  db.users.findByUsername(username, (err, user) => {
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      return done(null, false);
-    }
-    if (user.password !== password) {
-      return done(null, false);
-    }
-    return done(null, user);
-  });
+  db.users.findByUsername(username)
+  .then(user => validate.user(user, password))
+  .then(user => done(null, user))
+  .catch(() => done(null, false));
 }));
 
 /**
@@ -42,19 +33,11 @@ passport.use(new LocalStrategy((username, password, done) => {
  * to the `Authorization` header).  While this approach is not recommended by
  * the specification, in practice it is quite common.
  */
-passport.use(new BasicStrategy((username, password, done) => {
-  db.clients.findByClientId(username, (err, client) => {
-    if (err) {
-      return done(err);
-    }
-    if (!client) {
-      return done(null, false);
-    }
-    if (client.clientSecret !== password) {
-      return done(null, false);
-    }
-    return done(null, client);
-  });
+passport.use(new BasicStrategy((clientId, clientSecret, done) => {
+  db.clients.findByClientId(clientId)
+  .then(client => validate.client(client, clientSecret))
+  .then(client => done(null, client))
+  .catch(() => done(null, false));
 }));
 
 /**
@@ -65,18 +48,10 @@ passport.use(new BasicStrategy((username, password, done) => {
  * which accepts those credentials and calls done providing a client.
  */
 passport.use(new ClientPasswordStrategy((clientId, clientSecret, done) => {
-  db.clients.findByClientId(clientId, (err, client) => {
-    if (err) {
-      return done(err);
-    }
-    if (!client) {
-      return done(null, false);
-    }
-    if (client.clientSecret !== clientSecret) {
-      return done(null, false);
-    }
-    return done(null, client);
-  });
+  db.clients.findByClientId(clientId)
+  .then(client => validate.client(client, clientSecret))
+  .then(client => done(null, client))
+  .catch(() => done(null, false));
 }));
 
 /**
@@ -86,45 +61,15 @@ passport.use(new ClientPasswordStrategy((clientId, clientSecret, done) => {
  * (aka a bearer token).  If a user, they must have previously authorized a client
  * application, which is issued an access token to make requests on behalf of
  * the authorizing user.
+ *
+ * To keep this example simple, restricted scopes are not implemented, and this is just for
+ * illustrative purposes
  */
 passport.use(new BearerStrategy((accessToken, done) => {
-  db.accessTokens.find(accessToken, (err, token) => {
-    if (err) {
-      return done(err);
-    }
-    if (!token) {
-      return done(null, false);
-    }
-    if (new Date() > token.expirationDate) {
-      return db.accessTokens.delete(accessToken, delErr => done(delErr));
-    }
-    if (token.userID !== null) {
-      return db.users.find(token.userID, (findErr, user) => {
-        if (findErr) {
-          return done(findErr);
-        }
-        if (!user) {
-          return done(null, false);
-        }
-        // to keep this example simple, restricted scopes are not implemented,
-        // and this is just for illustrative purposes
-        return done(null, user, { scope: '*' });
-      });
-    }
-    // The request came from a client only since userID is null
-    // therefore the client is passed back instead of a user
-    return db.clients.find(token.clientID, (findErr, client) => {
-      if (findErr) {
-        return done(findErr);
-      }
-      if (!client) {
-        return done(null, false);
-      }
-      // to keep this example simple, restricted scopes are not implemented,
-      // and this is just for illustrative purposes
-      return done(null, client, { scope: '*' });
-    });
-  });
+  db.accessTokens.find(accessToken)
+  .then(token => validate.token(token, accessToken))
+  .then(token => done(null, token, { scope: '*' }))
+  .catch(() => done(null, false));
 }));
 
 // Register serialialization and deserialization functions.
@@ -145,7 +90,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  db.users.find(id, (err, user) => {
-    done(err, user);
-  });
+  db.users.find(id)
+  .then(user => done(null, user))
+  .catch(err => done(err));
 });

@@ -13,36 +13,31 @@ const tokens = Object.create(null);
 /**
  * Returns a refresh token if it finds one, otherwise returns
  * null if one is not found.
- * @param   {String}   key  - The key to the refresh token
- * @param   {Function} done - The refresh token if found, otherwise returns null
- * @returns {undefined}
+ * @param   {String}   key - The key to the access token
+ * @returns {Promise}  resolved with the token
  */
-exports.find = (key, done) => {
-  const token = tokens[key];
-  return done(null, token);
-};
+exports.find = key => Promise.resolve(tokens[key]);
 
 /**
  * Saves a refresh token, user id, client id, and scope.
- * @param   {Object} token    - The refresh token (required)
- * @param   {String} userID   - The user ID (required)
- * @param   {String} clientID - The client ID (required)
- * @param   {String} scope    - The scope (optional)
- * @param   {Function} done   - Calls this with undefined always
- * @returns {undefined}
+ * @param   {Object}  token    - The refresh token (required)
+ * @param   {String}  userID   - The user ID (required)
+ * @param   {String}  clientID - The client ID (required)
+ * @param   {String}  scope    - The scope (optional)
+ * @returns {Promise} resolved with the saved token
  */
-exports.save = (token, userID, clientID, scope, done) => {
+exports.save = (token, userID, clientID, scope) => {
   tokens[token] = { userID, clientID, scope };
-  return done();
+  return Promise.resolve(tokens[token]);
 };
 
 /**
  * Deletes a refresh token
- * @param   {String}   key  - The refresh token to delete
- * @param   {Function} done - Calls this with undefined always
- * @returns {undefined}
+ * @param   {String}   key - The refresh token to delete
+ * @returns {Promise} resolved with the deleted token
  */
-exports.delete = (key, done) => {
+exports.delete = (key) => {
+  const deletedToken = tokens[key];
   delete tokens[key];
-  return done();
+  return Promise.resolve(deletedToken);
 };

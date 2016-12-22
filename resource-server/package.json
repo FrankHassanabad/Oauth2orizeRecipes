@@ -1,6 +1,6 @@
 {
   "name": "oauth2orize-resource-server",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "author": "Frank Hassanabad <frankhassanabad@gmail.com>",
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
   "license": "MIT",

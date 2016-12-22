@@ -35,8 +35,14 @@ app.use(passport.session());
 // to the browser and pass along the status with it
 app.use((err, req, res, next) => {
   if (err) {
-    res.status(err.status);
-    res.json(err);
+    if (err.status == null) {
+      console.error('Internal unexpected error from:', err.stack);
+      res.status(500);
+      res.json(err);
+    } else {
+      res.status(err.status);
+      res.json(err);
+    }
   } else {
     next();
   }
@@ -59,12 +65,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // From time to time we need to clean up any expired tokens
 // in the database
 setInterval(() => {
-  console.log('Checking for expired tokens');
-  db.accessTokens.removeExpired((err) => {
-    if (err) {
-      console.log('Error removing expired tokens');
-    }
-  });
+  db.accessTokens.removeExpired()
+  .catch(err => console.error('Error trying to remove expired tokens:', err.stack));
 }, config.db.timeToCheckExpiredTokens * 1000);
 
 // TODO: Change these for your own certificates.  This was generated

@@ -11,49 +11,61 @@
 let tokens = Object.create(null);
 
 /**
- * Returns an access token if it finds one, otherwise returns
- * null if one is not found.
- * @param   {String}   key  - The key to the access token
- * @param   {Function} done - The access token if found, otherwise returns null
- * @returns {undefined}
+ * Returns an access token if it finds one, otherwise returns null if one is not found.
+ * @param   {String}  key  - The key to the access token
+ * @returns {Promise} resolved with the token
  */
-exports.find = (key, done) => {
-  const token = tokens[key];
-  return done(null, token);
-};
+exports.find = key => Promise.resolve(tokens[key]);
 
 /**
- * Saves a access token, expiration date, client id, and scope.
- * @param   {Object}   token          - The access token (required)
- * @param   {Date}     expirationDate - The expiration of the access token (required)
- * @param   {String}   clientID       - The client ID (required)
- * @param   {String}   scope          - The scope (optional)
- * @param   {Function} done           - Calls this with undefined always
- * @returns {undefined}
+ * Saves a access token, expiration date, user id, client id, and scope.
+ * @param   {Object}  token          - The access token (required)
+ * @param   {Date}    expirationDate - The expiration of the access token (required)
+ * @param   {String}  userID         - The user ID (required)
+ * @param   {String}  clientID       - The client ID (required)
+ * @param   {String}  scope          - The scope (optional)
+ * @returns {Promise} resolved with the saved token
  */
-exports.save = (token, expirationDate, clientID, scope, done) => {
-  tokens[token] = { expirationDate, clientID, scope };
-  return done();
+exports.save = (token, expirationDate, userID, clientID, scope) => {
+  tokens[token] = { userID, expirationDate, clientID, scope };
+  return Promise.resolve(tokens[token]);
 };
 
 /**
  * Deletes an access token
- * @param   {String}   key  - The access token to delete
- * @param   {Function} done - Calls this with undefined always
- * @returns {undefined}
+ * @param   {String}  key - The access token to delete
+ * @returns {Promise} resolved with the deleted token
  */
-exports.delete = (key, done) => {
+exports.delete = (key) => {
+  const deletedToken = tokens[key];
   delete tokens[key];
-  return done();
+  return Promise.resolve(deletedToken);
 };
 
 /**
- * Removes expired access tokens. It does this by looping through them all
- * and then removing the expired ones it finds.
- * @param   {Function} done - Calls this with undefined always.
- * @returns {undefined}
+ * Removes expired access tokens. It does this by looping through them all and then removing the
+ * expired ones it finds.
+ * @returns {Promise} resolved with an associative of tokens that were expired
  */
-exports.removeExpired = (done) => {
-  tokens = tokens.filter(token => new Date() > token.expirationDate);
-  return done();
+exports.removeExpired = () => {
+  const keys    = Object.keys(tokens);
+  const expired = keys.reduce((accumulator, key) => {
+    if (new Date() > tokens[key].expirationDate) {
+      const expiredToken = tokens[key];
+      delete tokens[key];
+      accumulator[key] = expiredToken; // eslint-disable-line no-param-reassign
+    }
+    return accumulator;
+  }, Object.create(null));
+  return Promise.resolve(expired);
+};
+
+/**
+ * Removes all access tokens.
+ * @returns {Promise} resolved with all removed tokens returned
+ */
+exports.removeAll = () => {
+  const deletedTokens = tokens;
+  tokens              = Object.create(null);
+  return Promise.resolve(deletedTokens);
 };

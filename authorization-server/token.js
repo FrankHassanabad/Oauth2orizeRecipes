@@ -1,8 +1,7 @@
 'use strict';
 
-const config   = require('./config');
-
-const db       = require(`./${config.db.type}`); // eslint-disable-line
+const db       = require('./db');
+const validate = require('./validate');
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to
@@ -27,36 +26,24 @@ const db       = require(`./${config.db.type}`); // eslint-disable-line
  */
 exports.info = [
   (req, res) => {
-    if (req.query.access_token) {
-      db.accessTokens.find(req.query.access_token, (err, token) => {
-        if (err || !token) {
-          res.status(400);
-          res.json({ error: 'invalid_token' });
-        } else if (new Date() > token.expirationDate) {
-          res.status(400);
-          res.json({ error: 'invalid_token' });
-        } else {
-          db.clients.find(token.clientID, (findErr, client) => {
-            if (findErr || !client) {
-              res.status(400);
-              res.json({ error: 'invalid_token' });
-            } else if (token.expirationDate) {
-              const expirationLeft =
-                Math.floor((token.expirationDate.getTime() - Date.now()) / 1000);
-              if (expirationLeft <= 0) {
-                res.json({ error: 'invalid_token' });
-              } else {
-                res.json({ audience: client.clientId, expires_in: expirationLeft });
-              }
-            } else {
-              res.json({ audience: client.clientId });
-            }
-          });
-        }
-      });
-    } else {
+    if (!req.query.access_token) {
       res.status(400);
       res.json({ error: 'invalid_token' });
+      return;
     }
+    db.accessTokens.find(req.query.access_token)
+    .then(token => validate.tokenForHttp(token))
+    .then(token =>
+      db.clients.find(token.clientID)
+      .then(client => validate.clientExistsForHttp(client))
+      .then(client => ({ client, token })))
+    .then(({ client, token }) => {
+      const expirationLeft = Math.floor((token.expirationDate.getTime() - Date.now()) / 1000);
+      res.json({ audience: client.clientId, expires_in: expirationLeft });
+    })
+    .catch((err) => {
+      res.status(err.status);
+      res.json({ error: err.message });
+    });
   },
 ];
