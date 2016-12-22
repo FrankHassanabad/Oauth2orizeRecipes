@@ -1,13 +1,10 @@
 'use strict';
 
 const assert     = require('assert');
-const config     = require('../config');
 const helper     = require('./common').request;
 const properties = require('./common').properties;
 const request    = require('request').defaults({ jar: true, strictSSL: false }); // eslint-disable-line
 const validate   = require('./common').validate;
-
-const dbTokens = require(`../${config.db.type}`); // eslint-disable-line
 
 /**
  * Tests for the Grant Type of Implicit.

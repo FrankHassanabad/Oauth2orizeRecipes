@@ -4,6 +4,7 @@ const bodyParser     = require('body-parser');
 const client         = require('./client');
 const cookieParser   = require('cookie-parser');
 const config         = require('./config');
+const db             = require('./db');
 const express        = require('express');
 const expressSession = require('express-session');
 const fs             = require('fs');
@@ -15,31 +16,9 @@ const site           = require('./site');
 const token          = require('./token');
 const user           = require('./user');
 
-// Pull in the mongo store if we're configured to use it
-// else pull in MemoryStore for the session configuration
-let sessionStorage;
-if (config.session.type === 'MongoStore') {
-  const MongoStore = require('connect-mongo')({ session: expressSession }); // eslint-disable-line global-require
-  console.log('Using MongoDB for the Session');
-  sessionStorage = new MongoStore({ db: config.session.dbName });
-} else if (config.session.type === 'MemoryStore') {
-  const MemoryStore = expressSession.MemoryStore;
-  console.log('Using MemoryStore for the Session');
-  sessionStorage = new MemoryStore();
-} else {
-  throw new Error(`Within config/index.js the session.type is unknown: ${config.session.type}`);
-}
-
-// Pull in the mongo store if we're configured to use it
-// else pull in MemoryStore for the database configuration
-const db = require(`./${config.db.type}`); // eslint-disable-line
-if (config.db.type === 'mongodb') {
-  console.log('Using MongoDB for the data store');
-} else if (config.db.type === 'db') {
-  console.log('Using MemoryStore for the data store');
-} else {
-  throw new Error(`Within config/index.js the db.type is unknown: ${config.db.type}`);
-}
+console.log('Using MemoryStore for the data store');
+console.log('Using MemoryStore for the Session');
+const MemoryStore = expressSession.MemoryStore;
 
 // Express configuration
 const app = express();
@@ -51,7 +30,7 @@ app.use(expressSession({
   saveUninitialized : true,
   resave            : true,
   secret            : config.session.secret,
-  store             : sessionStorage,
+  store             : new MemoryStore(),
   key               : 'authorization.sid',
   cookie            : { maxAge: config.session.maxAge },
 }));
@@ -89,8 +68,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // to the browser and pass along the status with it
 app.use((err, req, res, next) => {
   if (err) {
-    res.status(err.status);
-    res.json(err);
+    if (err.status == null) {
+      console.error('Internal unexpected error from:', err.stack);
+      res.status(500);
+      res.json(err);
+    } else {
+      res.status(err.status);
+      res.json(err);
+    }
   } else {
     next();
   }
@@ -99,11 +84,8 @@ app.use((err, req, res, next) => {
 // From time to time we need to clean up any expired tokens
 // in the database
 setInterval(() => {
-  db.accessTokens.removeExpired((err) => {
-    if (err) {
-      console.error('Error removing expired tokens');
-    }
-  });
+  db.accessTokens.removeExpired()
+  .catch(err => console.error('Error trying to remove expired tokens:', err.stack));
 }, config.db.timeToCheckExpiredTokens * 1000);
 
 // TODO: Change these for your own certificates.  This was generated through the commands:

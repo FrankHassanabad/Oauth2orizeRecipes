@@ -43,29 +43,17 @@ passport.use(new LocalStrategy((username, password, done) => {
     const { access_token, refresh_token, expires_in } = JSON.parse(body);
     if (response.statusCode === 200 && access_token) {
       // TODO: scopes
-      let expirationDate = null;
-      if (expires_in) {
-        expirationDate = new Date(Date.now() + (expires_in * 1000));
-      }
-      const saveAccessToken = (err) => {
-        if (err) {
-          return done(null, false);
+      const expirationDate = expires_in ? new Date(Date.now() + (expires_in * 1000)) : null;
+      db.accessTokens.save(access_token, expirationDate, config.client.clientID)
+      .then(() => {
+        if (refresh_token != null) {
+          return db.refreshTokens.save(refresh_token, config.client.clientID);
         }
-        return done(null, { accessToken: access_token, refreshToken: refresh_token });
-      };
-      if (refresh_token) {
-        return db.refreshTokens.save(refresh_token, config.client.clientID, null, (err) => {
-          if (err) {
-            return done(null, false);
-          }
-          return db.accessTokens.save(
-            access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-        });
-      }
-      return db.accessTokens.save(
-        access_token, expirationDate, config.client.clientID, null, saveAccessToken);
+        return Promise.resolve();
+      })
+      .then(done(null, { accessToken: access_token, refreshToken: refresh_token }))
+      .catch(() => done(null, false));
     }
-    return done(null, false);
   });
 }));
 
@@ -78,47 +66,31 @@ passport.use(new LocalStrategy((username, password, done) => {
  * the authorizing user.
  */
 passport.use(new BearerStrategy((accessToken, done) => {
-  db.accessTokens.find(accessToken, (err, token) => {
-    if (err) {
-      return done(err);
+  db.accessTokens.find(accessToken)
+  .then((token) => {
+    if (token != null && new Date() > token.expirationDate) {
+      db.accessTokens.delete(accessToken)
+      .then(() => null);
     }
-    if (!token) {
+    return token;
+  })
+  .then((token) => {
+    if (token == null) {
       const tokeninfoURL = config.authorization.tokeninfoURL;
-      return request.get(tokeninfoURL + accessToken, (error, response, body) => {
-        if (error) {
-          console.log(`Error: ${error}`);
+      request.get(tokeninfoURL + accessToken, (error, response, body) => {
+        if (error != null || response.statusCode !== 200) {
+          throw new Error('Token request not valid');
         }
-        if (response.statusCode === 200) {
-          const jsonReturn = JSON.parse(body);
-          if (jsonReturn.error) {
-            return done(null, false);
-          }
-          let expirationDate = null;
-          if (jsonReturn.expires_in) {
-            expirationDate = new Date(Date.now() + (jsonReturn.expires_in * 1000));
-          }
-          // TODO: scopes
-          return db.accessTokens.save(
-            accessToken, expirationDate, config.client.clientID, null, (saveErr) => {
-              if (saveErr) {
-                return done(saveErr);
-              }
-              return done(null, accessToken);
-            });
-        }
-        return done(null, false);
-      });
-    } else if (token.expirationDate && (new Date() > token.expirationDate)) {
-      return db.accessTokens.delete(token, (delErr) => {
-        if (delErr) {
-          return done(delErr);
-        }
-        return done(null, false);
+        const { expires_in } = JSON.parse(body);
+        const expirationDate = expires_in ? new Date(Date.now() + (expires_in * 1000)) : null;
+        // TODO: scopes
+        return db.accessTokens.save(accessToken, expirationDate, config.client.clientID);
       });
     }
-
-    return done(null, token);
-  });
+    return token;
+  })
+  .then(() => done(null, accessToken))
+  .catch(() => done(null, false));
 }));
 
 // Register serialialization and deserialization functions.
