@@ -1,28 +1,36 @@
 'use strict';
 
-const assert            = require('assert');
+const chai              = require('chai');
 const { refreshTokens } = require('../../db');
+const sinonChai         = require('sinon-chai');
+
+chai.use(sinonChai);
+const expect = chai.expect;
 
 describe('refreshTokens', () => {
   it('should not find any empty refreshTokens tokens', () =>
     refreshTokens.find('')
-    .then(token => assert.equal(token, null)));
+    .then(token => expect(token).to.be.undefined));
 
   it('should save an refreshtokens token, then delete it correctly', () =>
     refreshTokens.save(
       'someMadeUpAccessTokenLookAtMe', 'madeUpUser', 'madeUpClient', 'madeUpScope')
     .then((token) => {
-      assert.equal(token.userID,   'madeUpUser');
-      assert.equal(token.clientID, 'madeUpClient');
-      assert.equal(token.scope,    'madeUpScope');
+      expect(token).to.contain({
+        userID   : 'madeUpUser',
+        clientID : 'madeUpClient',
+        scope    : 'madeUpScope',
+      });
     })
     .then(() => refreshTokens.find('someMadeUpAccessTokenLookAtMe'))
     .then((token) => {
-      assert.equal(token.userID,   'madeUpUser');
-      assert.equal(token.clientID, 'madeUpClient');
-      assert.equal(token.scope,    'madeUpScope');
+      expect(token).to.contain({
+        userID   : 'madeUpUser',
+        clientID : 'madeUpClient',
+        scope    : 'madeUpScope',
+      });
     })
     .then(() => refreshTokens.delete('someMadeUpAccessTokenLookAtMe'))
     .then(() => refreshTokens.find('someMadeUpAccessTokenLookAtMe'))
-    .then(token => assert.equal(token, null)));
+    .then(token => expect(token).to.be.undefined));
 });
