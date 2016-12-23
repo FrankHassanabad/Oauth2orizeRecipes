@@ -1,6 +1,6 @@
 {
   "name": "oauth2orize-authorization-server",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "author": "Frank Hassanabad <frankhassanabad@gmail.com>",
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
   "license": "MIT",
@@ -28,20 +28,23 @@
   "scripts": {
     "lint": "eslint *.js config db mongodb test",
     "start": "node app.js",
-    "test": "mocha test/db test"
+    "test": "mocha test test/db test/config"
   },
   "engines": {
     "node": ">=6.7.0",
     "npm": ">=3.10.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^3.10.x",
     "eslint-config-airbnb": "^13.0.x",
     "eslint-plugin-import": "^2.2.x",
     "eslint-plugin-jsx-a11y": "^2.2.x",
     "eslint-plugin-react": "^6.7.x",
     "mocha": "^3.2.x",
-    "request": "^2.48.x"
+    "request": "^2.48.x",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0"
   },
   "keywords": [
     "authentication",
