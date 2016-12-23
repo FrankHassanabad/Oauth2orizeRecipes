@@ -1,28 +1,36 @@
 'use strict';
 
-const assert      = require('assert');
+const chai        = require('chai');
 const { clients } = require('../../db');
+const sinonChai   = require('sinon-chai');
+
+chai.use(sinonChai);
+const expect = chai.expect;
 
 describe('clients', () => {
   it('should not find an invalid client', () =>
     clients.find('')
-    .then(client => assert.equal(client, null)));
+    .then(token => expect(token).to.be.undefined));
 
   it('should find a client by id 1', () =>
     clients.find('1')
     .then((client) => {
-      assert.equal(client.id,           '1');
-      assert.equal(client.name,         'Samplr');
-      assert.equal(client.clientId,     'abc123');
-      assert.equal(client.clientSecret, 'ssh-secret');
+      expect(client).to.contain({
+        id           : '1',
+        name         : 'Samplr',
+        clientId     : 'abc123',
+        clientSecret : 'ssh-secret',
+      });
     }));
 
   it('should find a client by clientId abc123', () =>
     clients.findByClientId('abc123')
     .then((client) => {
-      assert.equal(client.id,           '1');
-      assert.equal(client.name,         'Samplr');
-      assert.equal(client.clientId,     'abc123');
-      assert.equal(client.clientSecret, 'ssh-secret');
+      expect(client).to.contain({
+        id           : '1',
+        name         : 'Samplr',
+        clientId     : 'abc123',
+        clientSecret : 'ssh-secret',
+      });
     }));
 });
