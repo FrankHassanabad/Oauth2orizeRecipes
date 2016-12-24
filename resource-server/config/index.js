@@ -10,7 +10,7 @@ exports.client = {
   clientSecret : 'ssh-otherpassword',
 };
 
-// TODO Compact this more, and document it better
+// TODO Compact this more
 
 /**
  * The Authorization server's location, port number, and the token info end point

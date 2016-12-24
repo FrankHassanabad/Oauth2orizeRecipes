@@ -31,8 +31,7 @@ const expiresIn = { expires_in : config.token.expiresIn };
  * which is bound to these values, and will be exchanged for an access token.
  */
 server.grant(oauth2orize.grant.code((client, redirectURI, user, ares, done) => {
-  const code = utils.uid(config.token.authorizationCodeLength);
-
+  const code = utils.createToken({ sub : user.id, exp : config.codeToken.expiresIn });
   db.authorizationCodes.save(code, client.id, redirectURI, user.id, client.scope)
   .then(() => done(null, code))
   .catch(err => done(err));
@@ -47,7 +46,7 @@ server.grant(oauth2orize.grant.code((client, redirectURI, user, ares, done) => {
  * which is bound to these values.
  */
 server.grant(oauth2orize.grant.token((client, user, ares, done) => {
-  const token      = utils.uid(config.token.accessTokenLength);
+  const token      = utils.createToken({ sub : user.id, exp : config.token.expiresIn });
   const expiration = config.token.calculateExpirationDate();
 
   db.accessTokens.save(token, expiration, user.id, client.id, client.scope)
@@ -65,7 +64,7 @@ server.grant(oauth2orize.grant.token((client, user, ares, done) => {
  */
 server.exchange(oauth2orize.exchange.code((client, code, redirectURI, done) => {
   db.authorizationCodes.delete(code)
-  .then(authCode => validate.authCode(authCode, client, redirectURI))
+  .then(authCode => validate.authCode(code, authCode, client, redirectURI))
   .then(authCode => validate.generateTokens(authCode))
   .then((tokens) => {
     if (tokens.length === 1) {
@@ -113,7 +112,7 @@ server.exchange(oauth2orize.exchange.password((client, username, password, scope
  * application issues an access token on behalf of the client who authorized the code.
  */
 server.exchange(oauth2orize.exchange.clientCredentials((client, scope, done) => {
-  const token      = utils.uid(config.token.accessTokenLength);
+  const token      = utils.createToken({ sub : client.id, exp : config.token.expiresIn });
   const expiration = config.token.calculateExpirationDate();
   // Pass in a null for user id since there is no user when using this grant type
   db.accessTokens.save(token, expiration, null, client.id, scope)
@@ -130,7 +129,7 @@ server.exchange(oauth2orize.exchange.clientCredentials((client, scope, done) => 
  */
 server.exchange(oauth2orize.exchange.refreshToken((client, refreshToken, scope, done) => {
   db.refreshTokens.find(refreshToken)
-  .then(foundRefreshToken => validate.refreshToken(foundRefreshToken, client))
+  .then(foundRefreshToken => validate.refreshToken(foundRefreshToken, refreshToken, client))
   .then(foundRefreshToken => validate.generateToken(foundRefreshToken))
   .then(token => done(null, token, null, expiresIn))
   .catch(() => done(null, false));
