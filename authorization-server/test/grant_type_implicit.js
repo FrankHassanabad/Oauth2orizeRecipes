@@ -4,6 +4,7 @@ const assert     = require('assert');
 const helper     = require('./common').request;
 const properties = require('./common').properties;
 const request    = require('request').defaults({ jar: true, strictSSL: false }); // eslint-disable-line
+const utils      = require('../utils');
 const validate   = require('./common').validate;
 
 /**
@@ -27,13 +28,19 @@ describe('Grant Type Implicit', () => {
       // Get the OAuth2 authorization code
       helper.getAuthorization({ responseType: 'token' }, (error, response) => {
         // Assert that we have the ?code in our URL
-        assert.equal(22, response.request.href.indexOf('/#access_token='));
-        const accessToken = response.request.href.slice(37, 293);
-        assert.equal(accessToken.length, 256);
-        const expiresIn = response.request.href.slice(305, 309);
+        const accessTokenIndex = response.request.href.indexOf('#access_token') + '#access_token='.length;
+        const endTokenIndex    = response.request.href.indexOf('&expires_in');
+        const accessToken      = response.request.href.slice(accessTokenIndex, endTokenIndex);
+        utils.verifyToken(accessToken);
+
+        const expiresInIndex = response.request.href.indexOf('&expires_in') + '&expires_in='.length;
+        const expiresIn = response.request.href.slice(expiresInIndex, expiresInIndex + 4);
         assert.equal(expiresIn, 3600);
-        const tokenType = response.request.href.slice(321, 328);
+
+        const tokenTypeIndex = response.request.href.indexOf('&token_type') + '&token_type='.length;
+        const tokenType = response.request.href.slice(tokenTypeIndex, tokenTypeIndex + 6);
         assert.equal(tokenType, 'Bearer');
+
         // Get the user info
         helper.getUserInfo(accessToken, (userError, userResponse, body) => {
           validate.validateUserJson(userResponse, body);

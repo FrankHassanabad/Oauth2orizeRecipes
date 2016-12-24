@@ -21,12 +21,12 @@ describe('config', () => {
     expect(config.token.expiresIn).to.be.a('number');
   });
 
-  it('should have authorizationCodeLength as a number', () => {
-    expect(config.token.authorizationCodeLength).to.be.a('number');
+  it('codeToken should have expiresIn as a number', () => {
+    expect(config.codeToken.expiresIn).to.be.a('number');
   });
 
-  it('should have accessTokenLength as a number', () => {
-    expect(config.token.accessTokenLength).to.be.a('number');
+  it('refreshToken should have expiresIn as a number', () => {
+    expect(config.refreshToken.expiresIn).to.be.a('number');
   });
 
   it('should have db timeToCheckExpiredTokens as a number', () => {

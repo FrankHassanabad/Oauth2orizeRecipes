@@ -77,35 +77,6 @@ validate.clientExists = (client) => {
 };
 
 /**
- * Given a token this will return the token if it exists, otherwise this will throw an error
- * @param   {Object} token - The token
- * @throws  {Error}  If the token does not exist
- * @returns {Object} The token if valid
- */
-validate.tokenExists = (token) => {
-  if (token == null) {
-    validate.logAndThrow('Token not found');
-  }
-  return token;
-};
-
-/**
- * Given a token and accessToken this will return the token is not expired, otherwise this will
- * delete the token from the DB and throw an error
- * @param   {Object} token       - The token
- * @param   {Object} accessToken - The access token
- * @throws  {Error}  If the token is expired
- * @returns {Object} The token if valid
- */
-validate.tokenNotExpired = (token, accessToken) => {
-  if (new Date() > token.expirationDate) {
-    db.accessTokens.delete(accessToken);
-    validate.logAndThrow('Token is expired');
-  }
-  return token;
-};
-
-/**
  * Given a token and accessToken this will return either the user or the client associated with
  * the token if valid.  Otherwise this will throw.
  * delete the token from the DB and throw an error.
@@ -115,8 +86,7 @@ validate.tokenNotExpired = (token, accessToken) => {
  * @returns {Promise} Resolved with the user or client associated with the token if valid
  */
 validate.token = (token, accessToken) => {
-  validate.tokenExists(token);
-  validate.tokenNotExpired(token, accessToken);
+  utils.verifyToken(accessToken);
 
   // token is a user token
   if (token.userID !== null) {
@@ -131,81 +101,43 @@ validate.token = (token, accessToken) => {
 };
 
 /**
- * Given a refresh token this will return the refresh token if it exists, otherwise this will
- * throw an error
- * @param   {Object} refreshToken - The refresh token
- * @throws  {Error}  If the refresh token does not exist
- * @returns {Object} The refresh token if valid
- */
-validate.refreshTokenExists = (refreshToken) => {
-  if (refreshToken == null) {
-    validate.logAndThrow('Refresh token not found');
-  }
-  return refreshToken;
-};
-
-/**
  * Given a refresh token and client this will return the refresh token if it exists and the client
  * id's match otherwise this will throw an error
  * throw an error
- * @param   {Object} refreshToken - The refresh token
+ * @param   {Object} token        - The token record from the DB
+ * @param   {Object} refreshToken - The raw refresh token
  * @param   {Object} client       - The client profile
  * @throws  {Error}  If the refresh token does not exist or the client id's don't match
  * @returns {Object} The refresh token if valid
  */
-validate.refreshToken = (refreshToken, client) => {
-  validate.refreshTokenExists(refreshToken);
-  if (client.id !== refreshToken.clientID) {
+validate.refreshToken = (token, refreshToken, client) => {
+  utils.verifyToken(refreshToken);
+  if (client.id !== token.clientID) {
     validate.logAndThrow('RefreshToken clientID does not match client id given');
   }
   return refreshToken;
 };
 
 /**
- * Given a auth code this will return the auth code if it exists and is not 0, otherwise this will
- * throw an error.
- * @param   {Object} authCode - The auth code
- * @throws  {Error}  If the auth code does not exist or is zero
- * @returns {Object} The auth code token if valid
- */
-validate.authCodeExists = (authCode) => {
-  if (authCode == null || authCode === 0) {
-    throw new Error('AuthCode does not exist');
-  }
-  return authCode;
-};
-
-/**
  * Given a auth code, client, and redirectURI this will return the auth code if it exists and is
  * not 0, the client id matches it, and the redirectURI matches it, otherwise this will throw an
  * error.
- * @param  {Object}  authCode    - The auth code
+ * @param  {Object}  code        - The auth code record from the DB
+ * @param  {Object}  authCode    - The raw auth code
  * @param  {Object}  client      - The client profile
  * @param  {Object}  redirectURI - The redirectURI to check against
  * @throws {Error}   If the auth code does not exist or is zero or does not match the client or
  *                   the redirectURI
  * @returns {Object} The auth code token if valid
  */
-validate.authCode = (authCode, client, redirectURI) => {
-  validate.authCodeExists(authCode);
+validate.authCode = (code, authCode, client, redirectURI) => {
+  utils.verifyToken(code);
   if (client.id !== authCode.clientID) {
     validate.logAndThrow('AuthCode clientID does not match client id given');
   }
   if (redirectURI !== authCode.redirectURI) {
     validate.logAndThrow('AuthCode redirectURI does not match redirectURI given');
   }
-  return authCode;
-};
-
-/**
- * Deletes the auth code if it exists otherwise throws an error.
- * @param   {Object} authCode - The auth code
- * @throws  {Error}  If the auth code does not exist or is zero
- * @returns {Object} The auth code token if valid
- */
-validate.deleteAuthCode = (authCode) => {
-  validate.authCodeExists(authCode);
-  db.authorizationCodes.delete(authCode);
   return authCode;
 };
 
@@ -224,7 +156,7 @@ validate.isRefreshToken = ({ scope }) => scope && scope.indexOf('offline_access'
  * @returns {Promise} The resolved refresh token after saved
  */
 validate.generateRefreshToken = ({ userId, clientID, scope }) => {
-  const refreshToken = utils.uid(config.token.refreshTokenLength);
+  const refreshToken = utils.createToken({ sub : userId, exp : config.refreshToken.expiresIn });
   return db.refreshTokens.save(refreshToken, userId, clientID, scope)
   .then(() => refreshToken);
 };
@@ -236,8 +168,10 @@ validate.generateRefreshToken = ({ userId, clientID, scope }) => {
  * @returns {Promise} The resolved refresh token after saved
  */
 validate.generateToken = (authCode) => {
-  validate.authCodeExists(authCode);
-  const token      = utils.uid(config.token.accessTokenLength);
+  const token      = utils.createToken({
+    sub : authCode.userID,
+    exp : config.token.expiresIn,
+  });
   const expiration = config.token.calculateExpirationDate();
   return db.accessTokens.save(token, expiration, authCode.userID, authCode.clientID, authCode.scope)
   .then(() => token);
@@ -251,7 +185,6 @@ validate.generateToken = (authCode) => {
  * @returns {Promise} The resolved refresh and access tokens as an array
  */
 validate.generateTokens = (authCode) => {
-  validate.authCodeExists(authCode);
   if (validate.isRefreshToken(authCode)) {
     return Promise.all([
       validate.generateToken(authCode),

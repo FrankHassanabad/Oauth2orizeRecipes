@@ -1,34 +1,42 @@
 'use strict';
 
-/**
- * Return a random int, used by `utils.uid()`
- *
- * @param  {Number}   min - Minimum
- * @param  {Number}   max - Maximum
- * @return {Number} Random number
- * @api private
- */
-const getRandomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;// eslint-disable-line no-mixed-operators
+const fs   = require('fs');
+const path = require('path');
+const uuid = require('uuid/v4');
+const jwt  = require('jsonwebtoken');
+
+/** Private certificate used for signing JSON WebTokens */
+const privateKey = fs.readFileSync(path.join(__dirname, 'certs/privatekey.pem'));
+
+/** Public certificate used for verification.  Note: you could also use the private key */
+const publicKey = fs.readFileSync(path.join(__dirname, 'certs/certificate.pem'));
 
 /**
- * Return a unique identifier with the given `len`.
+ * Creates a signed JSON WebToken and returns it.  Utilizes the private certificate to create
+ * the signed JWT.  For more options and other things you can change this to, please see:
+ * https://github.com/auth0/node-jsonwebtoken
  *
- *     utils.uid(10);
- *     // => "FDaS435D2z"
- *
- * @param {Number}  len - Length
- * @return {String} String of random characters
- * @api private
+ * @param  {Number} exp - The number of seconds for this token to expire.  By default it will be 60
+ *                        minutes (3600 seconds) if nothing is passed in.
+ * @param  {String} sub - The subject or identity of the token.
+ * @return {String} The JWT Token
  */
-exports.uid = (len) => {
-  const buf     = [];
-  const chars   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charlen = chars.length;
+exports.createToken = ({ exp = 3600, sub = '' }) => {
+  const token = jwt.sign({
+    jti : uuid(),
+    sub,
+    exp : Math.floor(Date.now() / 1000) + exp,
+  }, privateKey, {
+    algorithm: 'RS256',
+  });
 
-  for (let i = 0; i < len; i += 1) {
-    buf.push(chars[getRandomInt(0, charlen - 1)]);
-  }
-
-  return buf.join('');
+  return token;
 };
+
+/**
+ * Verifies the token through the jwt library using the public certificate.
+ * @param   {String} token - The token to verify
+ * @throws  {Error} Error if the token could not be verified
+ * @returns {Object} The token decoded and verified
+ */
+exports.verifyToken = token => jwt.verify(token, publicKey);
