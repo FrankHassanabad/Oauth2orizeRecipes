@@ -7,19 +7,32 @@
 /**
  * Configuration of access tokens.
  *
- * expiresIn               - The time in seconds before the access token expires
- * calculateExpirationDate - A simple function to calculate the absolute time that th token is going
- *                           to expire in.
- * authorizationCodeLength - The length of the authorization code
- * accessTokenLength       - The length of the access token
- * refreshTokenLength      - The length of the refresh token
+ * expiresIn               - The time in minutes before the access token expires. Default is 60
+ *                           minutes
+ * calculateExpirationDate - A simple function to calculate the absolute time that the token is
+ *                           going to expire in.
  */
 exports.token = {
-  expiresIn               : 3600,
+  expiresIn               : 60 * 60,
   calculateExpirationDate : () => new Date(Date.now() + (this.token.expiresIn * 1000)),
-  authorizationCodeLength : 16,
-  accessTokenLength       : 256,
-  refreshTokenLength      : 256,
+};
+
+/**
+ * Configuration of code token.
+ * expiresIn - The time in minutes before the code token expires.  Default is 5 minutes.
+ */
+exports.codeToken = {
+  expiresIn : 5 * 60,
+};
+
+/**
+ * Configuration of refresh token.
+ * expiresIn - The time in minutes before the code token expires.  Default is 100 years.  Most if
+ *             all refresh tokens are expected to not expire.  However, I give it a very long shelf
+ *             life instead.
+ */
+exports.refreshToken = {
+  expiresIn : 52560000,
 };
 
 /**
@@ -36,12 +49,9 @@ exports.db = {
 /**
  * Session configuration
  *
- * type   - The type of session to use.  MemoryStore for "in-memory", or MongoStore for the mongo
- *          database store
  * maxAge - The maximum age in milliseconds of the session.  Use null for web browser session only.
  *          Use something else large like 3600000 * 24 * 7 * 52 for a year.
  * secret - The session secret that you should change to what you want
- * dbName - The database name if you're using Mongo
  */
 exports.session = {
   maxAge : 3600000 * 24 * 7 * 52,

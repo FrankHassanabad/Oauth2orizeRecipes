@@ -29,6 +29,7 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 # Features of the Authorization Server
 * All 4 grant types exposed out of the box
 * Access/Refresh Tokens
+* All Tokens are [JWT based tokens](https://jwt.io/)
 * Configurable expiration times on tokens
 * Single Sign On (SSO) Example
 * Example of trusted clients

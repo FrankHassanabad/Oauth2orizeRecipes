@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const utils = require('../../utils');
 
 /**
  * Our validate module object we export at the bottom
@@ -23,7 +24,7 @@ validate.validateAccessToken = (response, body) => {
   const jsonResponse = JSON.parse(body);
   assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 3);
-  assert.equal(jsonResponse.access_token.length, 256);
+  utils.verifyToken(jsonResponse.access_token);
   assert.equal(jsonResponse.expires_in, 3600);
   assert.equal(jsonResponse.token_type, 'Bearer');
 };
@@ -45,7 +46,7 @@ validate.validateAccessRefreshToken = (response, body) => {
   const jsonResponse = JSON.parse(body);
   assert.equal(response.headers['content-type'], 'application/json');
   assert.equal(Object.keys(jsonResponse).length, 4);
-  assert.equal(jsonResponse.access_token.length, 256);
+  utils.verifyToken(jsonResponse.access_token);
   assert.equal(jsonResponse.expires_in, 3600);
   assert.equal(jsonResponse.token_type, 'Bearer');
 };
@@ -119,7 +120,7 @@ validate.validateInvalidCodeError = (response, body) => {
  * @returns {undefined}
  */
 validate.validateAuthorizationCode = (code) => {
-  assert.equal(code.length, 16);
+  utils.verifyToken(code);
 };
 
 module.exports = validate;

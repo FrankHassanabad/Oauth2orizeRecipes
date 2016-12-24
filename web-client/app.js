@@ -8,6 +8,7 @@ const finalhandler = require('finalhandler');
 const fs           = require('fs');
 const httpProxy    = require('http-proxy');
 const https        = require('https');
+const path         = require('path');
 const serveStatic  = require('serve-static');
 
 // TODO: Change these for your own certificates.  This was generated
@@ -18,12 +19,12 @@ const serveStatic  = require('serve-static');
 const options = {
   // This is for the proxy
   ssl : {
-    key  : fs.readFileSync('certs/privatekey.pem'),
-    cert : fs.readFileSync('certs/certificate.pem'),
+    key  : fs.readFileSync(path.join(__dirname, 'certs/privatekey.pem')),
+    cert : fs.readFileSync(path.join(__dirname, 'certs/certificate.pem')),
   },
   // This is duplicated for the regular https server
-  key  : fs.readFileSync('certs/privatekey.pem'),
-  cert : fs.readFileSync('certs/certificate.pem'),
+  key  : fs.readFileSync(path.join(__dirname, 'certs/privatekey.pem')),
+  cert : fs.readFileSync(path.join(__dirname, 'certs/certificate.pem')),
 };
 
 /**
