@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const utils = require('../../utils');
+const utils  = require('../../../utils');
 
 /**
  * Our validate module object we export at the bottom
