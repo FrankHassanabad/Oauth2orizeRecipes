@@ -1,0 +1,5 @@
+before_install:
+ - cd authorization-server
+language: node_js
+node_js:
+  - "6"
