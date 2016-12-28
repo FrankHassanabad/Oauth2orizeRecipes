@@ -28,7 +28,8 @@
   "scripts": {
     "lint": "eslint *.js config db test",
     "start": "node app.js",
-    "test": "mocha test test/db test/config"
+    "test": "mocha test test/db test/config",
+    "test:integration": "mocha test/integration"
   },
   "engines": {
     "node": ">=6.7.0",
@@ -42,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.x",
     "eslint-plugin-react": "^6.7.x",
     "mocha": "^3.2.x",
+    "es6-promisify": "^5.0.x",
     "request": "^2.48.x",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0"
