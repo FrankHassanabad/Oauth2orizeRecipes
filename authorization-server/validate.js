@@ -1,11 +1,15 @@
 'use strict';
 
-const config = require('./config');
-const db     = require('./db');
-const utils  = require('./utils');
+const config  = require('./config');
+const db      = require('./db');
+const utils   = require('./utils');
+const process = require('process');
 
 /** Validate object to attach all functions to  */
 const validate = Object.create(null);
+
+/** Suppress tracing for things like unit testing */
+const supressTrace = process.env.OAUTHRECIPES_SURPRESS_TRACE === 'true';
 
 /**
  * Log the message and throw it as an Error
@@ -14,7 +18,9 @@ const validate = Object.create(null);
  * @returns {undefined}
  */
 validate.logAndThrow = (msg) => {
-  console.trace(msg);
+  if (!supressTrace) {
+    console.trace(msg);
+  }
   throw new Error(msg);
 };
 
@@ -29,7 +35,7 @@ validate.logAndThrow = (msg) => {
 validate.user = (user, password) => {
   validate.userExists(user);
   if (user.password !== password) {
-    validate.logAndThrow('User is null or password does not match');
+    validate.logAndThrow('User password does not match');
   }
   return user;
 };
@@ -58,7 +64,7 @@ validate.userExists = (user) => {
 validate.client = (client, clientSecret) => {
   validate.clientExists(client);
   if (client.clientSecret !== clientSecret) {
-    validate.logAndThrow('Client is null or client secret does not match');
+    validate.logAndThrow('Client secret does not match');
   }
   return client;
 };
