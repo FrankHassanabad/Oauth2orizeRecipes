@@ -1,6 +1,6 @@
 {
   "name": "oauth2orize-authorization-server",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "author": "Frank Hassanabad <frankhassanabad@gmail.com>",
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
   "license": "MIT",
@@ -29,6 +29,7 @@
     "lint": "eslint *.js config db test",
     "start": "node app.js",
     "test": "mocha test test/db test/config",
+    "test:watch" : "npm run test -- --watch",
     "test:integration": "mocha test/integration"
   },
   "engines": {

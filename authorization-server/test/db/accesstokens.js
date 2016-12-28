@@ -1,7 +1,6 @@
 'use strict';
 
 const chai             = require('chai');
-const assert           = require('assert');
 const { accessTokens } = require('../../db');
 const sinonChai        = require('sinon-chai');
 
@@ -40,7 +39,7 @@ describe('accesstokens', () => {
     .then(() => accessTokens.save('456', new Date(), 'user2', 'client2', 'scope2'))
     .then(() => accessTokens.removeAll())
     .then(() => accessTokens.find('123'))
-    .then(token => assert.equal(token, null))
+    .then(token => expect(token).to.be.undefined)
     .then(() => accessTokens.find('456'))
     .then(token => expect(token).to.be.undefined));
 });
