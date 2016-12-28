@@ -1,11 +1,15 @@
 'use strict';
 
-const assert     = require('assert');
+const chai       = require('chai');
 const helper     = require('./common').helper;
 const promisify  = require('es6-promisify');
 const properties = require('./common').properties;
 const request    = require('request').defaults({ jar: true, strictSSL: false }); // eslint-disable-line
+const sinonChai  = require('sinon-chai');
 const validate   = require('./common').validate;
+
+chai.use(sinonChai);
+const expect = chai.expect;
 
 const get = promisify(request.get, { multiArgs : true });
 
@@ -18,13 +22,13 @@ describe('Grant Type Authorization Code', () => {
   it('should redirect when trying to get authorization without logging in', () =>
     get(properties.logout)
     .then(() => helper.getAuthorization({}))
-    .then(([response]) => assert.equal(response.req.path.indexOf('/?code='), -1)));
+    .then(([response]) => expect(response.req.path.indexOf('/?code=')).to.eql(-1)));
 
   it('should work with the authorization_code asking for a refresh token', () =>
     helper.login()
     .then(() => helper.getAuthorization({ scope: 'offline_access' }))
     .then(([response]) => {
-      assert.equal(response.req.path.indexOf('/?code='), 0);
+      expect(response.req.path.indexOf('/?code=')).to.eql(0);
       const code = response.req.path.slice(7, response.req.path.length);
       validate.validateAuthorizationCode(code);
       return code;
@@ -54,7 +58,7 @@ describe('Grant Type Authorization Code', () => {
     helper.login()
     .then(() => helper.getAuthorization({ scope: 'offline_access' }))
     .then(([response]) => {
-      assert.equal(response.req.path.indexOf('/?code='), 0);
+      expect(response.req.path.indexOf('/?code=')).eql(0);
       const code = response.req.path.slice(7, response.req.path.length);
       validate.validateAuthorizationCode(code);
       return code;
@@ -70,7 +74,7 @@ describe('Grant Type Authorization Code', () => {
     helper.login()
     .then(() => helper.getAuthorization({}))
     .then(([response]) => {
-      assert.equal(response.req.path.indexOf('/?code='), 0);
+      expect(response.req.path.indexOf('/?code=')).eql(0);
       const code = response.req.path.slice(7, response.req.path.length);
       validate.validateAuthorizationCode(code);
       return code;
@@ -86,15 +90,15 @@ describe('Grant Type Authorization Code', () => {
   it('should give an error with an invalid client id', () =>
     helper.login()
     .then(() => helper.getAuthorization({ clientId: 'someinvalidclientid' }))
-    .then(([response]) => assert.equal(response.statusCode, 403)));
+    .then(([response]) => expect(response.statusCode).to.eql(403)));
 
   it('should give an error with a missing client id', () =>
     helper.login()
     .then(() => get(`${properties.authorization}?redirect_uri=${properties.redirect}&response_type=code`))
-    .then(([response]) => assert.equal(response.statusCode, 400)));
+    .then(([response]) => expect(response.statusCode).to.eql(400)));
 
   it('should give an error with an invalid response type', () =>
     helper.login()
     .then(() => helper.getAuthorization({ responseType: 'invalid' }))
-    .then(([response]) => assert.equal(response.statusCode, 501)));
+    .then(([response]) => expect(response.statusCode).to.eql(501)));
 });
