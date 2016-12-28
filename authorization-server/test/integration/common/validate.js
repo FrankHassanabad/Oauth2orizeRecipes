@@ -1,7 +1,11 @@
 'use strict';
 
-const assert = require('assert');
-const utils  = require('../../../utils');
+const chai      = require('chai');
+const sinonChai = require('sinon-chai');
+const utils     = require('../../../utils');
+
+chai.use(sinonChai);
+const expect = chai.expect;
 
 /**
  * Our validate module object we export at the bottom
@@ -20,13 +24,13 @@ const validate = Object.create(null);
  * @returns {undefined}
  */
 validate.validateAccessToken = (response, body) => {
-  assert.equal(response.statusCode, 200);
+  expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
-  assert.equal(response.headers['content-type'], 'application/json');
-  assert.equal(Object.keys(jsonResponse).length, 3);
+  expect(response.headers['content-type']).to.eql('application/json');
+  expect(Object.keys(jsonResponse)).to.have.lengthOf(3);
   utils.verifyToken(jsonResponse.access_token);
-  assert.equal(jsonResponse.expires_in, 3600);
-  assert.equal(jsonResponse.token_type, 'Bearer');
+  expect(jsonResponse.expires_in).to.eql(3600);
+  expect(jsonResponse.token_type).to.eql('Bearer');
 };
 
 /**
@@ -42,13 +46,13 @@ validate.validateAccessToken = (response, body) => {
  * @returns {undefined}
  */
 validate.validateAccessRefreshToken = (response, body) => {
-  assert.equal(response.statusCode, 200);
+  expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
-  assert.equal(response.headers['content-type'], 'application/json');
-  assert.equal(Object.keys(jsonResponse).length, 4);
+  expect(response.headers['content-type']).to.eql('application/json');
+  expect(Object.keys(jsonResponse)).to.have.lengthOf(4);
   utils.verifyToken(jsonResponse.access_token);
-  assert.equal(jsonResponse.expires_in, 3600);
-  assert.equal(jsonResponse.token_type, 'Bearer');
+  expect(jsonResponse.expires_in).to.eql(3600);
+  expect(jsonResponse.token_type).to.eql('Bearer');
 };
 
 /**
@@ -64,13 +68,15 @@ validate.validateAccessRefreshToken = (response, body) => {
  * @returns {undefined}
  */
 validate.validateUserJson = (response, body) => {
-  assert.equal(response.statusCode, 200);
+  expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
-  assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
-  assert.equal(Object.keys(jsonResponse).length, 3);
-  assert.equal(jsonResponse.user_id, '1');
-  assert.equal(jsonResponse.name, 'Bob Smith');
-  assert.equal(jsonResponse.scope, '*');
+  expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
+  expect(Object.keys(jsonResponse)).to.have.lengthOf(3);
+  expect(jsonResponse).to.eql({
+    user_id : '1',
+    name    : 'Bob Smith',
+    scope   : '*',
+  });
 };
 
 /**
@@ -86,13 +92,15 @@ validate.validateUserJson = (response, body) => {
  * @returns {undefined}
  */
 validate.validateClientJson = (response, body) => {
-  assert.equal(response.statusCode, 200);
+  expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
-  assert.equal(response.headers['content-type'], 'application/json; charset=utf-8');
-  assert.equal(Object.keys(jsonResponse).length, 3);
-  assert.equal(jsonResponse.client_id, '3');
-  assert.equal(jsonResponse.name, 'Samplr3');
-  assert.equal(jsonResponse.scope, '*');
+  expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
+  expect(Object.keys(jsonResponse)).to.have.lengthOf(3);
+  expect(jsonResponse).to.eql({
+    client_id : '3',
+    name      : 'Samplr3',
+    scope     : '*',
+  });
 };
 
 /**
@@ -106,12 +114,14 @@ validate.validateClientJson = (response, body) => {
  * @returns {undefined}
  */
 validate.validateInvalidCodeError = (response, body) => {
-  assert.equal(response.statusCode, 403);
+  expect(response.statusCode).to.eql(403);
   const jsonResponse = JSON.parse(body);
-  assert.equal(response.headers['content-type'], 'application/json');
-  assert.equal(Object.keys(jsonResponse).length, 2);
-  assert.equal(jsonResponse.error, 'invalid_grant');
-  assert.equal(jsonResponse.error_description, 'Invalid authorization code');
+  expect(response.headers['content-type']).to.eql('application/json');
+  expect(Object.keys(jsonResponse)).to.have.lengthOf(2);
+  expect(jsonResponse).to.eql({
+    error             : 'invalid_grant',
+    error_description : 'Invalid authorization code',
+  });
 };
 
 /**
