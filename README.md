@@ -1,6 +1,8 @@
 OAuth2orizeRecipes
 ==================
 
+[![Build Status](https://travis-ci.org/FrankHassanabad/Oauth2orizeRecipes.svg?branch=master)](https://travis-ci.org/FrankHassanabad/Oauth2orizeRecipes)
+
 OAuth2 security recipes and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 
 The express2 example from [OAuth2orize](https://github.com/jaredhanson/oauth2orize) is a great and simple
@@ -36,4 +38,4 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 * REST tokeninfo endPoint for verifying a token is valid.
 * Authorization tokens are only useable once
 * SSL/HTTPS usage
-* More complex UI Examples for the Sign In/Login and the Decision Screens 
+* More complex UI Examples for the Sign In/Login and the Decision Screens
