@@ -1,6 +1,6 @@
 'use strict';
 
+exports.helper     = require('./helper');
 exports.properties = require('./properties');
-exports.request    = require('./request');
 exports.validate   = require('./validate');
 
