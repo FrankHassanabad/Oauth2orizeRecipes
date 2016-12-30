@@ -203,12 +203,14 @@ validate.generateTokens = (authCode) => {
 /**
  * Given a token this will return the token if it is not null and the expiration date has not been
  * exceeded.  Otherwise this will throw a HTTP error.
- * @param   {Object}  token - The token to check
- * @throws  {Error}   If the token is invalid or its past its expiration date
- * @returns {Object}  The token if it is a valid token
+ * @param   {Object} token - The token to check
+ * @throws  {Error}  If the token is invalid or its past its expiration date
+ * @returns {Object} The token if it is a valid token
  */
 validate.tokenForHttp = (token) => {
-  if (token == null || (new Date() > token.expiration)) {
+  try {
+    utils.verifyToken(token);
+  } catch (err) {
     const error  = new Error('invalid_token');
     error.status = 400;
     throw error;
@@ -219,9 +221,9 @@ validate.tokenForHttp = (token) => {
 /**
  * Given a client this will return the client if it is not null. Otherwise this will throw a
  * HTTP error.
- * @param   {Object}  client - The client to check
- * @throws  {Error}   If the client is null
- * @returns {Object}  The client if it is a valid client
+ * @param   {Object} client - The client to check
+ * @throws  {Error}  If the client is null
+ * @returns {Object} The client if it is a valid client
  */
 validate.clientExistsForHttp = (client) => {
   if (client == null) {

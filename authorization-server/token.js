@@ -26,7 +26,7 @@ const validate = require('./validate');
  */
 exports.info = [
   (req, res) => {
-    if (!req.query.access_token) {
+    if (req.query.access_token == null) {
       res.status(400);
       res.json({ error: 'invalid_token' });
       return;
