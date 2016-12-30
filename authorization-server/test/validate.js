@@ -165,8 +165,27 @@ describe('validate', () => {
     });
   });
 
-  describe.skip('#clientExistsForHttp', () => {
-    // TODO
+  describe('#clientExistsForHttp', () => {
+    it('should return 400 status', () => {
+      try {
+        validate.clientExistsForHttp();
+      } catch (err) {
+        expect(err.status).to.eql(400);
+      }
+    });
+
+    it('should reject undefined client', () => {
+      expect(() => validate.clientExistsForHttp()).to.throw('invalid_token');
+    });
+
+    it('should reject null client`', () => {
+      expect(() => validate.clientExistsForHttp(null)).to.throw('invalid_token');
+    });
+
+    it('should return a non null client', () => {
+      const client = validate.clientExistsForHttp({ client: 123 });
+      expect(client).eql({ client: 123 });
+    });
   });
 });
 
