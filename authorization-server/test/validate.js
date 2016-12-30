@@ -4,6 +4,7 @@ require('process').env.OAUTHRECIPES_SURPRESS_TRACE = true;
 
 const chai      = require('chai');
 const sinonChai = require('sinon-chai');
+const utils     = require('../utils');
 const validate  = require('../validate');
 
 chai.use(sinonChai);
@@ -137,8 +138,31 @@ describe('validate', () => {
     // TODO
   });
 
-  describe.skip('#tokenForHttp', () => {
-    // TODO
+  describe('#tokenForHttp', () => {
+    it('should return 400 status', () => {
+      try {
+        validate.tokenForHttp();
+      } catch (err) {
+        expect(err.status).to.eql(400);
+      }
+    });
+
+    it('should reject undefined token', () => {
+      expect(() => validate.tokenForHttp()).to.throw('invalid_token');
+    });
+
+    it('should reject null token`', () => {
+      expect(() => validate.tokenForHttp(null)).to.throw('invalid_token');
+    });
+
+    it('should reject invalid token', () => {
+      expect(() => validate.tokenForHttp('abc')).to.throw('invalid_token');
+    });
+
+    it('should work with a valid token', () => {
+      const token = utils.createToken();
+      expect(validate.tokenForHttp(token)).eql(token);
+    });
   });
 
   describe.skip('#clientExistsForHttp', () => {
