@@ -169,17 +169,15 @@ validate.generateRefreshToken = ({ userId, clientID, scope }) => {
 
 /**
  * Given an auth code this will generate a access token, save that token and then return it.
- * @param   {Object}  authCode - The auth code
- * @throws  {Error}   If the auth code does not exist or is zero
- * @returns {Promise} The resolved refresh token after saved
+ * @param   {userID}   userID   - The user profile
+ * @param   {clientID} clientID - The client profile
+ * @param   {scope}    scope    - The scope
+ * @returns {Promise}  The resolved refresh token after saved
  */
-validate.generateToken = (authCode) => {
-  const token      = utils.createToken({
-    sub : authCode.userID,
-    exp : config.token.expiresIn,
-  });
+validate.generateToken = ({ userID, clientID, scope }) => {
+  const token      = utils.createToken({ sub : userID, exp : config.token.expiresIn });
   const expiration = config.token.calculateExpirationDate();
-  return db.accessTokens.save(token, expiration, authCode.userID, authCode.clientID, authCode.scope)
+  return db.accessTokens.save(token, expiration, userID, clientID, scope)
   .then(() => token);
 };
 

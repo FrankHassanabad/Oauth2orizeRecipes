@@ -10,7 +10,6 @@ const validate  = require('../validate');
 chai.use(sinonChai);
 const expect = chai.expect;
 
-
 describe('validate', () => {
   describe('#logAndThrow', () => {
     it('should throw a given mesage', () => {
@@ -126,16 +125,32 @@ describe('validate', () => {
     });
   });
 
-  describe.skip('#generateRefreshToken', () => {
-    // TODO
+  describe('#generateRefreshToken', () => {
+    it('should generate and return a refresh token', () =>
+      validate.generateRefreshToken({ userID: '1', clientID: '1', scope: '*' })
+      .then(token => utils.verifyToken(token)));
   });
 
-  describe.skip('#generateToken', () => {
-    // TODO
+  describe('#generateToken', () => {
+    it('should generate and return a token', () =>
+      validate.generateToken({ userID: '1', clientID: '1', scope: '*' })
+      .then(token => utils.verifyToken(token)));
   });
 
-  describe.skip('#generateTokens', () => {
-    // TODO
+  describe('#generateTokens', () => {
+    it('should generate and return an access and refresh token', () =>
+      validate.generateTokens({ userID : '1', clientID : '1', scope : 'offline_access' })
+      .then(([accessToken, refreshToken]) => {
+        utils.verifyToken(accessToken);
+        utils.verifyToken(refreshToken);
+      }));
+
+    it('should generate and return an access with no refresh token when scope is defined as all', () =>
+      validate.generateTokens({ userID : '1', clientID : '1', scope : '*' })
+      .then(([accessToken, refreshToken]) => {
+        utils.verifyToken(accessToken);
+        expect(refreshToken).to.be.eql(undefined);
+      }));
   });
 
   describe('#tokenForHttp', () => {
