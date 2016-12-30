@@ -111,8 +111,18 @@ describe('validate', () => {
     // TODO
   });
 
-  describe.skip('#isRefreshToken', () => {
-    // TODO
+  describe('#isRefreshToken', () => {
+    it('show return true for scope having offline_access', () => {
+      expect(validate.isRefreshToken({ scope : 'offline_access' })).to.eql(true);
+    });
+
+    it('show return false for scope of other value', () => {
+      expect(validate.isRefreshToken({ scope : '*' })).to.eql(false);
+    });
+
+    it('show return false for non existent scope', () => {
+      expect(validate.isRefreshToken({ })).to.eql(false);
+    });
   });
 
   describe.skip('#generateRefreshToken', () => {

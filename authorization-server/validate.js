@@ -9,7 +9,7 @@ const process = require('process');
 const validate = Object.create(null);
 
 /** Suppress tracing for things like unit testing */
-const supressTrace = process.env.OAUTHRECIPES_SURPRESS_TRACE === 'true';
+const suppressTrace = process.env.OAUTHRECIPES_SURPRESS_TRACE === 'true';
 
 /**
  * Log the message and throw it as an Error
@@ -18,7 +18,7 @@ const supressTrace = process.env.OAUTHRECIPES_SURPRESS_TRACE === 'true';
  * @returns {undefined}
  */
 validate.logAndThrow = (msg) => {
-  if (!supressTrace) {
+  if (!suppressTrace) {
     console.trace(msg);
   }
   throw new Error(msg);
@@ -152,7 +152,7 @@ validate.authCode = (code, authCode, client, redirectURI) => {
  * @param   {Array}   scope - The scope to check if is a refresh token if it has 'offline_access'
  * @returns {Boolean} true If the scope is offline_access, otherwise false
  */
-validate.isRefreshToken = ({ scope }) => scope && scope.indexOf('offline_access') === 0;
+validate.isRefreshToken = ({ scope }) => scope != null && scope.indexOf('offline_access') === 0;
 
 /**
  * Given a userId, clientID, and scope this will generate a refresh token, save it, and return it
