@@ -148,30 +148,30 @@ describe('validate', () => {
   describe('#refreshToken', () => {
     it('should throw with undefined code', () => {
       expect(() =>
-      validate.refreshToken({
-        clientID : '1',
-      }, undefined, {
-        id : '1',
-      })).to.throw('JsonWebTokenError: jwt must be provided');
+        validate.refreshToken({
+          clientID : '1',
+        }, undefined, {
+          id : '1',
+        })).to.throw('JsonWebTokenError: jwt must be provided');
     });
 
     it('should throw with null code', () => {
       expect(() =>
-      validate.refreshToken({
-        clientID : '1',
-      }, null, {
-        id : '1',
-      })).to.throw('JsonWebTokenError: jwt must be provided');
+        validate.refreshToken({
+          clientID : '1',
+        }, null, {
+          id : '1',
+        })).to.throw('JsonWebTokenError: jwt must be provided');
     });
 
     it('should throw with invalid client ID', () => {
       const token = utils.createToken();
       expect(() =>
-      validate.refreshToken({
-        clientID : '1',
-      }, token, {
-        id : '2',
-      })).to.throw('RefreshToken clientID does not match client id given');
+        validate.refreshToken({
+          clientID : '1',
+        }, token, {
+          id : '2',
+        })).to.throw('RefreshToken clientID does not match client id given');
     });
 
     it('should return refreshToken with everything valid', () => {
@@ -183,44 +183,44 @@ describe('validate', () => {
   describe('#authCode', () => {
     it('should throw with undefined code', () => {
       expect(() =>
-      validate.authCode(undefined, {
-        clientID    : '1',
-        redirectURI : 'a',
-      }, {
-        id : '1',
-      }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
+        validate.authCode(undefined, {
+          clientID    : '1',
+          redirectURI : 'a',
+        }, {
+          id : '1',
+        }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
     });
 
     it('should throw with null code', () => {
       expect(() =>
-      validate.authCode(null, {
-        clientID    : '1',
-        redirectURI : 'a',
-      }, {
-        id : '1',
-      }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
+        validate.authCode(null, {
+          clientID    : '1',
+          redirectURI : 'a',
+        }, {
+          id : '1',
+        }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
     });
 
     it('should throw with invalid client ID', () => {
       const token = utils.createToken();
       expect(() =>
-      validate.authCode(token, {
-        clientID    : '1',
-        redirectURI : 'a',
-      }, {
-        id : '2',
-      }, 'a')).to.throw('AuthCode clientID does not match client id given');
+        validate.authCode(token, {
+          clientID    : '1',
+          redirectURI : 'a',
+        }, {
+          id : '2',
+        }, 'a')).to.throw('AuthCode clientID does not match client id given');
     });
 
     it('should throw with invalid redirectURI', () => {
       const token = utils.createToken();
       expect(() =>
-      validate.authCode(token, {
-        clientID    : '1',
-        redirectURI : 'a',
-      }, {
-        id : '1',
-      }, 'b')).to.throw('AuthCode redirectURI does not match redirectURI given');
+        validate.authCode(token, {
+          clientID    : '1',
+          redirectURI : 'a',
+        }, {
+          id : '1',
+        }, 'b')).to.throw('AuthCode redirectURI does not match redirectURI given');
     });
 
     it('should return authCode with everything valid', () => {
