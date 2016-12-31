@@ -1,46 +1,43 @@
-/*jslint node: true */
-/*global exports */
 'use strict';
 
-//The access token and optionally refresh token.
-//You will use these to access your end point data through the means outlined
-//in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
-//(http://tools.ietf.org/html/rfc6750)
+// The access token and optionally refresh token.
+// You will use these to access your end point data through the means outlined
+// in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
+// (http://tools.ietf.org/html/rfc6750)
 
 /**
  * Tokens in-memory data structure which stores all of the refresh tokens
  */
-var tokens = {};
+const tokens = Object.create(null);
 
 /**
- * Finds an access token and passes it if it exists, otherwise
- * it passes null
- * @param accessToken The accessToken to find
- * @param done Passes the token or null
+ * Returns a refresh token if it finds one, otherwise returns
+ * null if one is not found.
+ * @param   {String}   key  - The key to the access token
+ * @returns {Promise}  resolved with the token
  */
-exports.find = function (accessToken, done) {
-  var token = tokens[accessToken];
-  return done(null, token);
+exports.find = key => Promise.resolve(tokens[key]);
+
+/**
+ * Saves a refresh token, user id, client id, and scope.
+ * @param   {Object}  token    - The refresh token (required)
+ * @param   {String}  userID   - The user ID (required)
+ * @param   {String}  clientID - The client ID (required)
+ * @param   {String}  scope    - The scope (optional)
+ * @returns {Promise} resolved with the saved token
+ */
+exports.save = (token, userID, clientID, scope) => {
+  tokens[token] = { userID, clientID, scope };
+  return Promise.resolve(tokens[token]);
 };
 
 /**
- * Saves a access token, refresh token, client id, and scope.
- * @param refreshToken The refresh token (optional)
- * @param clientID The client ID (required)
- * @param scope The scope (optional)
- * @param done Calls this with null
+ * Deletes a refresh token
+ * @param   {String}   key  - The refresh token to delete
+ * @returns {Promise} resolved with the deleted token
  */
-exports.save = function (refreshToken, clientID, scope, done) {
-  tokens[refreshToken] = {refreshToken: refreshToken, clientID: clientID, scope: scope};
-  return done(null);
-};
-
-/**
- * Deletes an access token
- * @param accessToken The access token to delete
- * @param done returns this when done
- */
-exports.delete = function (accessToken, done) {
-  delete tokens[accessToken];
-  return done(null);
+exports.delete = (key) => {
+  const deletedToken = tokens[key];
+  delete tokens[key];
+  return Promise.resolve(deletedToken);
 };

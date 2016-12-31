@@ -1,5 +1,3 @@
-/*jslint node: true */
-/*global exports */
 'use strict';
 
 /**
@@ -8,22 +6,23 @@
  * screen.
  */
 exports.client = {
-  clientID: "trustedClient",
-  clientSecret: "ssh-otherpassword"
+  clientID     : 'trustedClient',
+  clientSecret : 'ssh-otherpassword',
 };
 
-//TODO Compact this more, and document it better
+// TODO Compact this more
+
 /**
  * The Authorization server's location, port number, and the token info end point
  */
 exports.authorization = {
-  host: "localhost",
-  port: "3000",
-  url: "https://localhost:3000/",
-  tokenURL: "oauth/token",
-  authorizeURL: "https://localhost:3000/dialog/authorize",
-  tokeninfoURL: "https://localhost:3000/api/tokeninfo?access_token=",
-  redirectURL: "https://localhost:4000/receivetoken"
+  host         : 'localhost',
+  port         : '3000',
+  url          : 'https://localhost:3000/',
+  tokenURL     : 'oauth/token',
+  authorizeURL : 'https://localhost:3000/dialog/authorize',
+  tokeninfoURL : 'https://localhost:3000/api/tokeninfo?access_token=',
+  redirectURL  : 'https://localhost:4000/receivetoken',
 };
 
 /**
@@ -35,7 +34,7 @@ exports.authorization = {
  * @type {{timeToCheckExpiredTokens: number}}
  */
 exports.db = {
-  timeToCheckExpiredTokens: 3600
+  timeToCheckExpiredTokens : 3600,
 };
 
 /**
@@ -44,6 +43,6 @@ exports.db = {
  * secret - The session secret that you should change to what you want
  */
 exports.session = {
-  //TODO You need to change this secret to something that you choose for your secret
-  secret: "A Secret That Should Be Changed"
+  // TODO You need to change this secret to something that you choose for your secret
+  secret: 'A Secret That Should Be Changed',
 };

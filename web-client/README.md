@@ -11,19 +11,19 @@ First install and run the authorization serer
 git clone https://github.com/FrankHassanabad/Oauth2orizeRecipes.git
 cd Oauth2orizeRecipes/authorization-server
 npm install
-node app.js
+npm start
 ```
 
 Then install and run the resource server
 ```
 cd Oauth2orizeRecipes/resource-server
 npm install
-node app.js
+npm start
 ```
 
 Finally, run this server
 ```
 cd Oauth2orizeRecipes/web-client
 npm install
-node app.js
+npm start
 ```

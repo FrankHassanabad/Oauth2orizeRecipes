@@ -1,71 +1,71 @@
-/*jslint node: true */
-/*global exports */
 'use strict';
 
-//The access token and optionally refresh token.
-//You will use these to access your end point data through the means outlined
-//in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
-//(http://tools.ietf.org/html/rfc6750)
+// The access token and optionally refresh token.
+// You will use these to access your end point data through the means outlined
+// in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
+// (http://tools.ietf.org/html/rfc6750)
 
 /**
  * Tokens in-memory data structure which stores all of the access tokens
  */
-var tokens = {};
+let tokens = Object.create(null);
 
 /**
- * Returns an access token if it finds one, otherwise returns
- * null if one is not found.
- * @param accessToken The key to the access token
- * @param done The function to call next
- * @returns The access token if found, otherwise returns null
+ * Returns an access token if it finds one, otherwise returns null if one is not found.
+ * @param   {String}  key  - The key to the access token
+ * @returns {Promise} resolved with the token
  */
-exports.find = function (accessToken, done) {
-  var token = tokens[accessToken];
-  return done(null, token);
-};
+exports.find = key => Promise.resolve(tokens[key]);
 
 /**
- * Saves a access token, expiration date, client id, and scope.
- * @param accessToken The access token (required)
- * @param expirationDate The expiration of the access token that is a javascript Date() object
- * @param clientID The client ID (required)
- * @param scope The scope (optional)
- * @param done Calls this with null always
+ * Saves a access token, expiration date, user id, client id, and scope.
+ * @param   {Object}  token          - The access token (required)
+ * @param   {Date}    expirationDate - The expiration of the access token (required)
+ * @param   {String}  userID         - The user ID (required)
+ * @param   {String}  clientID       - The client ID (required)
+ * @param   {String}  scope          - The scope (optional)
+ * @returns {Promise} resolved with the saved token
  */
-exports.save = function (accessToken, expirationDate, clientID, scope, done) {
-  tokens[accessToken] = {accessToken: accessToken, expirationDate: expirationDate, clientID: clientID, scope: scope};
-  return done(null);
+exports.save = (token, expirationDate, userID, clientID, scope) => {
+  tokens[token] = { userID, expirationDate, clientID, scope };
+  return Promise.resolve(tokens[token]);
 };
 
 /**
  * Deletes an access token
- * @param accessToken The access token to delete
- * @param done Calls this with null always
+ * @param   {String}  key - The access token to delete
+ * @returns {Promise} resolved with the deleted token
  */
-exports.delete = function (accessToken, done) {
-  delete tokens[accessToken];
-  return done(null);
+exports.delete = (key) => {
+  const deletedToken = tokens[key];
+  delete tokens[key];
+  return Promise.resolve(deletedToken);
 };
 
 /**
- * Removes expired access tokens.  It does this by looping through them all
- * and then removing the expired ones it finds.
- * @param done returns this when done.
- * @returns done
+ * Removes expired access tokens. It does this by looping through them all and then removing the
+ * expired ones it finds.
+ * @returns {Promise} resolved with an associative of tokens that were expired
  */
-exports.removeExpired = function (done) {
-  var tokensToDelete = [];
-  for (var key in tokens) {
-    if (tokens.hasOwnProperty(key)) {
-      var token = tokens[key];
-      if (new Date() > token.expirationDate) {
-        tokensToDelete.push(key);
-      }
+exports.removeExpired = () => {
+  const keys    = Object.keys(tokens);
+  const expired = keys.reduce((accumulator, key) => {
+    if (new Date() > tokens[key].expirationDate) {
+      const expiredToken = tokens[key];
+      delete tokens[key];
+      accumulator[key] = expiredToken; // eslint-disable-line no-param-reassign
     }
-  }
-  for (var i = 0; i < tokensToDelete.length; ++i) {
-    console.log("Deleting token:" + key);
-    delete tokens[tokensToDelete[i]];
-  }
-  return done(null);
+    return accumulator;
+  }, Object.create(null));
+  return Promise.resolve(expired);
+};
+
+/**
+ * Removes all access tokens.
+ * @returns {Promise} resolved with all removed tokens returned
+ */
+exports.removeAll = () => {
+  const deletedTokens = tokens;
+  tokens              = Object.create(null);
+  return Promise.resolve(deletedTokens);
 };

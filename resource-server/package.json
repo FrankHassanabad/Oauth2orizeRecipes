@@ -1,26 +1,46 @@
 {
   "name": "oauth2orize-resource-server",
-  "version": "3.0.2",
+  "version": "5.1.9",
+  "author": "Frank Hassanabad <frankhassanabad@gmail.com>",
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
+  "license": "MIT",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
   },
   "dependencies": {
-    "express": "4.10.x",
-    "express-session": "1.9.x",
-    "ejs": "1.0.x",
-    "passport": "0.2.x",
-    "passport-local": "1.0.x",
-    "passport-oauth2-client-password": "0.1.x",
-    "passport-http-bearer": "1.0.x",
-    "cookie-parser": "1.3.x",
-    "body-parser": "1.9.x",
-    "connect-ensure-login": "0.1.x",
-    "request": "2.48.x"
+    "express": "^4.10.x",
+    "express-session": "^1.9.x",
+    "ejs": "^2.5.x",
+    "passport": "^0.3.x",
+    "passport-local": "^1.0.x",
+    "passport-oauth2-client-password": "^0.1.x",
+    "passport-http-bearer": "^1.0.x",
+    "cookie-parser": "^1.3.x",
+    "body-parser": "^1.9.x",
+    "connect-ensure-login": "^0.1.x",
+    "request": "^2.48.x"
+  },
+  "devDependencies": {
+    "eslint": "^3.10.x",
+    "eslint-config-airbnb": "^13.0.x",
+    "eslint-plugin-import": "^2.2.x",
+    "eslint-plugin-jsx-a11y": "^2.2.x",
+    "eslint-plugin-react": "^6.7.x"
+  },
+  "scripts": {
+    "lint": "eslint *.js config db sso",
+    "start": "node app.js"
   },
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
-  }
+    "node": ">=6.7.0",
+    "npm": ">=3.10.0"
+  },
+  "keywords": [
+    "authentication",
+    "oauth2",
+    "security",
+    "passport"
+  ]  
 }

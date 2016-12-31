@@ -1,10 +1,10 @@
-/*jslint node: true */
-/*global exports */
 'use strict';
 
-var config = require('../config');
-var request = require('request');
-var db = require('../db');
+const config  = require('../config');
+const db      = require('../db');
+const request = require('request');
+
+/* eslint-disable camelcase */
 
 /**
  * https://localhost:4000/(any end point that is part of your API)
@@ -27,19 +27,15 @@ var db = require('../db');
  *       });
  *     }
  * ];
+ * @returns {Function} Single sign on function`
  */
-exports.ensureSingleSignOn = function () {
-  return function (req, res, next) {
-    if (!req.session.isAuthorized) {
-      req.session.redirectURL = req.originalUrl || req.url;
-      res.redirect(
-        config.authorization.authorizeURL + '?redirect_uri=' + config.authorization.redirectURL +
-        '&response_type=code&client_id=' + config.client.clientID + '&scope=offline_access'
-      );
-    } else {
-      next();
-    }
-  };
+exports.ensureSingleSignOn = () => (req, res, next) => {
+  if (!req.session.isAuthorized) {
+    req.session.redirectURL = req.originalUrl || req.url; // eslint-disable-line no-param-reassign
+    res.redirect(`${config.authorization.authorizeURL}?redirect_uri=${config.authorization.redirectURL}&response_type=code&client_id=${config.client.clientID}&scope=offline_access`);
+  } else {
+    next();
+  }
 };
 
 /**
@@ -52,54 +48,43 @@ exports.ensureSingleSignOn = function () {
  *     "error": "invalid_grant",
  *     "error_description": "invalid code"
  * }
- * @param req The request which should have the parameter query of ?code=(authorization code)
- * @param res We use this to redirect to the original URL that needed to authenticate with the
- * authorization server.
+ * @param   {Object} req - The request which should have the parameter query of
+ *                         ?code=(authorization code)
+ * @param   {Object} res - We use this to redirect to the original URL that needed to
+ *                         authenticate with the authorization server.
+ * @returns {undefined}
  */
-exports.receivetoken = function (req, res) {
-  //Get the token
-  request.post(
-    config.authorization.url + config.authorization.tokenURL, {
-      form: {
-        code: req.query.code,
-        redirect_uri: config.authorization.redirectURL,
-        client_id: config.client.clientID,
-        client_secret: config.client.clientSecret,
-        grant_type: 'authorization_code'
-      }
+exports.receivetoken = (req, res) => {
+  // Get the token
+  request.post(config.authorization.url + config.authorization.tokenURL, {
+    form : {
+      code          : req.query.code,
+      redirect_uri  : config.authorization.redirectURL,
+      client_id     : config.client.clientID,
+      client_secret : config.client.clientSecret,
+      grant_type    : 'authorization_code',
     },
-    function (error, response, body) {
-      var jsonResponse = JSON.parse(body);
-      if (response.statusCode === 200 && jsonResponse.access_token) {
-        req.session.accessToken = jsonResponse.access_token;
-        req.session.refreshToken = jsonResponse.refresh_token;
-        req.session.isAuthorized = true;
+  }, (error, response, body) => {
+    const { access_token, refresh_token, expires_in } = JSON.parse(body);
+    if (response.statusCode === 200 && access_token != null) {
+      req.session.accessToken  = access_token;  // eslint-disable-line no-param-reassign
+      req.session.refreshToken = refresh_token; // eslint-disable-line no-param-reassign
+      req.session.isAuthorized = true;          // eslint-disable-line no-param-reassign
 
-        var expirationDate = null;
-        if (jsonResponse.expires_in) {
-          expirationDate = new Date(new Date().getTime() + (jsonResponse.expires_in * 1000));
+      const expirationDate = expires_in ? new Date(Date.now() + (expires_in * 1000)) : null;
+      db.accessTokens.save(access_token, expirationDate, config.client.clientID)
+      .then(() => {
+        if (refresh_token != null) {
+          return db.refreshTokens.save(refresh_token, config.client.clientID);
         }
-        var saveAccessToken = function (err) {
-          if (err) {
-            res.send(500);
-          }
-          res.redirect(req.session.redirectURL);
-        };
-        if (jsonResponse.refresh_token) {
-          db.refreshTokens.save(jsonResponse.refresh_token, config.client.clientID, null, function (err) {
-            if (err) {
-              res.send(500);
-            }
-            db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-          });
-        } else {
-          db.accessTokens.save(jsonResponse.access_token, expirationDate, config.client.clientID, null, saveAccessToken);
-        }
-      } else {
-        //Error, someone is trying to put a bad authorization code in
-        res.status(response.statusCode);
-        res.send(response.body);
-      }
+        return Promise.resolve();
+      })
+      .then(res.redirect(req.session.redirectURL))
+      .catch(() => res.send(500));
+    } else {
+      // Error, someone is trying to put a bad authorization code in
+      res.status(response.statusCode);
+      res.send(response.body);
     }
-  );
+  });
 };

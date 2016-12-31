@@ -1,6 +1,8 @@
 OAuth2orizeRecipes
 ==================
 
+[![Build Status](https://travis-ci.org/FrankHassanabad/Oauth2orizeRecipes.svg?branch=master)](https://travis-ci.org/FrankHassanabad/Oauth2orizeRecipes)
+
 OAuth2 security recipes and examples based on [OAuth2orize](https://github.com/jaredhanson/oauth2orize).
 
 The express2 example from [OAuth2orize](https://github.com/jaredhanson/oauth2orize) is a great and simple
@@ -18,7 +20,7 @@ You can see a demo of it in action [here](https://oauth2orizerecipes.herokuapp.c
 git clone https://github.com/FrankHassanabad/Oauth2orizeRecipes.git
 cd Oauth2orizeRecipes/authorization-server
 npm install
-node app.js
+npm start
 ```
 Go here for how to use the REST API  
 https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authorization-Server-Tests
@@ -29,12 +31,11 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 # Features of the Authorization Server
 * All 4 grant types exposed out of the box
 * Access/Refresh Tokens
-* Configurable expriation times on tokens
+* All Tokens are [JWT based tokens](https://jwt.io/)
+* Configurable expiration times on tokens
 * Single Sign On (SSO) Example
 * Example of trusted clients
-* In-Memory or persistent tokens through MongoDB
-* In-Memory or persistent web sessions through connect-mongo
 * REST tokeninfo endPoint for verifying a token is valid.
 * Authorization tokens are only useable once
 * SSL/HTTPS usage
-* More complex UI Examples for the Sign In/Login and the Decision Screens 
+* More complex UI Examples for the Sign In/Login and the Decision Screens

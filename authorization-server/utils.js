@@ -1,37 +1,42 @@
-/*jslint node: true */
-/*global exports */
 'use strict';
 
+const fs   = require('fs');
+const path = require('path');
+const uuid = require('uuid/v4');
+const jwt  = require('jsonwebtoken');
+
+/** Private certificate used for signing JSON WebTokens */
+const privateKey = fs.readFileSync(path.join(__dirname, 'certs/privatekey.pem'));
+
+/** Public certificate used for verification.  Note: you could also use the private key */
+const publicKey = fs.readFileSync(path.join(__dirname, 'certs/certificate.pem'));
+
 /**
- * Return a unique identifier with the given `len`.
+ * Creates a signed JSON WebToken and returns it.  Utilizes the private certificate to create
+ * the signed JWT.  For more options and other things you can change this to, please see:
+ * https://github.com/auth0/node-jsonwebtoken
  *
- *     utils.uid(10);
- *     // => "FDaS435D2z"
- *
- * @param {Number} len
- * @return {String}
- * @api private
+ * @param  {Number} exp - The number of seconds for this token to expire.  By default it will be 60
+ *                        minutes (3600 seconds) if nothing is passed in.
+ * @param  {String} sub - The subject or identity of the token.
+ * @return {String} The JWT Token
  */
-exports.uid = function (len) {
-  var buf = [];
-  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charlen = chars.length;
+exports.createToken = ({ exp = 3600, sub = '' } = {}) => {
+  const token = jwt.sign({
+    jti : uuid(),
+    sub,
+    exp : Math.floor(Date.now() / 1000) + exp,
+  }, privateKey, {
+    algorithm: 'RS256',
+  });
 
-  for (var i = 0; i < len; ++i) {
-    buf.push(chars[getRandomInt(0, charlen - 1)]);
-  }
-
-  return buf.join('');
+  return token;
 };
 
 /**
- * Return a random int, used by `utils.uid()`
- *
- * @param {Number} min
- * @param {Number} max
- * @return {Number}
- * @api private
+ * Verifies the token through the jwt library using the public certificate.
+ * @param   {String} token - The token to verify
+ * @throws  {Error} Error if the token could not be verified
+ * @returns {Object} The token decoded and verified
  */
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+exports.verifyToken = token => jwt.verify(token, publicKey);

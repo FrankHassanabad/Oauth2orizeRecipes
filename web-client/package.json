@@ -1,19 +1,39 @@
 {
   "name": "oauth2orize-web-client",
-  "version": "3.0.2",
+  "version": "5.1.9",
+  "author": "Frank Hassanabad <frankhassanabad@gmail.com>",  
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
+  "license": "MIT",
+  "main": "app.js",  
   "repository": {
     "type": "git",
     "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
   },
   "dependencies": {
-    "http-proxy": "1.13.2",
-    "connect": "3.3.x",
-    "serve-static": "1.7.x",
-    "finalhandler": "0.3.x"
+    "http-proxy": "^1.13.x",
+    "connect": "^3.3.x",
+    "serve-static": "^1.7.x",
+    "finalhandler": "^0.5.x"
+  },
+  "devDependencies": {
+    "eslint": "^3.10.x",
+    "eslint-config-airbnb": "^13.0.x",
+    "eslint-plugin-import": "^2.2.x",
+    "eslint-plugin-jsx-a11y": "^2.2.x",
+    "eslint-plugin-react": "^6.7.x"
+  },
+  "scripts": {
+    "lint": "eslint *.js",
+    "start": "node app.js"
   },
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
-  }
+    "node": ">=6.7.0",
+    "npm": ">=3.10.0"
+  },
+  "keywords": [
+    "authentication",
+    "oauth2",
+    "security",
+    "passport"
+  ]
 }
