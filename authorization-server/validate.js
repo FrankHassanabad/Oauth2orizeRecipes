@@ -85,7 +85,6 @@ validate.clientExists = (client) => {
 /**
  * Given a token and accessToken this will return either the user or the client associated with
  * the token if valid.  Otherwise this will throw.
- * delete the token from the DB and throw an error.
  * @param   {Object}  token       - The token
  * @param   {Object}  accessToken - The access token
  * @throws  {Error}   If the token is not valid
@@ -95,7 +94,7 @@ validate.token = (token, accessToken) => {
   utils.verifyToken(accessToken);
 
   // token is a user token
-  if (token.userID !== null) {
+  if (token.userID != null) {
     return db.users.find(token.userID)
     .then(user => validate.userExists(user))
     .then(user => user);
