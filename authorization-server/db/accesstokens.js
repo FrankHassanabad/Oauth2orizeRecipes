@@ -1,5 +1,7 @@
 'use strict';
 
+const jwt = require('jsonwebtoken');
+
 // The access tokens.
 // You will use these to access your end point data through the means outlined
 // in the RFC The OAuth 2.0 Authorization Framework: Bearer Token Usage
@@ -12,13 +14,22 @@ let tokens = Object.create(null);
 
 /**
  * Returns an access token if it finds one, otherwise returns null if one is not found.
- * @param   {String}  key  - The key to the access token
- * @returns {Promise} resolved with the token
+ * @param   {String}  token - The token to decode to get the id of the access token to find.
+ * @returns {Promise} resolved with the token if found, otherwise resolved with undefined
  */
-exports.find = key => Promise.resolve(tokens[key]);
+exports.find = (token) => {
+  try {
+    const id = jwt.decode(token).jti;
+    return Promise.resolve(tokens[id]);
+  } catch (error) {
+    return Promise.resolve(undefined);
+  }
+};
 
 /**
- * Saves a access token, expiration date, user id, client id, and scope.
+ * Saves a access token, expiration date, user id, client id, and scope. Note: The actual full
+ * access token is never saved.  Instead just the ID of the token is saved.  In case of a database
+ * breach this prevents anyone from stealing the live tokens.
  * @param   {Object}  token          - The access token (required)
  * @param   {Date}    expirationDate - The expiration of the access token (required)
  * @param   {String}  userID         - The user ID (required)
@@ -27,19 +38,25 @@ exports.find = key => Promise.resolve(tokens[key]);
  * @returns {Promise} resolved with the saved token
  */
 exports.save = (token, expirationDate, userID, clientID, scope) => {
-  tokens[token] = { userID, expirationDate, clientID, scope };
-  return Promise.resolve(tokens[token]);
+  const id = jwt.decode(token).jti;
+  tokens[id] = { userID, expirationDate, clientID, scope };
+  return Promise.resolve(tokens[id]);
 };
 
 /**
- * Deletes an access token
- * @param   {String}  key  - The access token to delete
+ * Deletes/Revokes an access token by getting the ID and removing it from the storage.
+ * @param   {String}  token - The token to decode to get the id of the access token to delete.
  * @returns {Promise} resolved with the deleted token
  */
-exports.delete = (key) => {
-  const deletedToken = tokens[key];
-  delete tokens[key];
-  return Promise.resolve(deletedToken);
+exports.delete = (token) => {
+  try {
+    const id = jwt.decode(token).jti;
+    const deletedToken = tokens[id];
+    delete tokens[id];
+    return Promise.resolve(deletedToken);
+  } catch (error) {
+    return Promise.resolve(undefined);
+  }
 };
 
 /**
