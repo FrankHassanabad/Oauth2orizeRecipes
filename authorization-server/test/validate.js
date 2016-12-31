@@ -99,16 +99,135 @@ describe('validate', () => {
     });
   });
 
-  describe.skip('#token', () => {
-    // TODO
+  describe('#token', () => {
+    it('should throw with undefined code', () => {
+      expect(() =>
+        validate.token({ userID : '1' }, undefined))
+          .to.throw('JsonWebTokenError: jwt must be provided');
+    });
+
+    it('should throw with null code', () => {
+      expect(() =>
+        validate.token({ userID : '1' }, null))
+          .to.throw('JsonWebTokenError: jwt must be provided');
+    });
+
+    it('should throw with invalid userID', () => {
+      const token = utils.createToken();
+      return validate.token({ userID : '-1' }, token)
+      .catch(err => expect(err.message).to.eql('User does not exist'));
+    });
+
+    it('should throw with invalid clientID', () => {
+      const token = utils.createToken();
+      return validate.token({ clientID: '-1' }, token)
+      .catch(err => expect(err.message).to.eql('Client does not exist'));
+    });
+
+    it('should throw with invalid userID and invalid clientID', () => {
+      const token = utils.createToken();
+      return validate.token({ userID : '-1', clientID: '-1' }, token)
+      .catch(err => expect(err.message).to.eql('User does not exist'));
+    });
+
+    it('should return user with valid user', () => {
+      const token = utils.createToken();
+      const user  = { userID   : '1' };
+      return validate.token(user, token)
+      .then(returnedUser => expect(returnedUser.id).eql(user.userID));
+    });
+
+    it('should return client with valid client', () => {
+      const token = utils.createToken();
+      const client  = { clientID   : '1' };
+      return validate.token(client, token)
+      .then(returnedClient => expect(returnedClient.id).eql(client.clientID));
+    });
   });
 
-  describe.skip('#refreshToken', () => {
-    // TODO
+  describe('#refreshToken', () => {
+    it('should throw with undefined code', () => {
+      expect(() =>
+      validate.refreshToken({
+        clientID : '1',
+      }, undefined, {
+        id : '1',
+      })).to.throw('JsonWebTokenError: jwt must be provided');
+    });
+
+    it('should throw with null code', () => {
+      expect(() =>
+      validate.refreshToken({
+        clientID : '1',
+      }, null, {
+        id : '1',
+      })).to.throw('JsonWebTokenError: jwt must be provided');
+    });
+
+    it('should throw with invalid client ID', () => {
+      const token = utils.createToken();
+      expect(() =>
+      validate.refreshToken({
+        clientID : '1',
+      }, token, {
+        id : '2',
+      })).to.throw('RefreshToken clientID does not match client id given');
+    });
+
+    it('should return refreshToken with everything valid', () => {
+      const token = utils.createToken();
+      expect(validate.refreshToken({ clientID: '1' }, token, { id : '1' })).to.eql(token);
+    });
   });
 
-  describe.skip('#authCode', () => {
-    // TODO
+  describe('#authCode', () => {
+    it('should throw with undefined code', () => {
+      expect(() =>
+      validate.authCode(undefined, {
+        clientID    : '1',
+        redirectURI : 'a',
+      }, {
+        id : '1',
+      }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
+    });
+
+    it('should throw with null code', () => {
+      expect(() =>
+      validate.authCode(null, {
+        clientID    : '1',
+        redirectURI : 'a',
+      }, {
+        id : '1',
+      }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
+    });
+
+    it('should throw with invalid client ID', () => {
+      const token = utils.createToken();
+      expect(() =>
+      validate.authCode(token, {
+        clientID    : '1',
+        redirectURI : 'a',
+      }, {
+        id : '2',
+      }, 'a')).to.throw('AuthCode clientID does not match client id given');
+    });
+
+    it('should throw with invalid redirectURI', () => {
+      const token = utils.createToken();
+      expect(() =>
+      validate.authCode(token, {
+        clientID    : '1',
+        redirectURI : 'a',
+      }, {
+        id : '1',
+      }, 'b')).to.throw('AuthCode redirectURI does not match redirectURI given');
+    });
+
+    it('should return authCode with everything valid', () => {
+      const token    = utils.createToken();
+      const authCode = { clientID: '1', redirectURI : 'a' };
+      expect(validate.authCode(token, authCode, { id : '1' }, 'a')).to.eql(authCode);
+    });
   });
 
   describe('#isRefreshToken', () => {
