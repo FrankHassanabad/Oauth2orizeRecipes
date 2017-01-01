@@ -273,29 +273,22 @@ describe('validate', () => {
   });
 
   describe('#tokenForHttp', () => {
-    it('should return 400 status', () => {
-      try {
-        validate.tokenForHttp();
-      } catch (err) {
-        expect(err.status).to.eql(400);
-      }
-    });
+    it('should return 400 status', () =>
+      validate.tokenForHttp().catch(err => expect(err.status).to.eql(400)));
 
-    it('should reject undefined token', () => {
-      expect(() => validate.tokenForHttp()).to.throw('invalid_token');
-    });
+    it('should reject undefined token', () =>
+      validate.tokenForHttp().catch(err => expect(err.message).to.eql('invalid_token')));
 
-    it('should reject null token`', () => {
-      expect(() => validate.tokenForHttp(null)).to.throw('invalid_token');
-    });
+    it('should reject null token', () =>
+      validate.tokenForHttp(null).catch(err => expect(err.message).to.eql('invalid_token')));
 
-    it('should reject invalid token', () => {
-      expect(() => validate.tokenForHttp('abc')).to.throw('invalid_token');
-    });
+    it('should reject invalid token', () =>
+      validate.tokenForHttp('abc').catch(err => expect(err.message).to.eql('invalid_token')));
 
     it('should work with a valid token', () => {
       const token = utils.createToken();
-      expect(validate.tokenForHttp(token)).eql(token);
+      return validate.tokenForHttp(token)
+      .then(returnedToken => expect(returnedToken).to.eql(token));
     });
   });
 
