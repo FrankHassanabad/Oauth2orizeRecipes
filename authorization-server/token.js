@@ -24,26 +24,19 @@ const validate = require('./validate');
  * @param {Object} res The response
  * @returns {undefined}
  */
-exports.info = [
-  (req, res) => {
-    if (req.query.access_token == null) {
-      res.status(400);
-      res.json({ error: 'invalid_token' });
-      return;
-    }
-    db.accessTokens.find(req.query.access_token)
-    .then(token => validate.tokenForHttp(token))
-    .then(token =>
-      db.clients.find(token.clientID)
-      .then(client => validate.clientExistsForHttp(client))
-      .then(client => ({ client, token })))
-    .then(({ client, token }) => {
-      const expirationLeft = Math.floor((token.expirationDate.getTime() - Date.now()) / 1000);
-      res.json({ audience: client.clientId, expires_in: expirationLeft });
-    })
-    .catch((err) => {
-      res.status(err.status);
-      res.json({ error: err.message });
-    });
-  },
-];
+exports.info = (req, res) =>
+  validate.tokenForHttp(req.query.access_token)
+  .then(() => db.accessTokens.find(req.query.access_token))
+  .then(token => validate.tokenExistsForHttp(token))
+  .then(token =>
+    db.clients.find(token.clientID)
+    .then(client => validate.clientExistsForHttp(client))
+    .then(client => ({ client, token })))
+  .then(({ client, token }) => {
+    const expirationLeft = Math.floor((token.expirationDate.getTime() - Date.now()) / 1000);
+    res.json({ audience : client.clientId, expires_in : expirationLeft });
+  })
+  .catch((err) => {
+    res.status(err.status);
+    res.json({ error: err.message });
+  });
