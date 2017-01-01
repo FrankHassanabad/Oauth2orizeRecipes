@@ -198,22 +198,39 @@ validate.generateTokens = (authCode) => {
 };
 
 /**
- * Given a token this will return the token if it is not null and the expiration date has not been
- * exceeded.  Otherwise this will throw a HTTP error.
- * @param   {Object} token - The token to check
- * @throws  {Error}  If the token is invalid or its past its expiration date
- * @returns {Object} The token if it is a valid token
+ * Given a token this will resolve a promise with the token if it is not null and the expiration
+ * date has not been exceeded.  Otherwise this will throw a HTTP error.
+ * @param   {Object}  token - The token to check
+ * @returns {Promise} Resolved with the token if it is a valid token otherwise rejected with error
  */
-validate.tokenForHttp = (token) => {
-  try {
-    utils.verifyToken(token);
-  } catch (err) {
-    const error  = new Error('invalid_token');
+validate.tokenForHttp = token =>
+  new Promise((resolve, reject) => {
+    try {
+      utils.verifyToken(token);
+    } catch (err) {
+      const error  = new Error('invalid_token');
+      error.status = 400;
+      reject(error);
+    }
+    resolve(token);
+  });
+
+/**
+ * Given a token this will return the token if it is not null. Otherwise this will throw a
+ * HTTP error.
+ * @param   {Object} token - The token to check
+ * @throws  {Error}  If the client is null
+ * @returns {Object} The client if it is a valid client
+ */
+validate.tokenExistsForHttp = (token) => {
+  if (token == null) {
+    const error = new Error('invalid_token');
     error.status = 400;
     throw error;
   }
   return token;
 };
+
 
 /**
  * Given a client this will return the client if it is not null. Otherwise this will throw a
