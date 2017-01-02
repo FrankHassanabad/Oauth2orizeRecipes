@@ -1,6 +1,6 @@
 {
   "name": "oauth2orize-web-client",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "author": "Frank Hassanabad <frankhassanabad@gmail.com>",  
   "description": "OAuth2 security recipes and examples based on OAuth2orize",
   "license": "MIT",

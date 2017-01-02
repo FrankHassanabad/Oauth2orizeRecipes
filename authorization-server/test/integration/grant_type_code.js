@@ -30,26 +30,26 @@ describe('Grant Type Authorization Code', () => {
     .then(([response]) => {
       expect(response.req.path.indexOf('/?code=')).to.eql(0);
       const code = response.req.path.slice(7, response.req.path.length);
-      validate.validateAuthorizationCode(code);
+      validate.authorizationCode(code);
       return code;
     })
     .then(code => helper.postOAuthCode(code))
     .then(([response, body]) => {
-      validate.validateAccessRefreshToken(response, body);
+      validate.accessRefreshToken(response, body);
       return JSON.parse(body);
     })
     .then((tokens) => {
       const userInfo = helper.getUserInfo(tokens.access_token)
-      .then(([response, body]) => validate.validateUserJson(response, body));
+      .then(([response, body]) => validate.userJson(response, body));
 
       const refreshToken = helper.postRefeshToken(tokens.refresh_token)
       .then(([response, body]) => {
-        validate.validateAccessToken(response, body);
+        validate.accessToken(response, body);
       });
 
       const refreshToken2 = helper.postRefeshToken(tokens.refresh_token)
       .then(([response, body]) => {
-        validate.validateAccessToken(response, body);
+        validate.accessToken(response, body);
       });
       return Promise.all([userInfo, refreshToken, refreshToken2]);
     }));
@@ -60,14 +60,14 @@ describe('Grant Type Authorization Code', () => {
     .then(([response]) => {
       expect(response.req.path.indexOf('/?code=')).eql(0);
       const code = response.req.path.slice(7, response.req.path.length);
-      validate.validateAuthorizationCode(code);
+      validate.authorizationCode(code);
       return code;
     })
     .then(code =>
       Promise.all([helper.postOAuthCode(code), helper.postOAuthCode(code)]))
     .then(([[response1, body1], [response2, body2]]) => {
-      validate.validateAccessRefreshToken(response1, body1);
-      validate.validateInvalidCodeError(response2, body2);
+      validate.accessRefreshToken(response1, body1);
+      validate.invalidCodeError(response2, body2);
     }));
 
   it('should work with the authorization_code not asking for a refresh token', () =>
@@ -76,16 +76,16 @@ describe('Grant Type Authorization Code', () => {
     .then(([response]) => {
       expect(response.req.path.indexOf('/?code=')).eql(0);
       const code = response.req.path.slice(7, response.req.path.length);
-      validate.validateAuthorizationCode(code);
+      validate.authorizationCode(code);
       return code;
     })
     .then(code => helper.postOAuthCode(code))
     .then(([response, body]) => {
-      validate.validateAccessToken(response, body);
+      validate.accessToken(response, body);
       return body;
     })
     .then(body => helper.getUserInfo(JSON.parse(body).access_token))
-    .then(([response, body]) => validate.validateUserJson(response, body)));
+    .then(([response, body]) => validate.userJson(response, body)));
 
   it('should give an error with an invalid client id', () =>
     helper.login()
