@@ -60,6 +60,10 @@ app.get('/api/clientinfo', client.info);
 // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
 app.get('/api/tokeninfo', token.info);
 
+// Mimicking google's token revoke endpoint from
+// https://developers.google.com/identity/protocols/OAuth2WebServer
+app.get('/api/revoke', token.revoke);
+
 // static resources for stylesheets, images, javascript files
 app.use(express.static(path.join(__dirname, 'public')));
 
