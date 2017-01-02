@@ -15,18 +15,18 @@ describe('Grant Type Password', () => {
   it('should work with asking for an access token and refresh token', () =>
     helper.postOAuthPassword('offline_access')
     .then(([response, body]) => {
-      validate.validateAccessRefreshToken(response, body);
+      validate.accessRefreshToken(response, body);
       return JSON.parse(body);
     })
     .then((tokens) => {
       const userInfo = helper.getUserInfo(tokens.access_token)
-      .then(([response, body]) => validate.validateUserJson(response, body));
+      .then(([response, body]) => validate.userJson(response, body));
 
       const refreshToken = helper.postRefeshToken(tokens.refresh_token)
-      .then(([response, body]) => validate.validateAccessToken(response, body));
+      .then(([response, body]) => validate.accessToken(response, body));
 
       const refreshToken2 = helper.postRefeshToken(tokens.refresh_token)
-      .then(([response, body]) => validate.validateAccessToken(response, body));
+      .then(([response, body]) => validate.accessToken(response, body));
 
       return Promise.all([userInfo, refreshToken, refreshToken2]);
     }));
@@ -34,9 +34,9 @@ describe('Grant Type Password', () => {
   it('should work just an access token and a scope of undefined', () =>
     helper.postOAuthPassword(undefined)
     .then(([response, body]) => {
-      validate.validateAccessToken(response, body);
+      validate.accessToken(response, body);
       return JSON.parse(body);
     })
     .then(tokens => helper.getUserInfo(tokens.access_token))
-    .then(([response, body]) => validate.validateUserJson(response, body)));
+    .then(([response, body]) => validate.userJson(response, body)));
 });

@@ -12,18 +12,18 @@ describe('Grant Type Client', () => {
   it('should work with asking for an access token', () =>
     helper.postOAuthClient({})
     .then(([response, body]) => {
-      validate.validateAccessToken(response, body);
+      validate.accessToken(response, body);
       return JSON.parse(body);
     })
     .then(tokens => helper.getClientInfo(tokens.access_token))
-    .then(([response, body]) => validate.validateClientJson(response, body)));
+    .then(([response, body]) => validate.clientJson(response, body)));
 
   it('should work with a scope of undefined', () =>
     helper.postOAuthClient(undefined)
     .then(([response, body]) => {
-      validate.validateAccessToken(response, body);
+      validate.accessToken(response, body);
       return JSON.parse(body);
     })
     .then(tokens => helper.getClientInfo(tokens.access_token))
-    .then(([response, body]) => validate.validateClientJson(response, body)));
+    .then(([response, body]) => validate.clientJson(response, body)));
 });

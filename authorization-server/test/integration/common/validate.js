@@ -23,7 +23,7 @@ const validate = Object.create(null);
  * @param   {Object}   body     - The body of the message with the access token and refresh token
  * @returns {undefined}
  */
-validate.validateAccessToken = (response, body) => {
+validate.accessToken = (response, body) => {
   expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json');
@@ -45,7 +45,7 @@ validate.validateAccessToken = (response, body) => {
  * @param   {Object}   body     - The body of the message with the access token and refresh token
  * @returns {undefined}
  */
-validate.validateAccessRefreshToken = (response, body) => {
+validate.accessRefreshToken = (response, body) => {
   expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json');
@@ -67,7 +67,7 @@ validate.validateAccessRefreshToken = (response, body) => {
  * @param   {Object}   body     - The body of the message which contains the user json message
  * @returns {undefined}
  */
-validate.validateUserJson = (response, body) => {
+validate.userJson = (response, body) => {
   expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
@@ -91,7 +91,7 @@ validate.validateUserJson = (response, body) => {
  * @param   {Object}   body     - The body of the message which contains the token info message
  * @returns {undefined}
  */
-validate.validateTokenInfoJson = (response, body) => {
+validate.tokenInfoJson = (response, body) => {
   expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
@@ -110,7 +110,7 @@ validate.validateTokenInfoJson = (response, body) => {
  * @param   {Object}   body     - The body of the message which contains the error message
  * @returns {undefined}
  */
-validate.validateInvalidTokenInfoJson = (response, body) => {
+validate.invalidTokenInfoJson = (response, body) => {
   expect(response.statusCode).to.eql(400);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
@@ -128,7 +128,7 @@ validate.validateInvalidTokenInfoJson = (response, body) => {
  * @param   {Object}   body     - The body of the message which contains the error message
  * @returns {undefined}
  */
-validate.validateRevokeTokenJson = (response, body) => {
+validate.revokeTokenJson = (response, body) => {
   expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
@@ -148,7 +148,7 @@ validate.validateRevokeTokenJson = (response, body) => {
  * @param   {Object}   body     - The body of the message which contains the client json message
  * @returns {undefined}
  */
-validate.validateClientJson = (response, body) => {
+validate.clientJson = (response, body) => {
   expect(response.statusCode).to.eql(200);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json; charset=utf-8');
@@ -170,7 +170,7 @@ validate.validateClientJson = (response, body) => {
  * @param {Object}      body     - The body of the message which contains the error message
  * @returns {undefined}
  */
-validate.validateInvalidCodeError = (response, body) => {
+validate.invalidCodeError = (response, body) => {
   expect(response.statusCode).to.eql(403);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json');
@@ -191,7 +191,7 @@ validate.validateInvalidCodeError = (response, body) => {
  * @param {Object}      body     - The body of the message which contains the error message
  * @returns {undefined}
  */
-validate.validateInvalidRefreshToken = (response, body) => {
+validate.invalidRefreshToken = (response, body) => {
   expect(response.statusCode).to.eql(403);
   const jsonResponse = JSON.parse(body);
   expect(response.headers['content-type']).to.eql('application/json');
@@ -207,7 +207,7 @@ validate.validateInvalidRefreshToken = (response, body) => {
  * @param   {String}    code - The code to validate the access code against the correct length.
  * @returns {undefined}
  */
-validate.validateAuthorizationCode = (code) => {
+validate.authorizationCode = (code) => {
   utils.verifyToken(code);
 };
 
