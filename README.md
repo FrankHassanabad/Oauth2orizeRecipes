@@ -36,6 +36,7 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 * Single Sign On (SSO) Example
 * Example of trusted clients
 * REST tokeninfo endPoint for verifying a token is valid.
+* REST revoke endPoint for revoking either an access token or a refresh token.
 * Authorization tokens are only useable once and are short expiring JWT tokens
 * Full tokens are NOT stored in the DB since they are JWT signed tokens.  Only ID's of tokens are stored.
 * SSL/HTTPS usage
