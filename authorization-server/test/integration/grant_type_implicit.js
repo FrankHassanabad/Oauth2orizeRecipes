@@ -44,7 +44,7 @@ describe('Grant Type Implicit', () => {
       return accessToken;
     })
     .then(accessToken => helper.getUserInfo(accessToken))
-    .then(([response, body]) => validate.validateUserJson(response, body)));
+    .then(([response, body]) => validate.userJson(response, body)));
 
   it('should give an error with an invalid client id', () =>
     helper.login()
