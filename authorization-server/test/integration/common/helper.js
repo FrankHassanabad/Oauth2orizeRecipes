@@ -10,7 +10,9 @@ const {
   redirect,
   username,
   userinfo,
+  revokeToken,
   token,
+  tokenInfo,
 } = require('./properties.js');
 const promisify = require('es6-promisify');
 const request   = require('request').defaults({ jar : true, strictSSL : false }); // eslint-disable-line
@@ -148,4 +150,25 @@ module.exports = {
         Authorization: `Bearer ${accessToken}`,
       },
     }),
+
+  /**
+   * Gets the token info from the OAuth2 authorization server
+   * @param   {String}  accessToken - The access token to get the user info from
+   * @returns {Promise} User Info resolved
+   */
+  getTokenInfo : accessToken =>
+    get({
+      url : `${tokenInfo}?access_token=${accessToken}`,
+    }),
+
+  /**
+   * Revokes a token from the OAuth2 authorization server
+   * @param   {String}  accessToken - The access token to revoke
+   * @returns {Promise} User revocation resolved
+   */
+  getRevokeToken : accessToken =>
+    get({
+      url : `${revokeToken}?token=${accessToken}`,
+    }),
+
 };
