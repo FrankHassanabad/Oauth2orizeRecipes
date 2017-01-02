@@ -12,8 +12,10 @@ module.exports = {
   clientId      : 'trustedClient',
   clientSecret  : 'ssh-otherpassword',
   token         : 'https://localhost:3000/oauth/token',
+  tokenInfo     : 'https://localhost:3000/api/tokeninfo',
   authorization : 'https://localhost:3000/dialog/authorize',
   userinfo      : 'https://localhost:3000/api/userinfo',
+  revokeToken   : 'https://localhost:3000/api/revoke',
   clientinfo    : 'https://localhost:3000/api/clientinfo',
   logout        : 'https://localhost:3000/logout',
 };
