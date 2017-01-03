@@ -20,7 +20,7 @@ Then you can run any example such as getting a user's token directly through
 
 You can validate that token through the token info:
 
-```
+```sh
 ./token_info.sh (some long token)
 { 
   "audience": "abc123",
@@ -35,7 +35,7 @@ As well as revoke the token through the token revoke endpoint:
 ```
 
 And then if trying token the info again you will get invalid token error:
-```
+```sh
 ./token_info.sh (some revoked or expired long token)
 {
   "error": "invalid_token"

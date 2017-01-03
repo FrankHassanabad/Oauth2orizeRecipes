@@ -28,8 +28,7 @@ https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/OAuth2orize-Authoriza
 Go here for high level views of security scenarios  
 https://github.com/FrankHassanabad/Oauth2orizeRecipes/wiki/Security-Scenarios
 
-See the curl folder for headless operations and ad-hoc testing
-
+See the curl folder for headless operations and ad-hoc testing  
 [authorization/server/curl/README.md](authorization-server/curl/README.md)
 
 # Features of the Authorization Server
