@@ -68,7 +68,7 @@ https.createServer(options, (req, res) => {
 
 /**
  * Create a very simple static file server which listens
- * on port 6000, to server up our local static content
+ * on port 6000, to serve up our local static content
  */
 const serve = serveStatic('views', { index: ['index.html', 'index.htm'] });
 // Create server
