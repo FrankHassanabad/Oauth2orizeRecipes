@@ -5,7 +5,7 @@ This is a resource server example.
 
 # Installation
 
-First install and run the authorization serer
+First install and run the authorization server
 ```
 git clone https://github.com/FrankHassanabad/Oauth2orizeRecipes.git
 cd Oauth2orizeRecipes/authorization-server
