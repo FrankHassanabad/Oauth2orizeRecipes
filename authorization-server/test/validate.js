@@ -174,9 +174,9 @@ describe('validate', () => {
         })).to.throw('RefreshToken clientID does not match client id given');
     });
 
-    it('should return refreshToken with everything valid', () => {
+    it('should return token with everything valid', () => {
       const token = utils.createToken();
-      expect(validate.refreshToken({ clientID: '1' }, token, { id : '1' })).to.eql(token);
+      expect(validate.refreshToken({ clientID: '1' }, token, { id : '1' })).to.eql({ clientID: '1' });
     });
   });
 
