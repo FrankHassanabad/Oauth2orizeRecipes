@@ -29,7 +29,7 @@
     "lint": "eslint *.js config db test",
     "start": "node app.js",
     "test": "mocha test test/db test/config",
-    "test:watch" : "npm run test -- --watch",
+    "test:watch": "npm run test -- --watch",
     "test:integration": "mocha test/integration"
   },
   "engines": {

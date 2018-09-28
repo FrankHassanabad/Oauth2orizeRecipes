@@ -120,7 +120,7 @@ validate.refreshToken = (token, refreshToken, client) => {
   if (client.id !== token.clientID) {
     validate.logAndThrow('RefreshToken clientID does not match client id given');
   }
-  return refreshToken;
+  return token;
 };
 
 /**
