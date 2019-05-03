@@ -103,13 +103,13 @@ describe('validate', () => {
     it('should throw with undefined code', () => {
       expect(() =>
         validate.token({ userID : '1' }, undefined))
-          .to.throw('JsonWebTokenError: jwt must be provided');
+          .to.throw('jwt must be provided');
     });
 
     it('should throw with null code', () => {
       expect(() =>
         validate.token({ userID : '1' }, null))
-          .to.throw('JsonWebTokenError: jwt must be provided');
+          .to.throw('jwt must be provided');
     });
 
     it('should throw with invalid userID', () => {
@@ -152,7 +152,7 @@ describe('validate', () => {
           clientID : '1',
         }, undefined, {
           id : '1',
-        })).to.throw('JsonWebTokenError: jwt must be provided');
+        })).to.throw('jwt must be provided');
     });
 
     it('should throw with null code', () => {
@@ -161,7 +161,7 @@ describe('validate', () => {
           clientID : '1',
         }, null, {
           id : '1',
-        })).to.throw('JsonWebTokenError: jwt must be provided');
+        })).to.throw('jwt must be provided');
     });
 
     it('should throw with invalid client ID', () => {
@@ -188,7 +188,7 @@ describe('validate', () => {
           redirectURI : 'a',
         }, {
           id : '1',
-        }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
+        }, 'a')).to.throw('jwt must be provided');
     });
 
     it('should throw with null code', () => {
@@ -198,7 +198,7 @@ describe('validate', () => {
           redirectURI : 'a',
         }, {
           id : '1',
-        }, 'a')).to.throw('JsonWebTokenError: jwt must be provided');
+        }, 'a')).to.throw('jwt must be provided');
     });
 
     it('should throw with invalid client ID', () => {
